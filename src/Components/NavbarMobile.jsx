@@ -5,6 +5,7 @@ import Bell from "./icons/Bell";
 import Google from "./icons/Google";
 import Dashboard from "./icons/Dashboard";
 import Collection from "./icons/Collection";
+import Person from "./icons/Person";
 // import HamburgerIcon from "./icons/HamburgerIcon";
 
 const StyledNavbarMobile = styled.nav`
@@ -60,8 +61,12 @@ const StyledNavbarMobile = styled.nav`
         width: 16px;
         fill: var(--text-secondary);
         background-color: inherit;
-        &:hover{
-          fill: white;
+      }
+
+      .profile-menu-btn{
+        svg{
+          height: 20px;
+          width: 20px;
         }
       }
     }
@@ -72,16 +77,26 @@ const StyledNavbarMobile = styled.nav`
   }
 `;
 
-const NavbarMobile = () => {
+const NavbarMobile = ({setIsModalOpen}) => {
+
+  const showProfileMenu = () => {
+    let profileMenu = document.querySelector(".profile-menu");
+    if(profileMenu.classList.contains("active")){
+      profileMenu.classList.remove("active");
+    }
+    else {
+      profileMenu.classList.add("active");
+    }
+  }
 
   return (
     <StyledNavbarMobile>
       <ul className="menus">
         <li><NavLink to="/dashboard"><Dashboard /></NavLink></li>
-        <li><NavLink to="/collections"><Collection /></NavLink></li>
-        <li><button className="add-btn">+</button></li>
+        <li><NavLink end to="/collections"><Collection /></NavLink></li>
+        <li><button className="add-btn" onClick={() => setIsModalOpen(true)}>+</button></li>
         <li><button><Search /></button></li>
-        <li><button><Bell /></button></li>
+        <li><button onClick={showProfileMenu} className="profile-menu-btn"><Person /></button></li>
       </ul>
     </StyledNavbarMobile>
   )

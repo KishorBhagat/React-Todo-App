@@ -8,6 +8,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { toggelMenu } from "../store/slices/SidebarSlice";
 import Dashboard from "./icons/Dashboard";
 import Collection from "./icons/Collection";
+import { useRef } from "react";
+import ToggleButton from "./ToggleButton";
 
 const StyledNavbar = styled.nav`
   position: fixed;
@@ -18,6 +20,7 @@ const StyledNavbar = styled.nav`
   justify-content: space-between;
   align-items: center;
   background-color: var(--background-secondary);
+  /* box-shadow: 0 10px 10px -10px #020c1bb3; */
   height: 50px;
   padding: 0 20px;
   ul{
@@ -46,9 +49,9 @@ const StyledNavbar = styled.nav`
           }
         } 
         &.active{
-          color: white;
+          color: var(--text-primary);
           svg{
-            fill: white;
+            fill: var(--text-primary);
           }
         }
       }
@@ -76,6 +79,19 @@ const StyledNavbar = styled.nav`
           fill: var(--text-primary);
         }
       }
+
+      .avatar{
+        height: 28px;
+        width: 28px;
+        border-radius: 50%;
+        background-color: var(--avatar);
+        border: 3px solid var(--avatar);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--avatar-font-color);
+        font-weight: 600;
+      }
     }
 
     .add-btn{
@@ -87,6 +103,7 @@ const StyledNavbar = styled.nav`
       width: 25px;
       border-radius: 9px;
     }
+
   }
 
   @media (max-width: 700px){
@@ -94,7 +111,7 @@ const StyledNavbar = styled.nav`
   }
 `;
 
-const Navbar = () => {
+const Navbar = ({ isModalOpen, setIsModalOpen }) => {
   const dispatch = useDispatch();
 
   const handleToggleMenu = () => {
@@ -105,30 +122,33 @@ const Navbar = () => {
     return state.sidebar;
   })
 
-  const handleToggleTheme = (e) => {
-    if(document.body.classList == "dark-theme"){
-      document.body.classList = "light-theme";
-      e.target.innerHTML = "Dark 🌙";
+  const showProfileMenu = () => {
+    let profileMenu = document.querySelector(".profile-menu");
+    if(profileMenu.classList.contains("active")){
+      profileMenu.classList.remove("active");
     }
     else {
-      document.body.classList = "dark-theme"
-      e.target.innerHTML = "Light 🌞";
+      profileMenu.classList.add("active");
     }
   }
+
 
   return (
     <StyledNavbar>
       <ul className="tabs">
         <li><button className={isToggleOn ? "active" : ""} onClick={() => handleToggleMenu()}><HamburgerIcon /></button></li>
         <li><NavLink to="/dashboard"><Dashboard />&nbsp;&nbsp;Dashboard</NavLink></li>
-        <li><NavLink to="/collections"><Collection />&nbsp;&nbsp;Collections</NavLink></li>
+        <li><NavLink end to="/collections"><Collection />&nbsp;&nbsp;Collections</NavLink></li>
       </ul>
       <ul className="menus">
-        <button className="add-btn">+</button>
+        <button className="add-btn" onClick={() => setIsModalOpen(true)}>+</button>
         <button><Search /></button>
-        <button><Bell /></button>
-        <button onClick={handleToggleTheme}>Light 🌞</button>
-        <button><Avatar /></button>
+        <ToggleButton />
+        <button onClick={showProfileMenu}>
+          <div className="avatar">
+            {"kishor".charAt(0).toUpperCase()}
+          </div>
+        </button>
       </ul>
     </StyledNavbar>
   )
