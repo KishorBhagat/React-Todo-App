@@ -62,7 +62,7 @@ const StyledLogin = styled.section`
             }
         }
 
-        button.auth-btn{
+        .auth-btn{
             border: 3px solid #2d2e37;
             border-radius: 12px;
             padding: 10px 15px;
@@ -117,6 +117,12 @@ const Login = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        const formData = {};
+        formData[e.target[0].getAttribute("name")] = e.target[0].value;
+        formData[e.target[1].getAttribute("name")] = e.target[1].value;
+        // e.target[0].value = "";
+
+        console.log(formData)
     }
 
     const [isPending, setIsPending] = useState(false);
@@ -126,11 +132,11 @@ const Login = () => {
         <div className="form-container">
             <h1>Log in.</h1>
             <form className="form" onSubmit={(e) => handleSubmit(e)}>
-                <button type="button" className="auth-btn"><Google />&nbsp;&nbsp;Continue with Google</button>
-                <button type="button" className="auth-btn"><Facebook />&nbsp;&nbsp;Continue with Facebook</button>
+                <div className="auth-btn"><Google />&nbsp;&nbsp;Continue with Google</div>
+                <div className="auth-btn"><Facebook />&nbsp;&nbsp;Continue with Facebook</div>
                 <span>or</span>
-                <input type="email" name="email" placeholder="Email"/>
-                <input type="password" name="password" placeholder="Password"/>
+                <input type="email" name="email" placeholder="Email" required/>
+                <input type="password" name="password" placeholder="Password" required/>
                 {
                     isPending ? 
                     <button type="submit" className="btn" disabled><Spinner /></button>
@@ -139,7 +145,7 @@ const Login = () => {
                 }
             </form>
             <p><span>Don't have an account?</span> <Link to="/signup">Create Account</Link></p>
-            <p><Link to="">Forgot Password?</Link></p>
+            <p><Link to="/forgotpassword">Forgot Password?</Link></p>
         </div>
     </StyledLogin>
   )
