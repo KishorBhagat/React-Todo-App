@@ -2,6 +2,8 @@ import styled from "styled-components"
 import Navbar from "../Components/Navbar"
 import Sidebar from "../Components/Sidebar";
 import NavbarMobile from "../Components/NavbarMobile";
+import { useState } from "react";
+import FormModal from "../Components/FormModal";
 
 const StyledLayout = styled.section`
   display: flex;
@@ -12,14 +14,18 @@ const StyledLayout = styled.section`
 `;
 
 const Layout = ({children}) => {
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   return (
     <>
-      <Navbar />
+      <FormModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen}/>
+      <Navbar isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen}/>
       <StyledLayout>
         <Sidebar />
             {children}
       </StyledLayout>
-      <NavbarMobile />
+      <NavbarMobile setIsModalOpen={setIsModalOpen}/>
     </>
   )
 }

@@ -1,11 +1,12 @@
 import styled from "styled-components"
 import Collection from "../Components/Collection";
+import Layout from "./Layout";
 
 const StyledCollections = styled.div`
   margin-top: 50px;
   /* background-color: purple; */
   width: 100%;
-  padding-top: 50px;
+  padding-top: 40px;
   display: flex;
   /* justify-content: center; */
   flex-direction: column;
@@ -30,7 +31,7 @@ const StyledCollections = styled.div`
     background-color: inherit;
     /* background-color: yellow; */
     width: 500px;
-    max-height: calc(100vh - 180px);
+    max-height: calc(100vh - 170px);
     display: flex;
     gap: 12px;
     flex-wrap: wrap;
@@ -90,64 +91,66 @@ const Collections = () => {
 
   const collectionData = [
     {
-        name: "School",
-        _id: "1",
-        total_tasks: 8,
-        total_finished: 4
+      name: "School",
+      _id: "1",
+      total_tasks: 8,
+      total_finished: 4
     },
     {
-        name: "Personal",
-        _id: "2",
-        total_tasks: 10,
-        total_finished: 5
+      name: "Personal",
+      _id: "2",
+      total_tasks: 10,
+      total_finished: 10
     },
     {
-        name: "Design",
-        _id: "3",
-        total_tasks: 4,
-        total_finished: 3
+      name: "Design",
+      _id: "3",
+      total_tasks: 4,
+      total_finished: 3
     },
     {
-        name: "Groceries",
-        _id: "4",
-        total_tasks: 8,
-        total_finished: 7
+      name: "Groceries",
+      _id: "4",
+      total_tasks: 8,
+      total_finished: 7
     },
     {
-        name: "Birthday",
-        _id: "5",
-        total_tasks: 8,
-        total_finished: 4
+      name: "Birthday",
+      _id: "5",
+      total_tasks: 8,
+      total_finished: 4
     },
     {
-        name: "Default",
-        _id: "6",
-        total_tasks: 11,
-        total_finished: 11
+      name: "Default",
+      _id: "6",
+      total_tasks: 11,
+      total_finished: 11
     },
-];
+  ];
 
-  
+
   return (
+    <Layout>
       <StyledCollections>
         {/* <div className="collections"> */}
-          <header>
-              <h1 className="collections-heading">Collections</h1>
-              <h1>...</h1>
-          </header>
-          <div className="collection-container">
-            {
-              collectionData.map(({name, _id, total_tasks, total_finished}, id) => {
-                return (
-                  <Collection name={name} total={total_tasks} done={total_finished} key={id} />
-                )
-              })
-            }
+        <header>
+          <h1 className="collections-heading">Collections</h1>
+          <h1>...</h1>
+        </header>
+        <div className="collection-container">
+          {
+            collectionData.map(({ name, _id, total_tasks, total_finished }, id) => {
+              return (
+                <Collection name={name} total={total_tasks} done={total_finished} key={id} />
+              )
+            })
+          }
 
-            <button>+</button>
-          </div>
+          <button>+</button>
+        </div>
         {/* </div> */}
       </StyledCollections>
+    </Layout>
   )
 }
 
