@@ -1,10 +1,13 @@
 import styled from "styled-components"
 import Collection from "../Components/Collection";
 import Layout from "./Layout";
+import Modal from "../Components/Modal";
+import { useState } from "react";
 
 const StyledCollections = styled.div`
   margin-top: 50px;
-  /* background-color: purple; */
+  background-color: var(--background-primary);
+  color: var(--text-primary);
   width: 100%;
   padding-top: 40px;
   display: flex;
@@ -12,6 +15,60 @@ const StyledCollections = styled.div`
   flex-direction: column;
   align-items: center;
 
+  .container{
+    background-color: white;
+    padding: 20px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    border-radius: 2px;
+
+    .heading{
+      color: var(--pink);
+      margin-bottom: 20px;
+    }
+
+    .add-collection-form{
+      width: 300px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+  
+      input {
+        height: 40px;
+        width: 100%;
+        /* padding: 0 14px; */
+        background-color: inherit;
+        font-size: 16px;
+        border: none;
+        /* color: var(--text-primary); */
+        border-bottom: 2px solid #e756b5;
+        /* border-bottom: 2px solid black; */
+        /* border-radius: 10px; */
+        :focus{
+          outline: none;
+          border-bottom: 3px solid #e756b5;
+          caret-color: var(--pink);
+        }
+      }
+  
+      .buttons{
+        display: flex;
+        justify-content: end;
+        width: 100%;
+        gap: 5px;
+        margin-top: 20px;
+  
+        button{
+          border: none;
+          padding: 5px 10px;
+          color: var(--pink);
+          font-weight: 500;
+          background-color: inherit;
+          cursor: pointer;
+        }
+      }
+    }
+  }
   header{
     background-color: inherit;
     /* background-color: green; */
@@ -42,6 +99,7 @@ const StyledCollections = styled.div`
       width: 150px;
       height: 85px;
       border: 3px solid var(--background-secondary);
+      background-color: var(--background-primary);
       border-radius: 20px;
       cursor: pointer;
       color: var(--text-secondary);
@@ -71,6 +129,11 @@ const StyledCollections = styled.div`
     margin-top: 0px;
     padding-top: 0;
 
+    .container{
+      .add-collection-form{
+        width: 270px;
+      }
+    }
     header{
       width: 100%;
       padding-top: 20px;
@@ -82,7 +145,7 @@ const StyledCollections = styled.div`
       width: 100%;
       padding: 0 5%;
       padding-bottom: 10px;
-      max-height: calc(100vh - 140px);
+      min-height: calc(100vh - 140px);
     }
   }
 `;
@@ -128,14 +191,34 @@ const Collections = () => {
     },
   ];
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleAddNewCollection = (e) => {
+    e.preventDefault();
+    const formData = {};
+    formData[e.target[0].getAttribute("name")] = e.target[0].value;
+    e.target[0].value = "";
+    setIsModalOpen(false);    
+  }
 
   return (
     <Layout>
       <StyledCollections>
-        {/* <div className="collections"> */}
+        <Modal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen}>
+          <div className="container">
+            <h2 className="heading">New Collection</h2>
+            <form className="add-collection-form" onSubmit={handleAddNewCollection}>
+                <input autoComplete="off" type="text" name="collection_name" placeholder="Enter collection name" required />
+                <div className="buttons">
+                  <button type="button" onClick={() => setIsModalOpen(false)}>CANCEL</button>
+                  <button type="submit">ADD</button>
+                </div>
+            </form>
+          </div>
+        </Modal>
         <header>
           <h1 className="collections-heading">Collections</h1>
-          <h1>...</h1>
+          {/* <h1>...</h1> */}
         </header>
         <div className="collection-container">
           {
@@ -146,9 +229,8 @@ const Collections = () => {
             })
           }
 
-          <button>+</button>
+          <button onClick={() => setIsModalOpen(true)}>+</button>
         </div>
-        {/* </div> */}
       </StyledCollections>
     </Layout>
   )

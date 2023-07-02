@@ -3,10 +3,14 @@ import Task from "../Components/Task";
 import Layout from "./Layout";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import ThreeDots from "../Components/icons/ThreeDots"
+import Trash from "../Components/icons/Trash";
+import PencilSquare from "../Components/icons/PencilSquare";
 
 const StyledSingleCollection = styled.div`
   margin-top: 50px;
-  /* background-color: purple; */
+  background-color: var(--background-primary);
+  color: var(--text-primary);
   width: 100%;
   padding-top: 40px;
   display: flex;
@@ -30,6 +34,54 @@ const StyledSingleCollection = styled.div`
       h1{
         font-weight: 500;
         background-color: inherit;
+      }
+      .delete-coll-btn{
+        border: none;
+        background-color: inherit;
+        width: fit-content;
+        display: flex;
+        /* background-color: red; */
+        padding-top: 3px;
+        cursor: pointer;
+        svg{
+          fill: var(--text-primary);
+          height: 23px;
+          width: 23px;
+        }
+        position: relative;
+        .options{
+          position: absolute;
+          width: fit-content;
+          top: 28px;
+          right: 10px;
+          display: none;
+          cursor: pointer;
+          background-color: red;
+          box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+          
+          li{
+            background-color: var(--background-secondary);
+            font-size: 16px;
+            color: var(--text-secondary);
+            list-style: none;
+            padding: 4px 6px;
+            padding-right: 30px;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            transition: .2s ease;
+            
+            svg{
+              height: 16px;
+              width: 16px;
+              margin-right: 10px;
+              fill: var(--text-secondary);
+            }
+            &:hover{
+              background-color: var(--hover);
+            }
+          }
+        }
       }
     }
 
@@ -62,11 +114,12 @@ const StyledSingleCollection = styled.div`
         justify-content: center;
       }
       input {
+        background-color: var(--background-primary);
+        color: var(--text-primary);
         width: 100%;
         height: 100%;
         border: none;
         padding: 0 14px;
-        /* color: white; */
 
         &:focus{
             outline: none;
@@ -76,7 +129,6 @@ const StyledSingleCollection = styled.div`
   }
 
   .task-container{
-    background-color: inherit;
     /* background-color: yellow; */
     width: 600px;
     height: calc(100vh - 215px);
@@ -174,10 +226,23 @@ const SingleCollection = () => {
         <header>
           <div className="heading">
             <h1 className="collection-heading">{capitalize(collectionName).slice(0, 40)}{collectionName.length > 40 && "..."}</h1>
-            <h1>...</h1>
+            <button className="delete-coll-btn">
+              <div onClick={e => {
+                if(document.querySelector(".options").style.display == "none")
+                  document.querySelector(".options").style.display = "block";
+                else
+                  document.querySelector(".options").style.display = "none";
+              }}>
+                <ThreeDots />
+              </div>
+              <div className="options" /*onMouseLeave={e => document.querySelector(".options").style.display = "none"}*/>
+                <li><Trash /> Delete</li>
+                <li><PencilSquare/>Rename</li>
+              </div>
+            </button>
           </div>
           <form className="input-box" onSubmit={handleSubmit}>
-            <button type="submit">+</button><input type="text" name="task" placeholder="Add a task" autoComplete="off" />
+            <button type="submit">+</button><input type="text" name="task" placeholder="Add a task" autoComplete="off" required/>
           </form>
         </header>
         <div className="task-container">

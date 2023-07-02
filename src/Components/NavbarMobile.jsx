@@ -15,7 +15,7 @@ const StyledNavbarMobile = styled.nav`
   width: 100%;
   height: 60px;
   padding: 0 20px;
-  /* background-color: green; */
+  background-color: var(--background-primary);
   display: none;
   ul{
     width: 100%;
@@ -77,16 +77,14 @@ const StyledNavbarMobile = styled.nav`
   }
 `;
 
-const NavbarMobile = ({setIsModalOpen}) => {
+const NavbarMobile = ({setIsFormModalOpen}) => {
 
   const showProfileMenu = () => {
     let profileMenu = document.querySelector(".profile-menu");
-    if(profileMenu.classList.contains("active")){
-      profileMenu.classList.remove("active");
-    }
-    else {
-      profileMenu.classList.add("active");
-    }
+    let profilecontainer = document.querySelector(".profile-container");
+    profileMenu.classList.add("active");
+    profilecontainer.classList.add("active");
+    document.body.style.overflow = "hidden";
   }
 
   return (
@@ -94,7 +92,7 @@ const NavbarMobile = ({setIsModalOpen}) => {
       <ul className="menus">
         <li><NavLink to="/dashboard"><Dashboard /></NavLink></li>
         <li><NavLink end to="/collections"><Collection /></NavLink></li>
-        <li><button className="add-btn" onClick={() => setIsModalOpen(true)}>+</button></li>
+        <li><button className="add-btn" onClick={() => setIsFormModalOpen(true)}>+</button></li>
         <li><button><Search /></button></li>
         <li><button onClick={showProfileMenu} className="profile-menu-btn"><Person /></button></li>
       </ul>

@@ -4,6 +4,7 @@ import Sidebar from "../Components/Sidebar";
 import NavbarMobile from "../Components/NavbarMobile";
 import { useState } from "react";
 import FormModal from "../Components/FormModal";
+import ProfileMenu from "../Components/ProfileMenu";
 
 const StyledLayout = styled.section`
   display: flex;
@@ -15,17 +16,18 @@ const StyledLayout = styled.section`
 
 const Layout = ({children}) => {
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isFormModalOpen, setIsFormModalOpen] = useState(false);
 
   return (
     <>
-      <FormModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen}/>
-      <Navbar isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen}/>
+      <FormModal isFormModalOpen={isFormModalOpen} setIsFormModalOpen={setIsFormModalOpen}/>
+      <ProfileMenu />
+      <Navbar isFormModalOpen={isFormModalOpen} setIsFormModalOpen={setIsFormModalOpen}/>
       <StyledLayout>
         <Sidebar />
             {children}
       </StyledLayout>
-      <NavbarMobile setIsModalOpen={setIsModalOpen}/>
+      <NavbarMobile setIsFormModalOpen={setIsFormModalOpen}/>
     </>
   )
 }

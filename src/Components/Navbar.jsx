@@ -31,7 +31,7 @@ const StyledNavbar = styled.nav`
     justify-content: center;
     li{
       list-style: none;
-      background-color: inherit;
+      /* background-color: inherit; */
       display: flex;
       align-items: center;
       a{
@@ -58,14 +58,14 @@ const StyledNavbar = styled.nav`
     }
     svg{
       transition: .2s ease;
-      background-color: inherit;
+      /* background-color: inherit; */
       fill: var(--text-secondary);
       &:hover{
         fill: white;
       }
     }
     button{
-      background-color: inherit;
+      background-color: transparent;
       border: none;
       cursor: pointer;
       display: flex;
@@ -90,7 +90,7 @@ const StyledNavbar = styled.nav`
         align-items: center;
         justify-content: center;
         color: var(--avatar-font-color);
-        font-weight: 600;
+        font-weight: 500;
       }
     }
 
@@ -111,7 +111,7 @@ const StyledNavbar = styled.nav`
   }
 `;
 
-const Navbar = ({ isModalOpen, setIsModalOpen }) => {
+const Navbar = ({ isFormModalOpen, setIsFormModalOpen }) => {
   const dispatch = useDispatch();
 
   const handleToggleMenu = () => {
@@ -124,11 +124,14 @@ const Navbar = ({ isModalOpen, setIsModalOpen }) => {
 
   const showProfileMenu = () => {
     let profileMenu = document.querySelector(".profile-menu");
+    let profileContainer = document.querySelector(".profile-container");
     if(profileMenu.classList.contains("active")){
       profileMenu.classList.remove("active");
+      profileContainer.classList.remove("active");
     }
     else {
       profileMenu.classList.add("active");
+      profileContainer.classList.add("active");
     }
   }
 
@@ -141,7 +144,7 @@ const Navbar = ({ isModalOpen, setIsModalOpen }) => {
         <li><NavLink end to="/collections"><Collection />&nbsp;&nbsp;Collections</NavLink></li>
       </ul>
       <ul className="menus">
-        <button className="add-btn" onClick={() => setIsModalOpen(true)}>+</button>
+        <button className="add-btn" onClick={() => setIsFormModalOpen(true)}>+</button>
         <button><Search /></button>
         <ToggleButton />
         <button onClick={showProfileMenu}>

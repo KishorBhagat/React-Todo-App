@@ -1,10 +1,13 @@
 import styled from "styled-components"
 import Task from "../Components/Task";
 import Layout from "./Layout";
+import ThreeDots from "../Components/icons/ThreeDots";
+import { useEffect, useState } from "react";
 
 const StyledDashboard = styled.div`
   margin-top: 50px;
-  /* background-color: purple; */
+  background-color: var(--background-primary);
+  color: var(--text-primary);
   width: 100%;
   padding-top: 40px;
   display: flex;
@@ -30,6 +33,21 @@ const StyledDashboard = styled.div`
         font-weight: 500;
         background-color: inherit;
       }
+
+      .delete-coll-btn{
+        border: none;
+        background-color: inherit;
+        width: fit-content;
+        display: flex;
+        /* background-color: red; */
+        padding-top: 3px;
+        svg{
+          fill: var(--text-primary);
+          height: 23px;
+          width: 23px;
+        }
+      }
+      
     }
 
     .greet{
@@ -46,7 +64,7 @@ const StyledDashboard = styled.div`
   }
 
   .task-container{
-    background-color: inherit;
+    /* background-color: inherit; */
     /* background-color: yellow; */
     width: 600px;
     max-height: calc(100vh - 240px);
@@ -89,7 +107,7 @@ const StyledDashboard = styled.div`
       }
 
       .greet {
-        height: 70px;
+        height: 90px;
       }
     }
 
@@ -97,7 +115,7 @@ const StyledDashboard = styled.div`
       width: 100%;
       padding: 0 10px;
       padding-bottom: 10px;
-      max-height: calc(100vh - 210px);
+      max-height: calc(100vh - 230px);
     }
 
     /* .NOTtask-container::-webkit-scrollbar {
@@ -107,16 +125,31 @@ const StyledDashboard = styled.div`
 `;
 
 const Dashboard = () => {
+
+  const [greeting, setGreeting] = useState("");
+
+  useEffect(() => {
+    const currentHour = new Date().getHours();
+    if (currentHour < 12) {
+      setGreeting("Good morning");
+    } else if (currentHour < 17) {
+      setGreeting("Good afternoon");
+    } else {
+      setGreeting("Good evening");
+    }
+  }, [])
+
+
   return (
     <Layout>
       <StyledDashboard>
         <header>
           <div className="heading">
             <h1 className="dashboard-heading">Dashboard</h1>
-            <h1>...</h1>
+            {/* <button className="delete-coll-btn"><ThreeDots /></button> */}
           </div>
           <div className="greet">
-            <h1>Good {"morning"},</h1>
+            <h1>{greeting},</h1>
             <h1>{"Jhon Doe"}</h1>
           </div>
         </header>

@@ -10,6 +10,7 @@ const StyledForgotPassword = styled.section`
     display: flex;
     justify-content: center;
     /* align-items: center; */
+    background-color: var(--background-primary);
     
     .form-container{
         width: 300px;
@@ -21,6 +22,7 @@ const StyledForgotPassword = styled.section`
         font-weight: 500;
         text-align: center;
         margin-bottom: 40px;
+        color: var(--text-primary);
     }
     .desc{
         width: 300px;
@@ -34,6 +36,8 @@ const StyledForgotPassword = styled.section`
         flex-direction: column;
         gap: 16px;
         input{
+            background-color: var(--background-primary);
+            color: var(--text-primary);
             border: 3px solid #2d2e37;
             border-radius: 12px;
             padding: 10px 15px;
@@ -86,6 +90,7 @@ const StyledForgotPassword = styled.section`
         text-decoration: none;
         font-weight: 500;
         position: relative;
+        color: var(--text-primary);
         
         ::after{
             content: "";

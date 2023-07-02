@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 const StyledLogin = styled.section`
     height: 100vh;
     display: flex;
+    background-color: var(--background-primary);
     justify-content: center;
     align-items: center;
     h1{
@@ -15,17 +16,20 @@ const StyledLogin = styled.section`
         font-weight: 500;
         text-align: center;
         margin-bottom: 60px;
+        color: var(--text-primary);
     }
     .form{
         display: flex;
         flex-direction: column;
         gap: 16px;
         input{
+            background-color: var(--background-primary);
             border: 3px solid #2d2e37;
             border-radius: 12px;
             padding: 10px 15px;
             width: 300px;
             font-size: 15px;
+            color: var(--text-primary);
             &::placeholder{
                 color: #9a9aa8;
             }
@@ -92,6 +96,7 @@ const StyledLogin = styled.section`
         text-decoration: none;
         font-weight: 500;
         position: relative;
+        color: var(--text-primary);
         
         ::after{
             content: "";

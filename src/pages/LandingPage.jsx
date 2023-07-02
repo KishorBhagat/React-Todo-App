@@ -3,9 +3,9 @@ import styled from "styled-components"
 
 const StyledLanding = styled.div`
   height: 100vh;
-  background-color: var(--background-dark);
+  background-color: var(--background-primary);
   background-color: #1d1e26;
-  color: white;
+  color: var(--text-primary);
   /* padding: 0 16%; */
   nav{
     position: fixed;
@@ -62,12 +62,14 @@ const StyledLanding = styled.div`
     }
     button {
       margin-top: 40px;
+      cursor: pointer;
+      color: white;
     }
-    button > a {
+    /* button > a {
       text-decoration: none;
       color: white;
       background-color: inherit;
-    }
+    } */
   }
 
   @media (max-width: 400px){
@@ -95,7 +97,7 @@ const LandingPage = () => {
         <h1>Tasks, just tasks.</h1>
         <p>Keep track of the daily tasks in life and</p>
         <p>get the satisfation upon completion.</p>
-        <button className="btn"><Link to="/dashboard">Get started</Link></button>
+        <Link to="/dashboard"><button className="btn">Get started</button></Link>
       </section>
     </StyledLanding>
   )

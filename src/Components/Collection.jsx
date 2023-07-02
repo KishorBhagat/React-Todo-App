@@ -5,6 +5,8 @@ import Design from "./icons/Design";
 import Groceries from "./icons/Groceries";
 import DefaultCollection from "./icons/DefaultCollection";
 import Birthday from "./icons/Birthday";
+import ProgressRing from "./ProgressRing";
+import { useNavigate } from "react-router-dom";
 
 const StyledCollection = styled.div`
     background-color: var(--background-secondary);
@@ -32,13 +34,16 @@ const StyledCollection = styled.div`
 
     .details{
         .name{
-            font-size: 20px;
-            font-weight: 600;
+            font-size: 18px;
+            font-weight: 500;
             margin-bottom: 10px;
+            white-space: nowrap;
+            overflow: hidden;
         }
         .stats{
             display: flex;
             justify-content: space-between;
+            align-items: center;
             
             span{
                 font-size: 12px;
@@ -48,41 +53,47 @@ const StyledCollection = styled.div`
     }
 `;
 
-const Collection = ({name, total, done}) => {
+const Collection = ({ name, total, done }) => {
 
-  const Icon = () => {
-    switch (name.toLowerCase()) {
-        case "school":
-            return <School />;
-        case "personal":
-            return <Personal />;
-        case "design":
-            return <Design />;
-        case "groceries":
-            return <Groceries />;
-        case "birthday":
-            return <Birthday />;
-        default:
-            return <DefaultCollection />;
+    const navigate = useNavigate();
+
+    const Icon = () => {
+        switch (name.toLowerCase()) {
+            case "school":
+                return <School />;
+            case "personal":
+                return <Personal />;
+            case "design":
+                return <Design />;
+            case "groceries":
+                return <Groceries />;
+            case "birthday":
+                return <Birthday />;
+            default:
+                return <DefaultCollection />;
+        }
     }
-  }
-  
-  return (
-    <StyledCollection>
-        <div className="icon"><Icon /></div>
-        <div className="details">
-            <div className="name">{name}</div>
-            <div className="stats">
-                {
-                    (total == done) ? (<span>All {total} done!</span>) : (<span>{done}/{total} done</span>)
-                }
-                {/* <span>
-                    <ProgressRing />
-                </span> */}
+
+    const handleRedirect = () => {
+        navigate(`/collections/${name.toLowerCase()}`);
+    }
+
+    return (
+        <StyledCollection onClick={handleRedirect} id={name.toLowerCase()}>
+            <div className="icon"><Icon /></div>
+            <div className="details">
+                <div className="name">{name}</div>
+                <div className="stats">
+                    {
+                        (total == done) ? (<span>All {total} done!</span>) : (<span>{done}/{total} done</span>)
+                    }
+                    <span>
+                        <ProgressRing name={name} total={total} done={done} />
+                    </span>
+                </div>
             </div>
-        </div>
-    </StyledCollection>
-  )
+        </StyledCollection>
+    )
 }
 
 export default Collection

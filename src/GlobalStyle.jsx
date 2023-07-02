@@ -38,12 +38,6 @@ const GlobalStyle = createGlobalStyle`
         box-sizing: border-box;
         margin: 0;
         padding: 0;
-        /* background-color: #1d1e26; */
-        background-color: var(--background-primary);
-        color: var(--text-primary);
-        
-        /* scroll-behavior: smooth; */
-        /* font-family: var(--font-poppins); */
     }
     
     .btn{
