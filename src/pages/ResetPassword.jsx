@@ -1,15 +1,15 @@
 import styled from "styled-components"
-import Google from "../Components/icons/Google";
-import Facebook from "../Components/icons/Facebook";
 import Spinner from "../Components/icons/Spinner";
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import { updatePassword } from "../store/slices/authSlice";
 
 const StyledResetPassword = styled.section`
     height: 100vh;
     display: flex;
     justify-content: center;
-    /* align-items: center; */
     background-color: var(--background-primary);
     
     .form-container{
@@ -121,38 +121,73 @@ const StyledResetPassword = styled.section`
 
 const ResetPassword = () => {
 
+    const dispatch = useDispatch();
+
+    const isLoading = useSelector((state) => {
+        return state.auth.isLoading;
+    })
+
+    const navigate = useNavigate();
+
+    const resetToken = localStorage.getItem('resetToken');
+
     const handleSubmit = (e) => {
         e.preventDefault();
         const formData = {};
         formData[e.target[0].getAttribute("name")] = e.target[0].value;
         formData[e.target[1].getAttribute("name")] = e.target[1].value;
         // e.target[0].value = "";
-
-        console.log(formData)
+        dispatch(updatePassword({formData, resetToken}))
+        .unwrap()
+        .then((res) => {
+            if (res.error) {
+                toast.error(res.error.message, { position: toast.POSITION.TOP_CENTER });
+            }
+            else {
+                localStorage.removeItem("resetToken");
+                e.target[0].value = "";
+                e.target[1].value = "";
+                toast.success('Password change successfully.', {
+                    position: toast.POSITION.TOP_CENTER,
+                    onClose: () => {
+                        navigate('/login');
+                    }
+                })
+            }
+        })
     }
 
     const [isPending, setIsPending] = useState(false);
 
-  return (
-    <StyledResetPassword>
-        <div className="form-container">
-            <h1>Reset Password?</h1>
-            <p className="desc">You will be required to enter this password whenever you log in.</p>
-            <form className="form" onSubmit={(e) => handleSubmit(e)}>
-                <input type="password" name="newpassword" placeholder="New password" required/>
-                {/* <small className="desc">&#9432;&nbsp;&nbsp;Password must be at least 6 characters.</small> */}
-                <input type="password" name="confirmNewPassword" placeholder="Password again" required/>
-                <small className="error-message">Error message goes here</small>
-                {
-                    isPending ? 
-                    <button type="submit" className="btn" disabled><Spinner /></button>
-                    :
-                    <button type="submit" className="btn">Save changes and log in</button>
-                }
-            </form>
-        </div>
-    </StyledResetPassword>
-  )
+    useEffect(() => {
+        toast.info('You can now change your password.', {
+            position: toast.POSITION.TOP_CENTER
+        })
+    }, [])
+
+    // if (!resetToken) {
+    //     return <Navigate to='/' />
+    // }
+
+    return (
+        <StyledResetPassword>
+            <div className="form-container">
+                <h1>Reset Password?</h1>
+                <p className="desc">You will be required to enter this password whenever you log in.</p>
+                <form className="form" onSubmit={(e) => handleSubmit(e)}>
+                    <input type="password" name="newpassword" placeholder="New password" required />
+                    {/* <small className="desc">&#9432;&nbsp;&nbsp;Password must be at least 6 characters.</small> */}
+                    <input type="password" name="confirmNewPassword" placeholder="Password again" required />
+                    {
+                        isPending ?
+                            <button type="submit" className="btn" disabled><Spinner /></button>
+                            :
+                            <button type="submit" className="btn">Save changes and log in</button>
+                    }
+                </form>
+            </div>
+        </StyledResetPassword>
+    )
 }
 
 export default ResetPassword

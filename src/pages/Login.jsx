@@ -2,8 +2,10 @@ import styled from "styled-components"
 import Google from "../Components/icons/Google";
 import Facebook from "../Components/icons/Facebook";
 import Spinner from "../Components/icons/Spinner";
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "../store/slices/authSlice";
+import { toast } from "react-toastify";
 
 const StyledLogin = styled.section`
     height: 100vh;
@@ -118,7 +120,23 @@ const StyledLogin = styled.section`
         color: var(--text-secondary);
     }
 `;
+
+
 const Login = () => {
+    // const [isLoading, setIsLoading] = useState(false);
+    // const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+    const isLoading = useSelector((state) => {
+        return state.auth.isLoading;
+    })
+
+    // const data = useSelector((state) => {
+    //     return state.auth.data;
+    // })
+    // const isLoggedIn = useSelector((state) => {
+    //     return state.auth.isLoggedIn;
+    // })
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -126,34 +144,48 @@ const Login = () => {
         formData[e.target[0].getAttribute("name")] = e.target[0].value;
         formData[e.target[1].getAttribute("name")] = e.target[1].value;
         // e.target[0].value = "";
+        // e.target[1].value = "";
 
-        console.log(formData)
+        dispatch(login(formData))
+            .unwrap()
+            .then((res) => {
+                console.log(res)
+                if(res.error){
+                    toast.error(res.error.message, {position: toast.POSITION.TOP_CENTER});
+                }
+                else{
+                    localStorage.setItem('accessToken', (res.token.access));
+                    localStorage.setItem("isWelcomed", "true");
+                    // navigate('/dashboard')
+                    window.location.replace('/dashboard');
+                }
+            })
     }
 
-    const [isPending, setIsPending] = useState(false);
 
-  return (
-    <StyledLogin>
-        <div className="form-container">
-            <h1>Log in.</h1>
-            <form className="form" onSubmit={(e) => handleSubmit(e)}>
-                <div className="auth-btn"><Google />&nbsp;&nbsp;Continue with Google</div>
-                <div className="auth-btn"><Facebook />&nbsp;&nbsp;Continue with Facebook</div>
-                <span>or</span>
-                <input type="email" name="email" placeholder="Email" required/>
-                <input type="password" name="password" placeholder="Password" required/>
-                {
-                    isPending ? 
-                    <button type="submit" className="btn" disabled><Spinner /></button>
-                    :
-                    <button type="submit" className="btn">Log in</button>
-                }
-            </form>
-            <p><span>Don't have an account?</span> <Link to="/signup">Create Account</Link></p>
-            <p><Link to="/forgotpassword">Forgot Password?</Link></p>
-        </div>
-    </StyledLogin>
-  )
+    return (
+        <StyledLogin>
+            <div className="form-container">
+                <h1>Log in.</h1>
+                <form className="form" onSubmit={(e) => handleSubmit(e)}>
+                    <div className="auth-btn"><Google />&nbsp;&nbsp;Continue with Google</div>
+                    <div className="auth-btn"><Facebook />&nbsp;&nbsp;Continue with Facebook</div>
+                    <span>or</span>
+                    <input type="email" name="email" placeholder="Email" required />
+                    <input type="password" name="password" placeholder="Password" required />
+                    {/* {data && data.error && <p style={{color: "red"}}>{data.error.message}</p>} */}
+                    {
+                        isLoading ?
+                            <button type="submit" className="btn" disabled><Spinner /></button>
+                            :
+                            <button type="submit" className="btn">Log in</button>
+                    }
+                </form>
+                <p><span>Don't have an account?</span> <Link to="/signup">Create Account</Link></p>
+                <p><Link to="/forgotpassword">Forgot Password?</Link></p>
+            </div>
+        </StyledLogin>
+    )
 }
 
 export default Login

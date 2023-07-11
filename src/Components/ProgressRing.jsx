@@ -1,5 +1,5 @@
 import styled from "styled-components"
-
+import selectCollectionColor from "../utils/SelectCollectionColor";
 
 const StyledProgressRing = styled.div`
     .pie {
@@ -43,37 +43,20 @@ const StyledProgressRing = styled.div`
 
 const ProgressRing = ({ name, total, done }) => {
 
-    const colorSelector = (name) => {
-        switch (name.toLowerCase()) {
-            case "school":
-                return "#f075a8";
-            case "personal":
-                return "#5fa9a4";
-            case "design":
-                return "#ab6edc";
-            case "groceries":
-                return "#cbb54f";
-            case "birthday":
-                return "#7ed0ec";
-            default:
-                // return "#ffffff";
-                return "#c84949";
-        }
-    }
     // console.log(name, total, done)
     return (
         <StyledProgressRing>
             <div className="pie"
                 style={{
                     backgroundColor: `var(--background-secondary)`,
-                    backgroundImage: `conic-gradient(${colorSelector(name)} 0%, ${colorSelector(name)} ${(done * 100) / total}%, var(--text-secondary) ${(done * 100) / total}%)`
+                    backgroundImage: `conic-gradient(${selectCollectionColor(name)} 0%, ${selectCollectionColor(name)} ${(done * 100) / total}%, var(--text-secondary) ${(done * 100) / total}%)`
                 }}
             >
                 <div className="inner"
-                    style={{ backgroundColor: `${(total == done) ? colorSelector(name) : "var(--background-secondary)"}` }}
+                    style={{ backgroundColor: `${(total == done && total != 0) ? selectCollectionColor(name) : "var(--background-secondary)"}` }}
                 >
                     <div className="check"
-                        style={{ display: `${(total == done) ? "block" : "none"}` }}
+                        style={{ display: `${(total == done && total != 0) ? "block" : "none"}` }}
                     ></div>
                 </div>
             </div>

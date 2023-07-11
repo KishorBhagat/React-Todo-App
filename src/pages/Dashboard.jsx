@@ -2,7 +2,11 @@ import styled from "styled-components"
 import Task from "../Components/Task";
 import Layout from "./Layout";
 import ThreeDots from "../Components/icons/ThreeDots";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import { UserContext } from "../Context/UserContext";
+import { TaskContext } from "../Context/TaskContext";
 
 const StyledDashboard = styled.div`
   margin-top: 50px;
@@ -65,13 +69,21 @@ const StyledDashboard = styled.div`
 
   .task-container{
     /* background-color: inherit; */
-    /* background-color: yellow; */
+    background-color: transparent;
     width: 600px;
-    max-height: calc(100vh - 240px);
+    height: calc(100vh - 240px);
     padding-bottom: 20px;
     overflow-x: hidden;
     overflow-y: auto;
     transition: all .3s ease-in;
+
+    .msg{
+      color: var(--text-primary);
+      text-align: center;
+      font-weight: 300;
+      position: relative;
+      top: calc(50% - 50px);
+    }
 
     &::-webkit-scrollbar {
       width: 2px;
@@ -115,7 +127,7 @@ const StyledDashboard = styled.div`
       width: 100%;
       padding: 0 10px;
       padding-bottom: 10px;
-      max-height: calc(100vh - 230px);
+      height: calc(100vh - 230px);
     }
 
     /* .NOTtask-container::-webkit-scrollbar {
@@ -127,6 +139,11 @@ const StyledDashboard = styled.div`
 const Dashboard = () => {
 
   const [greeting, setGreeting] = useState("");
+
+  if (localStorage.getItem('isWelcomed') === 'true') {
+    toast.success("Welcome to tasks.", { position: toast.POSITION.TOP_CENTER });
+    localStorage.removeItem('isWelcomed')
+  }
 
   useEffect(() => {
     const currentHour = new Date().getHours();
@@ -140,6 +157,13 @@ const Dashboard = () => {
   }, [])
 
 
+  const data = useSelector((state) => {
+    return state.data;
+  })
+  // console.log(data)
+  const { user } = useContext(UserContext);
+  const { tasks, loadingTasks } = useContext(TaskContext);
+
   return (
     <Layout>
       <StyledDashboard>
@@ -150,28 +174,17 @@ const Dashboard = () => {
           </div>
           <div className="greet">
             <h1>{greeting},</h1>
-            <h1>{"Jhon Doe"}</h1>
+            <h1>{user.username}</h1>
           </div>
         </header>
         <div className="task-container">
-          <Task name={"The quick brown fox jumps over a lazy dog. The quick brown fox jumps over a lazy dog. The quick brown fox jumps over a lazy dog."} collection={"Default"} />
-          <Task name={"Task to do 1"} collection={"School"} />
-          <Task name={"Task to do 2"} collection={"Personal"} />
-          <Task name={"Task to do 3"} />
-          <Task name={"Task to do 4"} collection={"Grocery"} />
-          <Task name={"Task to do 5"} collection={"School"} />
-          <Task name={"Task to do 6"} collection={"Design"} />
-          <Task name={"Task to do 7"} collection={"School"} />
-          <Task name={"Task to do 8"} collection={"School"} />
-          <Task name={"Task to do 9"} collection={"School"} />
-          <Task name={"Task to do 10"} collection={"Personal"} />
-          <Task name={"Task to do 11"} collection={"Personal"} />
-          <Task name={"Task to do 12"} collection={"School"} />
-          <Task name={"Task to do 13"} collection={"Design"} />
-          <Task name={"Task to do 14"} collection={"School"} />
-          <Task name={"Task to do 15"} collection={"Design"} />
-          <Task name={"Task to do 16"} collection={"School"} />
-          <Task name={"Task to do 17"} collection={"School"} />
+          {loadingTasks && <h2 className="msg">Loading Tasks...</h2>}
+          {!loadingTasks && tasks.length === 0 && <h2 className="msg">No tasks to show.<br/>Create your first task.</h2>}
+          {
+            tasks.map(({ _id, user, collection_id, task, active }, idx) => {
+              return (<Task _id={_id} user={user} name={task} collection_id={collection_id} isActive={active} key={_id} showCollectionName={true} />)
+            })
+          }
         </div>
       </StyledDashboard>
     </Layout>

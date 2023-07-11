@@ -2,7 +2,8 @@ import styled from "styled-components"
 import Collection from "../Components/Collection";
 import Layout from "./Layout";
 import Modal from "../Components/Modal";
-import { useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
+import { CollectionContext } from "../Context/CollectionContext";
 
 const StyledCollections = styled.div`
   margin-top: 50px;
@@ -85,7 +86,7 @@ const StyledCollections = styled.div`
   }
 
   .collection-container{
-    background-color: inherit;
+    background-color: transparent;
     /* background-color: yellow; */
     width: 500px;
     max-height: calc(100vh - 170px);
@@ -152,54 +153,47 @@ const StyledCollections = styled.div`
 
 const Collections = () => {
 
-  const collectionData = [
-    {
-      name: "School",
-      _id: "1",
-      total_tasks: 8,
-      total_finished: 4
-    },
-    {
-      name: "Personal",
-      _id: "2",
-      total_tasks: 10,
-      total_finished: 10
-    },
-    {
-      name: "Design",
-      _id: "3",
-      total_tasks: 4,
-      total_finished: 3
-    },
-    {
-      name: "Groceries",
-      _id: "4",
-      total_tasks: 8,
-      total_finished: 7
-    },
-    {
-      name: "Birthday",
-      _id: "5",
-      total_tasks: 8,
-      total_finished: 4
-    },
-    {
-      name: "Default",
-      _id: "6",
-      total_tasks: 11,
-      total_finished: 11
-    },
-  ];
+  const {collections} = useContext(CollectionContext)
+
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleAddNewCollection = (e) => {
+  const handleAddNewCollection = async (e) => {
     e.preventDefault();
     const formData = {};
     formData[e.target[0].getAttribute("name")] = e.target[0].value;
     e.target[0].value = "";
+
+    const token = localStorage.getItem('accessToken');
+    
+    try {
+        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/collections`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'authToken': token
+            },
+            body: JSON.stringify(formData)
+        });
+        if(response.ok){
+            const data = await response.json();
+            collections.push(data);
+        }
+
+    } catch (error) {
+        console.log(error);
+    }
+
     setIsModalOpen(false);    
   }
+
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, []);
 
   return (
     <Layout>
@@ -208,7 +202,7 @@ const Collections = () => {
           <div className="container">
             <h2 className="heading">New Collection</h2>
             <form className="add-collection-form" onSubmit={handleAddNewCollection}>
-                <input autoComplete="off" type="text" name="collection_name" placeholder="Enter collection name" required />
+                <input autoComplete="off" type="text" name="collection_name" placeholder="Enter collection name" required ref={inputRef}/>
                 <div className="buttons">
                   <button type="button" onClick={() => setIsModalOpen(false)}>CANCEL</button>
                   <button type="submit">ADD</button>
@@ -222,9 +216,9 @@ const Collections = () => {
         </header>
         <div className="collection-container">
           {
-            collectionData.map(({ name, _id, total_tasks, total_finished }, id) => {
+            collections.map(({ collection_name, _id, total_tasks, total_finished }, id) => {
               return (
-                <Collection name={name} total={total_tasks} done={total_finished} key={id} />
+                <Collection name={collection_name} total={total_tasks} done={total_finished} key={_id} />
               )
             })
           }

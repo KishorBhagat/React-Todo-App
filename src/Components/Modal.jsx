@@ -23,9 +23,19 @@ const StyledModal = styled.div`
     }
 `;
 
-const Modal = ({ isModalOpen, setIsModalOpen, children }) => {
+const Modal = ({ isModalOpen, setIsModalOpen, children, refInput, refInputValue }) => {
+
+    const handleModalClose = () => {
+        setIsModalOpen(false);
+        if(refInput && refInputValue){
+            // refInput.current.value = refInputValue;
+            console.log(refInput.current.value)
+            console.log(refInputValue)
+        }
+    }
+
     return (
-        <StyledModal className="overlay" style={{ display: `${isModalOpen ? "block" : "none"}` }} onClick={() => setIsModalOpen(false)}>
+        <StyledModal className="overlay" style={{ display: `${isModalOpen ? "block" : "none"}` }} onClick={handleModalClose}>
             <div className="modal-container" onClick={e => e.stopPropagation()}>
                 {children}
             </div>

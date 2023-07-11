@@ -8,8 +8,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { toggelMenu } from "../store/slices/SidebarSlice";
 import Dashboard from "./icons/Dashboard";
 import Collection from "./icons/Collection";
-import { useRef } from "react";
-import ToggleButton from "./ToggleButton";
+import { useContext, useRef } from "react";
+import ToggleButton from "./ThemeToggleButton";
+import { UserContext } from "../Context/UserContext";
 
 const StyledNavbar = styled.nav`
   position: fixed;
@@ -135,6 +136,8 @@ const Navbar = ({ isFormModalOpen, setIsFormModalOpen }) => {
     }
   }
 
+  const { user } = useContext(UserContext);
+
 
   return (
     <StyledNavbar>
@@ -149,7 +152,7 @@ const Navbar = ({ isFormModalOpen, setIsFormModalOpen }) => {
         <ToggleButton />
         <button onClick={showProfileMenu}>
           <div className="avatar">
-            {"kishor".charAt(0).toUpperCase()}
+            {user.username?.charAt(0).toUpperCase()}
           </div>
         </button>
       </ul>

@@ -1,13 +1,9 @@
 import { useSelector } from "react-redux";
 import styled from "styled-components"
-import School from "./icons/School";
-import Personal from "./icons/Personal";
-import Design from "./icons/Design";
-import Groceries from "./icons/Groceries";
-import Birthday from "./icons/Birthday";
-import DefaultCollection from "./icons/DefaultCollection";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { CollectionContext } from "../Context/CollectionContext";
+import selectCollectionIcon from "../utils/SelectCollectionIcon";
 
 const StyledSidebar = styled.div`
     background-color: var(--background-secondary);
@@ -80,38 +76,14 @@ const StyledSidebar = styled.div`
 
 const Sidebar = () => {
 
-    const collectionData = [
-        {
-            collection_name: "school",
-            _id: "1"
-        },
-        {
-            collection_name: "Personal",
-            _id: "2"
-        },
-        {
-            collection_name: "Design",
-            _id: "3"
-        },
-        {
-            collection_name: "Groceries",
-            _id: "4"
-        },
-        {
-            collection_name: "Birthday",
-            _id: "5"
-        },
-        {
-            collection_name: "Default",
-            _id: "6"
-        },
-    ];
+    const {collections} = useContext(CollectionContext)
+
 
     /*When the sort() function compares two values, it sends the values to the compare function, and sorts the values according to the returned (negative, zero, positive) value.
     If the result is negative, a is sorted before b.
     If the result is positive, b is sorted before a.
     If the result is 0, no changes are done with the sort order of the two values.*/
-    collectionData.sort((a, b) => {
+    collections.sort((a, b) => {
         const nameA = a.collection_name.toLowerCase();
         const nameB = b.collection_name.toLowerCase();
         if (nameA < nameB) {
@@ -123,22 +95,22 @@ const Sidebar = () => {
         return 0;
     });
 
-    const selectCollectionIcon = (collection_name) => {
-        switch (collection_name.toLowerCase()) {
-            case "school":
-                return <School />
-            case "personal":
-                return <Personal />;
-            case "design":
-                return <Design />;
-            case "groceries":
-                return <Groceries />;
-            case "birthday":
-                return <Birthday />;
-            default:
-                return <DefaultCollection />;
-        }
-    }
+    // const selectCollectionIcon = (collection_name) => {
+    //     switch (collection_name.toLowerCase()) {
+    //         case "school":
+    //             return <School />
+    //         case "personal":
+    //             return <Personal />;
+    //         case "design":
+    //             return <Design />;
+    //         case "groceries":
+    //             return <Groceries />;
+    //         case "birthday":
+    //             return <Birthday />;
+    //         default:
+    //             return <DefaultCollection />;
+    //     }
+    // }
 
     const isToggleOn = useSelector((state) => {
         // console.log(state)
@@ -170,7 +142,7 @@ const Sidebar = () => {
             <ul className="collection-list">
                 {
                     // TODO: render collection list in sorted order of alphabets
-                    collectionData.map(({ collection_name, _id }, idx) => {
+                    collections.map(({ collection_name, _id }, idx) => {
                         return (
                             <Link to={`/collections/${collection_name.toLowerCase()}`} key={idx}>
                                 <li onClick={() => handleClick(idx + 1)} ref={listItem}

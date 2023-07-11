@@ -1,11 +1,14 @@
 import styled from "styled-components"
 import Task from "../Components/Task";
 import Layout from "./Layout";
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useContext, useEffect, useRef, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import ThreeDots from "../Components/icons/ThreeDots"
 import Trash from "../Components/icons/Trash";
 import PencilSquare from "../Components/icons/PencilSquare";
+import { CollectionContext } from "../Context/CollectionContext";
+import { TaskContext } from "../Context/TaskContext";
+import Modal from "../Components/Modal";
 
 const StyledSingleCollection = styled.div`
   margin-top: 50px;
@@ -35,55 +38,52 @@ const StyledSingleCollection = styled.div`
         font-weight: 500;
         background-color: inherit;
       }
-      .delete-coll-btn{
-        border: none;
-        background-color: inherit;
-        width: fit-content;
-        display: flex;
-        /* background-color: red; */
-        padding-top: 3px;
-        cursor: pointer;
-        svg{
-          fill: var(--text-primary);
-          height: 23px;
-          width: 23px;
-        }
+      .utility{
         position: relative;
+
+        .utility-btn{
+          border: none;
+          background-color: inherit;
+          width: fit-content;
+          display: flex;
+          padding-top: 3px;
+          position: relative;
+          cursor: pointer;
+          svg{
+            fill: var(--text-primary);
+            height: 23px;
+            width: 23px;
+          }
+        }
+
         .options{
           position: absolute;
           width: fit-content;
-          top: 28px;
+          top: 29px;
           right: 10px;
-          display: none;
+          border-radius: 2px;
           cursor: pointer;
-          background-color: red;
           box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-          
-          li{
-            background-color: var(--background-secondary);
-            font-size: 16px;
-            color: var(--text-secondary);
-            list-style: none;
-            padding: 4px 6px;
-            padding-right: 30px;
-            text-align: left;
-            display: flex;
-            align-items: center;
-            transition: .2s ease;
-            
-            svg{
-              height: 16px;
-              width: 16px;
-              margin-right: 10px;
-              fill: var(--text-secondary);
+
+          .options-list {
+            li{
+              background-color: var(--background-secondary);
+              list-style: none;
+              padding: 8px 12px;
+              display: flex;
+              align-items: center;
+              margin-top: 1px;
+              color: var(--text-secondary);
+
+              svg{
+                fill: var(--text-secondary);
+                margin-right: 10px;
+              }
             }
-            &:hover{
-              background-color: var(--hover);
-            }
+          }
           }
         }
       }
-    }
 
     .input-box{
       /* font-size: 20px; */
@@ -129,13 +129,19 @@ const StyledSingleCollection = styled.div`
   }
 
   .task-container{
-    /* background-color: yellow; */
     width: 600px;
     height: calc(100vh - 215px);
     padding-bottom: 20px;
     overflow-x: hidden;
     overflow-y: auto;
     transition: all .3s ease-in;
+    .msg{
+      color: var(--text-primary);
+      text-align: center;
+      font-weight: 300;
+      position: relative;
+      top: calc(50% - 50px);
+    }
 
     &::-webkit-scrollbar {
       width: 2px;
@@ -148,6 +154,61 @@ const StyledSingleCollection = styled.div`
         background: #9a9aa8;
         /* background: #1d1e26; */
         border-radius: 100px;
+    }
+  }
+
+  .modal-inner-container{
+    background-color: white;
+    padding: 20px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    border-radius: 2px;
+
+    .heading{
+      color: var(--pink);
+      margin-bottom: 20px;
+    }
+
+    .rename-collection-form{
+      width: 300px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+  
+      input {
+        height: 40px;
+        width: 100%;
+        /* padding: 0 14px; */
+        background-color: inherit;
+        font-size: 16px;
+        border: none;
+        /* color: var(--text-primary); */
+        border-bottom: 2px solid #e756b5;
+        /* border-bottom: 2px solid black; */
+        /* border-radius: 10px; */
+        :focus{
+          outline: none;
+          border-bottom: 3px solid #e756b5;
+          caret-color: var(--pink);
+        }
+      }
+  
+      .buttons{
+        display: flex;
+        justify-content: end;
+        width: 100%;
+        gap: 5px;
+        margin-top: 20px;
+  
+        button{
+          border: none;
+          padding: 5px 10px;
+          color: var(--pink);
+          font-weight: 500;
+          background-color: inherit;
+          cursor: pointer;
+        }
+      }
     }
   }
 
@@ -190,28 +251,121 @@ const StyledSingleCollection = styled.div`
 
 const SingleCollection = () => {
 
-  const [collectionName, setCollectionName] = useState('');
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const formData = {};
-    formData[e.target[1].getAttribute("name")] = e.target[1].value;
-    formData.collection_name = collectionName;
-    e.target[1].value = "";
-
-    console.log(formData)
-  }
-
-  // useEffect(() => {
-  //   const extractedPathArr = window.location.pathname.split('/');
-  //   setCollectionName(extractedPathArr[2])
-  // }, [collectionName])
-
+  const token = localStorage.getItem('accessToken');
 
   const { collection } = useParams();
+
   useEffect(() => {
     setCollectionName(collection);
   }, [collection])
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const [collectionName, setCollectionName] = useState('');
+  const [isOptionsOpen, setIsOptionsOpen] = useState(false);
+  const [currentCollectionID, setCurrentCollectioinID] = useState('');
+  const [currentCollectionTotalTasks, setCurrentCollectioinTotalTasks] = useState(null);
+
+  const optionsRef = useRef();
+
+  const { tasks, loadingTasks, fetchTasks } = useContext(TaskContext);
+  const { collections, fetchCollections } = useContext(CollectionContext);
+
+
+  const currentCollection = collections?.filter((obj) => obj.collection_name === collectionName);
+
+  const filteredTasks = tasks?.filter((obj) => obj.collection_id === currentCollectionID);
+  // console.log(filteredTasks)
+
+  useEffect(() => {
+    if (currentCollection.length !== 0) {
+      setCurrentCollectioinID(currentCollection[0]._id);
+      setCurrentCollectioinTotalTasks(currentCollection[0].total_tasks);
+    }
+  }, [currentCollection])
+
+  const handler = (e) => {
+    if (!optionsRef.current.contains(e.target)) {
+      setIsOptionsOpen(false);
+    }
+  }
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handler)
+
+    return () => {
+      document.removeEventListener('mousedown', handler)
+    }
+
+  }, [])
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const UpdateCollection = async (options) => {
+
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/collections/${currentCollectionID}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'authToken': token
+        },
+        body: JSON.stringify(options)
+      });
+
+      if (response.ok) {
+        await fetchCollections();
+        setIsSubmitting(false);
+      }
+
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  // console.log(collections.filter((obj) => obj.collection_id === currentCollectionID))
+  // console.log(collection)
+  const handleSubmit = async (e) => {
+
+    e.preventDefault();
+    const formData = {};
+    formData[e.target[1].getAttribute("name")] = e.target[1].value;
+    formData.collection_id = currentCollectionID;
+    e.target[1].value = "";
+    console.log(formData)
+
+    if (isSubmitting) {
+      console.log("Wait");
+      return
+    }
+
+    try {
+      setIsSubmitting(true);
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/tasks`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'authToken': token
+        },
+        body: JSON.stringify(formData)
+      });
+      if (response.ok) {
+        const data = await response.json();
+        tasks.push(data);
+
+        await fetchCollections();
+
+        UpdateCollection({ total_tasks: currentCollectionTotalTasks + 1 });
+
+      }
+
+    } catch (error) {
+      console.log(error);
+    }
+
+  }
 
   const capitalize = (str) => {
     if (typeof str !== 'string') {
@@ -220,51 +374,119 @@ const SingleCollection = () => {
     return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
   }
 
+  const handleDeleteCollection = async () => {
+    if (!confirm("Delete the collection?\nAll tasks in this collection will be deleted.")) {
+      setIsOptionsOpen(false)
+      return
+    }
+    setIsOptionsOpen(false);
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/collections/${currentCollectionID}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'authToken': token
+        },
+      });
+      if (response.ok) {
+        await fetchCollections();
+        navigate('/collections', { replace: true });
+
+      }
+
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  const handleRenameCollection = async (e) => {
+    e.preventDefault();
+    const formData = {};
+    formData[e.target[0].getAttribute("name")] = (e.target[0].value).toLowerCase();
+    e.target[0].value = "";
+    // console.log(formData)
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/collections/${currentCollectionID}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'authToken': token
+        },
+        body: JSON.stringify(formData)
+      });
+      if (response.ok) {
+        const data = await response.json();
+        await fetchCollections();
+        navigate(`/collections/${data.collection_name}`, { replace: true });
+      }
+
+    } catch (error) {
+      console.log(error);
+    }
+    setIsModalOpen(false);
+  }
+
+  const inputRenameRef = useRef();
+  const [curColName, setCurColName] = useState(collection);
+  const handleInputChange = (e) => {
+    inputRenameRef.current.focus()
+    setCurColName(e.target.value);
+  }
+
   return (
     <Layout>
       <StyledSingleCollection>
         <header>
           <div className="heading">
             <h1 className="collection-heading">{capitalize(collectionName).slice(0, 40)}{collectionName.length > 40 && "..."}</h1>
-            <button className="delete-coll-btn">
-              <div onClick={e => {
-                if(document.querySelector(".options").style.display == "none")
-                  document.querySelector(".options").style.display = "block";
-                else
-                  document.querySelector(".options").style.display = "none";
-              }}>
-                <ThreeDots />
+            {collectionName !== "default" &&
+
+              <div className="utility" ref={optionsRef}>
+                <button className="utility-btn" onClick={() => setIsOptionsOpen(!isOptionsOpen)}>
+                  <ThreeDots />
+                </button>
+
+                <div className="options">
+                  {
+                    isOptionsOpen && (
+                      <div className="options-list">
+
+                        <li onClick={handleDeleteCollection}><Trash /> Delete</li>
+                        <li onClick={() => setIsModalOpen(true)}><PencilSquare />Rename</li>
+
+                      </div>
+                    )
+                  }
+                </div>
               </div>
-              <div className="options" /*onMouseLeave={e => document.querySelector(".options").style.display = "none"}*/>
-                <li><Trash /> Delete</li>
-                <li><PencilSquare/>Rename</li>
-              </div>
-            </button>
+            }
           </div>
           <form className="input-box" onSubmit={handleSubmit}>
-            <button type="submit">+</button><input type="text" name="task" placeholder="Add a task" autoComplete="off" required/>
+            <button type="submit">+</button><input type="text" name="task" placeholder="Add a task" autoComplete="off" required />
           </form>
         </header>
         <div className="task-container">
-          <Task name={"The quick brown fox jumps over a lazy dog.The quick brown fox jumps over a lazy dog.The quick brown fox jumps over a lazy dog."} />
-          <Task name={"Single Task to do 1"}/>
-          <Task name={"Single Task to do 2"}/>
-          <Task name={"Single Task to do 3"}/>
-          <Task name={"Single Task to do 4"}/>
-          <Task name={"Single Task to do 5"}/>
-          <Task name={"Single Task to do 6"}/>
-          <Task name={"Single Task to do 7"}/>
-          <Task name={"Single Task to do 8"}/>
-          <Task name={"Single Task to do 9"}/>
-          <Task name={"Single Task to do 10"}/>
-          <Task name={"Single Task to do 11"}/>
-          <Task name={"Single Task to do 12"}/>
-          <Task name={"Single Task to do 13"}/>
-          <Task name={"Single Task to do 14"}/>
-          <Task name={"Single Task to do 15"}/>
-          <Task name={"Single Task to do 16"}/>
-          <Task name={"Single Task to do 17"}/>
+          {loadingTasks && <h2 className="msg">Loading Tasks...</h2>}
+          {!loadingTasks && filteredTasks.length === 0 && <h2 className="msg">No tasks in this collection.</h2>}
+          {
+            filteredTasks
+              .map(({ _id, user, collection_id, task, active }, idx) => {
+                return (<Task _id={_id} collection_id={collection_id} user={user} name={task} isActive={active} key={_id} showCollectionName={false} />)
+              })
+          }
         </div>
+        <Modal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen}>
+          <div className="modal-inner-container">
+            <h2 className="heading">Rename Collection</h2>
+            <form className="rename-collection-form" onSubmit={handleRenameCollection}>
+              <input onFocus={(e) => e.target.select()} onChange={handleInputChange} autoComplete="off" type="text" name="collection_name" required ref={inputRenameRef} value={curColName} />
+              <div className="buttons">
+                <button type="button" onClick={() => { setIsModalOpen(false); setCurColName(collection) }}>CANCEL</button>
+                <button type="submit">DONE</button>
+              </div>
+            </form>
+          </div>
+        </Modal>
+
       </StyledSingleCollection>
     </Layout>
   )

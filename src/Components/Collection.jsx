@@ -1,12 +1,7 @@
 import styled from "styled-components"
-import School from "./icons/School";
-import Personal from "./icons/Personal";
-import Design from "./icons/Design";
-import Groceries from "./icons/Groceries";
-import DefaultCollection from "./icons/DefaultCollection";
-import Birthday from "./icons/Birthday";
 import ProgressRing from "./ProgressRing";
 import { useNavigate } from "react-router-dom";
+import selectCollectionIcon from "../utils/SelectCollectionIcon";
 
 const StyledCollection = styled.div`
     background-color: var(--background-secondary);
@@ -57,35 +52,25 @@ const Collection = ({ name, total, done }) => {
 
     const navigate = useNavigate();
 
-    const Icon = () => {
-        switch (name.toLowerCase()) {
-            case "school":
-                return <School />;
-            case "personal":
-                return <Personal />;
-            case "design":
-                return <Design />;
-            case "groceries":
-                return <Groceries />;
-            case "birthday":
-                return <Birthday />;
-            default:
-                return <DefaultCollection />;
-        }
-    }
-
     const handleRedirect = () => {
         navigate(`/collections/${name.toLowerCase()}`);
     }
 
+    const capitalize = (str) => {
+        if (typeof str !== 'string') {
+            throw new TypeError('Input must be a string');
+        }
+        return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+    }
+
     return (
         <StyledCollection onClick={handleRedirect} id={name.toLowerCase()}>
-            <div className="icon"><Icon /></div>
+            <div className="icon">{selectCollectionIcon(name)}</div>
             <div className="details">
-                <div className="name">{name}</div>
+                <div className="name">{capitalize(name)}</div>
                 <div className="stats">
                     {
-                        (total == done) ? (<span>All {total} done!</span>) : (<span>{done}/{total} done</span>)
+                        total == 0 ? (<span>No tasks</span>) : (total == done) ? (<span>All {total} done!</span>) : (<span>{done}/{total} done</span>)
                     }
                     <span>
                         <ProgressRing name={name} total={total} done={done} />

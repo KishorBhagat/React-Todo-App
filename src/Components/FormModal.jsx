@@ -1,7 +1,9 @@
 import styled from "styled-components"
 import Collection from "./icons/Collection"
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
+import { CollectionContext } from "../Context/CollectionContext"
+import { TaskContext } from "../Context/TaskContext"
 
 const StyledFormModal = styled.div`
     position: fixed;
@@ -202,34 +204,13 @@ const FormModal = ({ isFormModalOpen, setIsFormModalOpen }) => {
     const [collectionName, setCollectionName] = useState('');
     const { collection } = useParams();
 
-    const collectionData = [
-        {
-            collection_name: "school",
-            _id: "1"
-        },
-        {
-            collection_name: "personal",
-            _id: "2"
-        },
-        {
-            collection_name: "design",
-            _id: "3"
-        },
-        {
-            collection_name: "groceries",
-            _id: "4"
-        },
-        {
-            collection_name: "birthday",
-            _id: "5"
-        },
-        {
-            collection_name: "default",
-            _id: "6"
-        },
-    ];
+    const { collections, fetchCollections } = useContext(CollectionContext);
+    const { tasks, fetchTasks } = useContext(TaskContext);
 
-    collectionData.sort((a, b) => {
+    const currentCollection = collections.filter((obj) => obj.collection_name === collectionName);
+    // console.log(currentCollection.length != 0)
+
+    collections.sort((a, b) => {
         const nameA = a.collection_name.toLowerCase();
         const nameB = b.collection_name.toLowerCase();
         if (nameA < nameB) {
@@ -248,29 +229,100 @@ const FormModal = ({ isFormModalOpen, setIsFormModalOpen }) => {
         return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
     }
 
-    const handleAddNewTask = (e) => {
+    const token = localStorage.getItem('accessToken');
+
+    const UpdateCollection = async (options) => {
+
+        await fetchCollections();
+
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/collections/${currentCollection[0]._id}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'authToken': token
+                },
+                body: JSON.stringify(options)
+            });
+            if (response.ok) {
+                await fetchCollections();
+            }
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const handleAddNewTask = async (e) => {
         e.preventDefault();
         const formData = {};
         formData[e.target[0].getAttribute("name")] = e.target[0].value;
+        // formData[e.target[1].getAttribute("name")] = currentCollection[0]._id;
         formData[e.target[1].getAttribute("name")] = e.target[1].value;
         e.target[0].value = "";
         e.target[1].value = "default";
         console.log(formData)
+
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/tasks`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'authToken': token
+                },
+                body: JSON.stringify(formData)
+            });
+            if (response.ok) {
+                const data = await response.json();
+                tasks.push(data);
+                await fetchCollections();
+                await fetchTasks();
+                UpdateCollection({ total_tasks: currentCollection[0].total_tasks + 1 });
+            }
+
+        } catch (error) {
+            console.log(error);
+        }
+
+
         setIsFormModalOpen(false);
     }
 
-    const handleAddNewCollection = (e) => {
+    const [newCollectionAdded, isNewCollectionAdded] = useState(null);
+
+    const handleAddNewCollection = async (e) => {
         e.preventDefault();
         const formCollectionData = {};
         formCollectionData[e.target[0].getAttribute("name")] = e.target[0].value;
-        // document.querySelector("#coll").value = e.target[0].value;
         e.target[0].value = "";
+
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/collections`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'authToken': token
+                },
+                body: JSON.stringify(formCollectionData)
+            });
+            if (response.ok) {
+                const data = await response.json();
+                collections.push(data);
+                // await fetchCollections();
+                document.querySelector("#coll").value = data?._id;
+
+            }
+
+        } catch (error) {
+            console.log(error);
+        }
+
         setIsModalOpen(false);
     }
 
     const handleCancleBtn = () => {
         setIsFormModalOpen(false);
-        document.querySelector("#coll").value = "default";
+        document.querySelector("#coll").value = collections?.filter((obj) => obj.collection_name === "default")[0]?._id;
     }
 
     const handleModal = () => {
@@ -282,7 +334,12 @@ const FormModal = ({ isFormModalOpen, setIsFormModalOpen }) => {
     }, [collection]);
 
     if (collectionName) {
-        document.querySelector("#coll").value = collectionName;
+        document.querySelector("#coll").value = currentCollection[0]?._id;
+    }
+    if (!collectionName) {
+        if (collections?.filter((obj) => obj.collection_name === "default").length !== 0) {
+            document.querySelector("#coll").value = collections?.filter((obj) => obj.collection_name === "default")[0]?._id;
+        }
     }
 
 
@@ -309,21 +366,15 @@ const FormModal = ({ isFormModalOpen, setIsFormModalOpen }) => {
                     <input type="text" name="task" autoComplete="off" placeholder="Enter task here" required />
                     <label htmlFor="">Add to Collection</label>
                     <div className="collection-options">
-                        <select name="collection_name" id="coll">
-                            <option value="default" >Default</option>
+                        <select name="collection_id" id="coll">
+                            {/* <option value="default" >Default</option> */}
                             {
-                                collectionData.map(({ collection_name, _id }, idx) => {
-                                    if(collection_name !== "default"){
-                                        return (<option value={collection_name} key={idx}>{capitalize(collection_name)}</option>)
-                                    }
+                                collections.map(({ collection_name, _id }, idx) => {
+                                    // if (collection_name !== "default") {
+                                    return (<option value={_id} key={idx}>{capitalize(collection_name)}</option>)
+                                    // }
                                 })
                             }
-                            {/* <option value="default" >Default</option>
-                            <option value="school">School</option>
-                            <option value="personal">Personal</option>
-                            <option value="design">Design</option>
-                            <option value="groceries">Groceries</option>
-                            <option value="birthday">Birthday</option> */}
                         </select>
                         <div onClick={handleModal}>
 

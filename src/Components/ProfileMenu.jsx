@@ -2,8 +2,12 @@ import styled from "styled-components"
 import Avatar from "./icons/Avatar"
 import Logout from "./icons/Logout"
 import Cross from "./icons/Cross"
-import ToggleButton from "./ToggleButton"
+import ToggleButton from "./ThemeToggleButton"
 import { useNavigate } from "react-router-dom"
+import { useDispatch } from "react-redux"
+import { logout } from "../store/slices/authSlice"
+import { UserContext } from "../Context/UserContext"
+import { useContext, useEffect } from "react"
 
 const StyledProfileMenu = styled.div`
     background-color: transparent;
@@ -163,9 +167,20 @@ const ProfileMenu = () => {
 
     const navigate = useNavigate();
 
-    const handleLogout = (e) => {
+    const dispatch = useDispatch();
+
+    const handleLogout = async (e) => {
         e.preventDefault();
-        navigate("/", {replace: true})
+        try {
+            const logoutRes = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/auth/logout`, {
+                method: 'POST',
+                credentials: "include",
+                // withCredentials: true,
+            });
+        } catch (error) {
+            console.log(error);
+        }
+        dispatch(logout());        
     }
 
     const handleCloseProfileMenu = () => {
@@ -174,16 +189,18 @@ const ProfileMenu = () => {
         document.body.style.overflow = "visible";
     }
 
+    const {user, isUser} = useContext(UserContext);
+
   return (
     <StyledProfileMenu className="profile-menu" onClick={handleCloseProfileMenu}>
     <div className="profile-container" onClick={e => e.stopPropagation()}>
         <div className="profile">
             <span className="close-btn" onClick={handleCloseProfileMenu}><Cross /></span>
             <span className="toggle-btn"><ToggleButton /></span>
-            <div className="no-img">{"kishor".charAt(0).toUpperCase()}</div>
+            <div className="no-img">{user.username?.charAt(0).toUpperCase()}</div>
             {/* <div className="profile-img"></div> */}
-            <p className="name">Kishor Bhagat</p>
-            <p className="email">kishorebhagat663@gmail.com</p>
+            <p className="name">{user.username}</p>
+            <p className="email">{user.email}</p>
             {/* <button className="edit">Edit</button> */}
         </div>
         <ul>

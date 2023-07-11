@@ -2,8 +2,11 @@ import styled from "styled-components"
 import Google from "../Components/icons/Google";
 import Facebook from "../Components/icons/Facebook";
 import Spinner from "../Components/icons/Spinner";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { signup } from "../store/slices/authSlice";
+import { toast } from "react-toastify";
 
 const StyledSignup = styled.section`
     height: 100vh;
@@ -123,42 +126,110 @@ const StyledSignup = styled.section`
 const Signup = () => {
 
     const [isPending, setIsPending] = useState(false);
+    const [isFormSubmitted, setIsFormSubmitted] = useState(false);
+
+    const initialFormState = {
+        username: '',
+        email: '',
+        password: '',
+        confirmPassword: ''
+    }
+
+    const [formData, setFormData] = useState(initialFormState);
+
+    const isLoading = useSelector((state) => {
+        return state.auth.isLoading;
+    })
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData((prevData) => ({
+            ...prevData,
+            [name]: value,
+        }));
+    }
+
+    const dispatch = useDispatch();
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const formData = {};
-        formData[e.target[0].getAttribute("name")] = e.target[0].value;
-        formData[e.target[1].getAttribute("name")] = e.target[1].value;
-        formData[e.target[2].getAttribute("name")] = e.target[2].value;
-        formData[e.target[3].getAttribute("name")] = e.target[3].value;
-        // e.target[0].value = "";
-
-        console.log(formData)
+        dispatch(signup(formData))
+            .unwrap()
+            .then((res) => {
+                if(res.error){
+                    toast.error(res.error.message, {position: toast.POSITION.TOP_CENTER});
+                }
+                else {
+                    console.log(res.user);
+                    toast.info("A verification link is sent to your email.\nPlease check your email.", {
+                        position: toast.POSITION.TOP_CENTER,
+                        autoClose: false
+                    });
+                    setIsFormSubmitted(true);
+                }
+            })
+            .catch((error) => {
+                console.log(error)
+            });
     }
 
-  return (
-    <StyledSignup>
-        <div className="form-container">
-            <h1>Sign up.</h1>
-            <form className="form" onSubmit={(e) => handleSubmit(e)}>
-                <div className="auth-btn"><Google />&nbsp;&nbsp;Continue with Google</div>
-                <div className="auth-btn"><Facebook />&nbsp;&nbsp;Continue with Facebook</div>
-                <span>or</span>
-                <input type="text" name="username" placeholder="Username" required/>
-                <input type="email" name="email" placeholder="Email" required/>
-                <input type="password" name="password" placeholder="Password" required/>
-                <input type="password" name="confirmPassword" placeholder="Re-enter password" required/>
-                {
-                    isPending ? 
-                    <button type="submit" className="btn" disabled><Spinner /></button>
-                    :
-                    <button type="submit" className="btn">Sign up</button>
-                }
-            </form>
-            <p><span>Already have an account?</span> <Link to="/login">Log in</Link></p>
-        </div>
-    </StyledSignup>
-  )
+    useEffect(() => {
+        if (isFormSubmitted) {
+          setFormData(initialFormState);
+          setIsFormSubmitted(false);
+        }
+      }, [isFormSubmitted]);
+
+
+
+    return (
+        <StyledSignup>
+            <div className="form-container">
+                <h1>Sign up.</h1>
+                <form className="form" onSubmit={(e) => handleSubmit(e)}>
+                    <div className="auth-btn"><Google />&nbsp;&nbsp;Continue with Google</div>
+                    <div className="auth-btn"><Facebook />&nbsp;&nbsp;Continue with Facebook</div>
+                    <span>or</span>
+                    <input
+                        type="text"
+                        name="username"
+                        onChange={handleInputChange}
+                        value={formData.username}
+                        placeholder="Name"
+                        required
+                    />
+                    <input type="email"
+                        name="email"
+                        placeholder="Email"
+                        onChange={handleInputChange}
+                        value={formData.email}
+                        required
+                    />
+                    <input type="password"
+                        name="password"
+                        onChange={handleInputChange}
+                        value={formData.password}
+                        placeholder="Password"
+                        required
+                    />
+                    <input type="password"
+                        name="confirmPassword"
+                        onChange={handleInputChange}
+                        value={formData.confirmPassword}
+                        placeholder="Re-enter password"
+                        required
+                    />
+                    {
+                        isLoading ?
+                            <button type="submit" className="btn" disabled><Spinner /></button>
+                            :
+                            <button type="submit" className="btn">Sign up</button>
+                    }
+                </form>
+                <p><span>Already have an account?</span> <Link to="/login">Log in</Link></p>
+            </div>
+        </StyledSignup>
+    )
 }
 
 export default Signup

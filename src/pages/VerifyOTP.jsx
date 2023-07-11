@@ -1,9 +1,9 @@
 import styled from "styled-components"
-import Google from "../Components/icons/Google";
-import Facebook from "../Components/icons/Facebook";
 import Spinner from "../Components/icons/Spinner";
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { verifyResetPassword } from "../store/slices/authSlice";
+import { toast } from "react-toastify";
 
 const StyledVerifyOTP = styled.section`
     height: 100vh;
@@ -60,7 +60,11 @@ const StyledVerifyOTP = styled.section`
             }
         }
 
-        
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
 
         button[type=submit]{
             height: 46px;
@@ -122,35 +126,59 @@ const StyledVerifyOTP = styled.section`
 
 const VerifyOTP = () => {
 
+    const resetToken = localStorage.getItem('resetToken');
+    let email = null;
+    if (resetToken) {
+        email = JSON.parse(atob(resetToken?.split('.')[1])).user.email;
+    }
+
+    const dispatch = useDispatch();
+
+    const isLoading = useSelector((state) => {
+        return state.auth.isLoading;
+    })
+
+    const navigate = useNavigate();
+
     const handleSubmit = (e) => {
         e.preventDefault();
         const formData = {};
         formData[e.target[0].getAttribute("name")] = e.target[0].value;
         // e.target[0].value = "";
 
-        console.log(formData)
+        dispatch(verifyResetPassword({ formData, resetToken }))
+            .unwrap()
+            .then((res) => {
+                if (res.error) {
+                    console.log(res)
+                    toast.error(res.error.message, { position: toast.POSITION.TOP_CENTER });
+                }
+                else {
+                    localStorage.setItem('resetToken', (res.token));
+                    navigate('/resetpassword');
+                }
+            })
+
     }
 
-    const [isPending, setIsPending] = useState(false);
 
-  return (
-    <StyledVerifyOTP>
-        <div className="form-container">
-            <h1>Verification required.</h1>
-            <p className="desc">To continue, complete this verification step. We've sent an OTP to the email {"example@gmail.com"}. Please enter it below to complete verification.</p>
-            <form className="form" onSubmit={(e) => handleSubmit(e)}>
-                <input type="text" name="resetCode" placeholder="Enter OTP" required/>
-                <small className="error-message">Error message goes here</small>
-                {
-                    isPending ? 
-                    <button type="submit" className="btn" disabled><Spinner /></button>
-                    :
-                    <button type="submit" className="btn">Continue</button>
-                }
-            </form>
-        </div>
-    </StyledVerifyOTP>
-  )
+    return (
+        <StyledVerifyOTP>
+            <div className="form-container">
+                <h1>Verification required.</h1>
+                <p className="desc">To continue, complete this verification step. We've sent an OTP to the email {email}. Please enter it below to complete verification.</p>
+                <form className="form" onSubmit={(e) => handleSubmit(e)}>
+                    <input type="number" name="resetCode" placeholder="Enter OTP" required />
+                    {
+                        isLoading ?
+                            <button type="submit" className="btn" disabled><Spinner /></button>
+                            :
+                            <button type="submit" className="btn">Continue</button>
+                    }
+                </form>
+            </div>
+        </StyledVerifyOTP>
+    )
 }
 
 export default VerifyOTP

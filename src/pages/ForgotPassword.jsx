@@ -1,15 +1,14 @@
 import styled from "styled-components"
-import Google from "../Components/icons/Google";
-import Facebook from "../Components/icons/Facebook";
 import Spinner from "../Components/icons/Spinner";
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import { requestResetPassword } from "../store/slices/authSlice";
 
 const StyledForgotPassword = styled.section`
     height: 100vh;
     display: flex;
     justify-content: center;
-    /* align-items: center; */
     background-color: var(--background-primary);
     
     .form-container{
@@ -115,35 +114,57 @@ const StyledForgotPassword = styled.section`
 
 const ForgotPassword = () => {
 
-    const handleSubmit = (e) => {
+    const dispatch = useDispatch();
+
+    const isLoading = useSelector((state) => {
+        return state.auth.isLoading;
+    })
+
+    const navigate = useNavigate();
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const formData = {};
         formData[e.target[0].getAttribute("name")] = e.target[0].value;
         // e.target[0].value = "";
 
-        console.log(formData)
+        dispatch(requestResetPassword(formData))
+            .unwrap()
+            .then((res) => {
+                if (res.error) {
+                    toast.error(res.error.message, { position: toast.POSITION.TOP_CENTER });
+                }
+                else {
+                    localStorage.setItem('resetToken', (res.token));
+                    toast.info("A security code is sent to your email. Please check your email.", {
+                        position: toast.POSITION.TOP_CENTER,
+                        onClose: () => {
+                            navigate('/forgotpassword/verify')
+                        }
+                    });
+                }
+            })
+
     }
 
-    const [isPending, setIsPending] = useState(false);
-
-  return (
-    <StyledForgotPassword>
-        <div className="form-container">
-            <h1>Forgot Password?</h1>
-            <p className="desc">Enter the email address associated with your account. A verification OTP will be sent to this email address.</p>
-            <form className="form" onSubmit={(e) => handleSubmit(e)}>
-                <input type="email" name="email" placeholder="Email" required/>
-                {
-                    isPending ? 
-                    <button type="submit" className="btn" disabled><Spinner /></button>
-                    :
-                    <button type="submit" className="btn">Continue</button>
-                }
-            </form>
-            <p><span>Go back to </span> <Link to="/login">Login</Link><span> Page.</span></p>
-        </div>
-    </StyledForgotPassword>
-  )
+    return (
+        <StyledForgotPassword>
+            <div className="form-container">
+                <h1>Forgot Password?</h1>
+                <p className="desc">Enter the email address associated with your account. A verification OTP will be sent to this email address.</p>
+                <form className="form" onSubmit={(e) => handleSubmit(e)}>
+                    <input type="email" name="email" placeholder="Email" required />
+                    {
+                        isLoading ?
+                            <button type="submit" className="btn" disabled><Spinner /></button>
+                            :
+                            <button type="submit" className="btn">Continue</button>
+                    }
+                </form>
+                <p><span>Go back to </span> <Link to="/login">Login</Link><span> Page.</span></p>
+            </div>
+        </StyledForgotPassword>
+    )
 }
 
 export default ForgotPassword
