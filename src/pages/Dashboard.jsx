@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { UserContext } from "../Context/UserContext";
 import { TaskContext } from "../Context/TaskContext";
+import { SearchContext } from "../Context/SearchContext";
 
 const StyledDashboard = styled.div`
   margin-top: 50px;
@@ -160,9 +161,10 @@ const Dashboard = () => {
   const data = useSelector((state) => {
     return state.data;
   })
-  // console.log(data)
   const { user } = useContext(UserContext);
   const { tasks, loadingTasks } = useContext(TaskContext);
+  const { searchTaskResult } = useContext(SearchContext);
+  // console.log(tasks.length)
 
   return (
     <Layout>
@@ -181,10 +183,11 @@ const Dashboard = () => {
           {loadingTasks && <h2 className="msg">Loading Tasks...</h2>}
           {!loadingTasks && tasks.length === 0 && <h2 className="msg">No tasks to show.<br/>Create your first task.</h2>}
           {
-            tasks.map(({ _id, user, collection_id, task, active }, idx) => {
+            searchTaskResult.map(({ _id, user, collection_id, task, active }, idx) => {
               return (<Task _id={_id} user={user} name={task} collection_id={collection_id} isActive={active} key={_id} showCollectionName={true} />)
             })
           }
+          {searchTaskResult.length === 0 && <h2 className="msg">No results</h2>}
         </div>
       </StyledDashboard>
     </Layout>

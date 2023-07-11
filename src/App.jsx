@@ -116,7 +116,7 @@ function App() {
           <Route exact path="/forgotpassword" element={<ForgotPassword />} />
           <Route exact path="/forgotpassword/verify" element={<VerifyOTP />} />
           <Route exact path="/resetpassword" element={<ResetPassword />} />
-          <Route path="/error" element={<Error404 />} />
+          <Route path="*" element={<Error404 />} />
         </Routes>
       </Router>
       <ToastContainer />

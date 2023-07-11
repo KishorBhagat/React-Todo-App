@@ -9,6 +9,7 @@ import PencilSquare from "../Components/icons/PencilSquare";
 import { CollectionContext } from "../Context/CollectionContext";
 import { TaskContext } from "../Context/TaskContext";
 import Modal from "../Components/Modal";
+import { SearchContext } from "../Context/SearchContext";
 
 const StyledSingleCollection = styled.div`
   margin-top: 50px;
@@ -62,6 +63,7 @@ const StyledSingleCollection = styled.div`
           top: 29px;
           right: 10px;
           border-radius: 2px;
+          z-index: 1;
           cursor: pointer;
           box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 
@@ -272,11 +274,12 @@ const SingleCollection = () => {
 
   const { tasks, loadingTasks, fetchTasks } = useContext(TaskContext);
   const { collections, fetchCollections } = useContext(CollectionContext);
+  const { searchTaskResult } = useContext(SearchContext);
 
 
   const currentCollection = collections?.filter((obj) => obj.collection_name === collectionName);
 
-  const filteredTasks = tasks?.filter((obj) => obj.collection_id === currentCollectionID);
+  const filteredTasks = searchTaskResult?.filter((obj) => obj.collection_id === currentCollectionID);
   // console.log(filteredTasks)
 
   useEffect(() => {
@@ -287,7 +290,7 @@ const SingleCollection = () => {
   }, [currentCollection])
 
   const handler = (e) => {
-    if (!optionsRef.current.contains(e.target)) {
+    if (!optionsRef.current?.contains(e.target)) {
       setIsOptionsOpen(false);
     }
   }

@@ -6,6 +6,7 @@ import { CollectionContext } from "../Context/CollectionContext";
 import { TaskContext } from "../Context/TaskContext";
 import PencilSquare from "./icons/PencilSquare";
 import Modal from "./Modal";
+import { SearchContext } from "../Context/SearchContext";
 
 const StyledTask = styled.div`
     background-color: var(--background-secondary);
@@ -78,6 +79,10 @@ const StyledTask = styled.div`
                 background-color: inherit;
                 font-size: 16px;
                 color: var(--text-tertiary);
+
+                .highlight{
+                    background-color: #d684b9;
+                }
             }
             span{
                 background-color: inherit;
@@ -275,6 +280,9 @@ const Task = ({ _id, name, user, collection_id, isActive, showCollectionName }) 
                     'authToken': token,
                 },
             });
+            if(response.ok){
+                await fetchTasks();
+            }
 
         } catch (error) {
             console.log(error);
@@ -340,43 +348,52 @@ const Task = ({ _id, name, user, collection_id, isActive, showCollectionName }) 
         setCurTaskName(e.target.value);
     }
 
+    const { searchValue } = useContext(SearchContext);
+
+    const highlightText = (text) => {
+        const regex = new RegExp(searchValue, 'gi');
+        return text.replace(regex, (match) => `<label class="highlight">${match}</label>`);
+    }
+
     return (
         <>
-        
-        <StyledTask ref={taskRef}>
-            <div className="left">
-                <div className="check-box">
-                    <input type="checkbox" name="done" id={"done-checkbox"} onChange={(e) => handleOnCheck(e)} ref={checkRef} />
-                </div>
-                <div className="label">
-                    <label ref={labelRef}>{name}</label>
-                    {
-                        showCollectionName && collectionName && collectionName !== "default" && (<span style={{}}>{capitalize(collectionName)}</span>)
-                    }
 
+            <StyledTask ref={taskRef}>
+                <div className="left">
+                    <div className="check-box">
+                        <input type="checkbox" name="done" id={"done-checkbox"} onChange={(e) => handleOnCheck(e)} ref={checkRef} />
+                    </div>
+                    <div className="label">
+                        <label ref={labelRef} dangerouslySetInnerHTML={{ __html: highlightText(name) }}>
+                            {/* {name} */}
+                        </label>
+                        {
+                            showCollectionName && collectionName && collectionName !== "default" && (<span style={{}}>{capitalize(collectionName)}</span>)
+                        }
+
+                    </div>
                 </div>
-            </div>
-            <div className="icons-btn">
-                <button className="rename-btn" onClick={() => setIsModalOpen(true)}><PencilSquare /></button>
-                <button ref={deleteRef} className="delete-btn" onClick={handleDelete}><Trash /></button>
-            </div>
-            
-            <audio ref={audioPlayer} src={NotificationSound} />
-        </StyledTask>
-        <StyledModal>
-        <Modal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} refInput={inputRenameTaskRef} refInputValue={name}>
-                <div className="modal-inner-container">
-                    <h2 className="heading">Rename Task</h2>
-                    <form className="rename-collection-form" onSubmit={handleRenameCollection}>
-                        <input onFocus={(e) => e.target.select()}
-                            onChange={handleInputChange} autoComplete="off" type="text" name="task" required ref={inputRenameTaskRef} value={curTaskName} />
-                        <div className="buttons">
-                            <button type="button" onClick={() => { setIsModalOpen(false); setCurTaskName(name) }}>CANCEL</button>
-                            <button type="submit">DONE</button>
-                        </div>
-                    </form>
+                <div className="icons-btn">
+                    <button className="rename-btn" onClick={() => setIsModalOpen(true)}><PencilSquare /></button>
+                    <button ref={deleteRef} className="delete-btn" onClick={handleDelete}><Trash /></button>
                 </div>
-            </Modal>
+
+                <audio ref={audioPlayer} src={NotificationSound} />
+            </StyledTask>
+            <StyledModal>
+                <Modal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} refInput={inputRenameTaskRef} refInputValue={name}>
+                    <div className="modal-inner-container">
+                        <h2 className="heading">Rename Task</h2>
+                        <form className="rename-collection-form" onSubmit={handleRenameCollection}>
+                            <input onFocus={(e) => e.target.select()}
+                                onChange={handleInputChange} autoComplete="off" type="text" name="task" required ref={inputRenameTaskRef} value={curTaskName} />
+                            <div className="buttons">
+                                <button type="button" onClick={() => { setIsModalOpen(false); setCurTaskName(name) }}>CANCEL</button>
+                                <button type="submit">DONE</button>
+                            </div>
+                        </form>
+                    </div>
+                </Modal>
             </StyledModal>
         </>
     )

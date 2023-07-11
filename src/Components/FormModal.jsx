@@ -1,6 +1,6 @@
 import styled from "styled-components"
 import Collection from "./icons/Collection"
-import { useContext, useEffect, useState } from "react"
+import { useContext, useEffect, useRef, useState } from "react"
 import { useParams } from "react-router-dom"
 import { CollectionContext } from "../Context/CollectionContext"
 import { TaskContext } from "../Context/TaskContext"
@@ -333,15 +333,18 @@ const FormModal = ({ isFormModalOpen, setIsFormModalOpen }) => {
         setCollectionName(collection);
     }, [collection]);
 
-    if (collectionName) {
-        document.querySelector("#coll").value = currentCollection[0]?._id;
-    }
-    if (!collectionName) {
-        if (collections?.filter((obj) => obj.collection_name === "default").length !== 0) {
-            document.querySelector("#coll").value = collections?.filter((obj) => obj.collection_name === "default")[0]?._id;
+    const selectRef = useRef();
+    
+    useEffect(() => {
+        if (collectionName) {
+            document.querySelector("#coll").value = currentCollection[0]?._id;
         }
-    }
-
+        else {
+            if (collections?.filter((obj) => obj.collection_name === "default").length !== 0) {
+                selectRef.current.value = collections?.filter((obj) => obj.collection_name === "default")[0]?._id;
+            }
+        }
+    }, [collectionName])
 
     return (
         <StyledFormModal className="overlay" style={{ display: `${isFormModalOpen ? "block" : "none"}` }} onClick={() => { setIsFormModalOpen(false); setIsModalOpen(false) }}>
@@ -350,7 +353,7 @@ const FormModal = ({ isFormModalOpen, setIsFormModalOpen }) => {
                 <div className="container">
                     <h2 className="heading">New Collection</h2>
                     <form className="add-collection-form" onSubmit={handleAddNewCollection}>
-                        <input autoComplete="off" type="text" name="collection_name" placeholder="Enter collection name" required />
+                        <input autoFocus={true} autoComplete="off" type="text" name="collection_name" placeholder="Enter collection name" required />
                         <div className="buttons">
                             <button type="button" onClick={() => setIsModalOpen(false)}>CANCEL</button>
                             <button type="submit">ADD</button>
@@ -363,10 +366,10 @@ const FormModal = ({ isFormModalOpen, setIsFormModalOpen }) => {
                 <h2 className="heading">Add new Task</h2>
                 <form action="" onSubmit={handleAddNewTask}>
                     <label htmlFor="">What is to be done?</label>
-                    <input type="text" name="task" autoComplete="off" placeholder="Enter task here" required />
+                    <input type="text" name="task" autoComplete="off" placeholder="Enter task here" autoFocus={true} required />
                     <label htmlFor="">Add to Collection</label>
                     <div className="collection-options">
-                        <select name="collection_id" id="coll">
+                        <select name="collection_id" id="coll" ref={selectRef}>
                             {/* <option value="default" >Default</option> */}
                             {
                                 collections.map(({ collection_name, _id }, idx) => {

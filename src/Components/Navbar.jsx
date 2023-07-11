@@ -11,6 +11,7 @@ import Collection from "./icons/Collection";
 import { useContext, useRef } from "react";
 import ToggleButton from "./ThemeToggleButton";
 import { UserContext } from "../Context/UserContext";
+import SearchInput from "./SearchInput";
 
 const StyledNavbar = styled.nav`
   position: fixed;
@@ -138,7 +139,6 @@ const Navbar = ({ isFormModalOpen, setIsFormModalOpen }) => {
 
   const { user } = useContext(UserContext);
 
-
   return (
     <StyledNavbar>
       <ul className="tabs">
@@ -148,8 +148,9 @@ const Navbar = ({ isFormModalOpen, setIsFormModalOpen }) => {
       </ul>
       <ul className="menus">
         <button className="add-btn" onClick={() => setIsFormModalOpen(true)}>+</button>
-        <button><Search /></button>
         <ToggleButton />
+        {/* <div className="search-input"><Search /><input type="text" onChange={handleSearch} /></div> */}
+        <SearchInput />
         <button onClick={showProfileMenu}>
           <div className="avatar">
             {user.username?.charAt(0).toUpperCase()}

@@ -4,6 +4,7 @@ import Layout from "./Layout";
 import Modal from "../Components/Modal";
 import { useContext, useEffect, useRef, useState } from "react";
 import { CollectionContext } from "../Context/CollectionContext";
+import { SearchContext } from "../Context/SearchContext";
 
 const StyledCollections = styled.div`
   margin-top: 50px;
@@ -195,6 +196,9 @@ const Collections = () => {
     }
   }, []);
 
+  const {searchValue, searchCollectionResult} = useContext(SearchContext);
+
+
   return (
     <Layout>
       <StyledCollections>
@@ -202,7 +206,7 @@ const Collections = () => {
           <div className="container">
             <h2 className="heading">New Collection</h2>
             <form className="add-collection-form" onSubmit={handleAddNewCollection}>
-                <input autoComplete="off" type="text" name="collection_name" placeholder="Enter collection name" required ref={inputRef}/>
+                <input autoFocus={true} autoComplete="off" type="text" name="collection_name" placeholder="Enter collection name" required ref={inputRef}/>
                 <div className="buttons">
                   <button type="button" onClick={() => setIsModalOpen(false)}>CANCEL</button>
                   <button type="submit">ADD</button>
@@ -216,7 +220,7 @@ const Collections = () => {
         </header>
         <div className="collection-container">
           {
-            collections.map(({ collection_name, _id, total_tasks, total_finished }, id) => {
+            searchCollectionResult.map(({ collection_name, _id, total_tasks, total_finished }, id) => {
               return (
                 <Collection name={collection_name} total={total_tasks} done={total_finished} key={_id} />
               )

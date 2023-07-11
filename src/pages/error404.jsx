@@ -10,14 +10,29 @@ const StyledError404 = styled.div`
   height: 100vh;
   width: 100%;
   flex-direction: column;
+
+  h1{
+    font-size: 44px;
+    margin-bottom: 20px;
+  }
+  small{
+    color: var(--text-secondary);
+  }
+
+  button{
+    color: #fff;
+    margin-top: 30px;
+    cursor: pointer;
+  }
 `
 
 const Error404 = () => {
   return (
     <StyledError404>
-      <h1>Oops...</h1>
-      <h1>Page not found</h1>
-      <Link to='/'><button>Go back to home</button></Link>
+      <h1>404 - Looks like you're lost.</h1>
+      <small>May be this page used to exist or you just spell something wrong.</small>
+      <small>Chances are you spelled something wrong, so you can double check the URL?</small>
+      <Link to='/'><button className="btn">Return Home</button></Link>
     </StyledError404>
   )
 }

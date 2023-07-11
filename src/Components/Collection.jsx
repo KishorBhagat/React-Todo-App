@@ -2,6 +2,8 @@ import styled from "styled-components"
 import ProgressRing from "./ProgressRing";
 import { useNavigate } from "react-router-dom";
 import selectCollectionIcon from "../utils/SelectCollectionIcon";
+import { useContext } from "react";
+import { SearchContext } from "../Context/SearchContext";
 
 const StyledCollection = styled.div`
     background-color: var(--background-secondary);
@@ -34,6 +36,10 @@ const StyledCollection = styled.div`
             margin-bottom: 10px;
             white-space: nowrap;
             overflow: hidden;
+
+            .highlight{
+                background-color: #d684b9;
+            }
         }
         .stats{
             display: flex;
@@ -63,14 +69,23 @@ const Collection = ({ name, total, done }) => {
         return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
     }
 
+    const { searchValue } = useContext(SearchContext);
+
+    const highlightText = (text) => {
+        const regex = new RegExp(searchValue, 'gi');
+        return text.replace(regex, (match) => `<span class="highlight">${match}</span>`);
+    }
+
     return (
         <StyledCollection onClick={handleRedirect} id={name.toLowerCase()}>
             <div className="icon">{selectCollectionIcon(name)}</div>
             <div className="details">
-                <div className="name">{capitalize(name)}</div>
+                <div className="name" dangerouslySetInnerHTML={{ __html: highlightText(capitalize(name)) }}>
+                    {/* {capitalize(name)} */}
+                </div>
                 <div className="stats">
                     {
-                        total == 0 ? (<span>No tasks</span>) : (total == done) ? (<span>All {total} done!</span>) : (<span>{done}/{total} done</span>)
+                        total == 0 ? (<span>No task</span>) : (total == done) ? (<span>All {total} done!</span>) : (<span>{done}/{total} done</span>)
                     }
                     <span>
                         <ProgressRing name={name} total={total} done={done} />

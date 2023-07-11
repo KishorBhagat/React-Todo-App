@@ -6,6 +6,10 @@ import Google from "./icons/Google";
 import Dashboard from "./icons/Dashboard";
 import Collection from "./icons/Collection";
 import Person from "./icons/Person";
+import SearchInput from "./SearchInput";
+import { useContext, useState } from "react";
+import Cross from "./icons/Cross";
+import { SearchContext } from "../Context/SearchContext";
 // import HamburgerIcon from "./icons/HamburgerIcon";
 
 const StyledNavbarMobile = styled.nav`
@@ -77,7 +81,43 @@ const StyledNavbarMobile = styled.nav`
   }
 `;
 
-const NavbarMobile = ({setIsFormModalOpen}) => {
+const StyledSearchBar = styled.div`
+  position: absolute;
+  top: 0;
+  width: 100%;
+  display: none;
+  height: 0px;
+
+  
+  button{
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 30px;
+    width: 30px;
+    margin: 10px 10px;
+    background-color: transparent;
+    border: none;
+
+    svg{
+      fill: var(--text-secondary);
+      height: 100%;
+      width: 100%;
+    }
+  }
+
+  @media (max-width: 700px) {
+    transition: .5s ease;
+    display: block;
+    height: 50px;
+  }
+`
+
+const NavbarMobile = ({ setIsFormModalOpen }) => {
+
+  const [searchOpen, setSearchOpen] = useState(false);
+
+  const {setSearchValue} = useContext(SearchContext)
 
   const showProfileMenu = () => {
     let profileMenu = document.querySelector(".profile-menu");
@@ -87,16 +127,34 @@ const NavbarMobile = ({setIsFormModalOpen}) => {
     document.body.style.overflow = "hidden";
   }
 
+  const handleShowSearch = (e) => {
+    setSearchOpen(true);
+  }
+
+  const handleHideSearch = () => {
+    setSearchOpen(false);
+    setSearchValue('');
+  }
+
   return (
-    <StyledNavbarMobile>
-      <ul className="menus">
-        <li><NavLink to="/dashboard"><Dashboard /></NavLink></li>
-        <li><NavLink end to="/collections"><Collection /></NavLink></li>
-        <li><button className="add-btn" onClick={() => setIsFormModalOpen(true)}>+</button></li>
-        <li><button><Search /></button></li>
-        <li><button onClick={showProfileMenu} className="profile-menu-btn"><Person /></button></li>
-      </ul>
-    </StyledNavbarMobile>
+    <>
+      {
+        searchOpen &&
+        <StyledSearchBar className="Search-Bar">
+          <SearchInput autofocus={true}/>
+          <button onClick={handleHideSearch}><Cross /></button>
+        </StyledSearchBar>
+      }
+      <StyledNavbarMobile>
+        <ul className="menus">
+          <li><NavLink to="/dashboard"><Dashboard /></NavLink></li>
+          <li><NavLink end to="/collections"><Collection /></NavLink></li>
+          <li><button className="add-btn" onClick={() => setIsFormModalOpen(true)}>+</button></li>
+          <li><button onClick={handleShowSearch}><Search /></button></li>
+          <li><button onClick={showProfileMenu} className="profile-menu-btn"><Person /></button></li>
+        </ul>
+      </StyledNavbarMobile>
+    </>
   )
 }
 

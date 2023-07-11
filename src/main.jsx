@@ -7,6 +7,7 @@ import store from './store/index.jsx'
 import { UserContextProvider } from './Context/UserContext.jsx'
 import { TaskContextProvider } from './Context/TaskContext.jsx'
 import { CollectionContextProvider } from './Context/CollectionContext.jsx'
+import { SearchContextProvider } from './Context/SearchContext.jsx'
 // import { persistor, store } from './redux/store';
 // import { PersistGate } from 'redux-persist/integration/react';
 
@@ -17,7 +18,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <UserContextProvider>
       <CollectionContextProvider>
         <TaskContextProvider>
-          <App />
+          <SearchContextProvider>
+            <App />
+          </SearchContextProvider>
         </TaskContextProvider>
       </CollectionContextProvider>
     </UserContextProvider>
