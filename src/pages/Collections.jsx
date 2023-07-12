@@ -5,6 +5,7 @@ import Modal from "../Components/Modal";
 import { useContext, useEffect, useRef, useState } from "react";
 import { CollectionContext } from "../Context/CollectionContext";
 import { SearchContext } from "../Context/SearchContext";
+import { TaskContext } from "../Context/TaskContext";
 
 const StyledCollections = styled.div`
   margin-top: 50px;
@@ -155,6 +156,7 @@ const StyledCollections = styled.div`
 const Collections = () => {
 
   const {collections} = useContext(CollectionContext)
+  const {fetchTasks} = useContext(TaskContext)
 
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -191,6 +193,14 @@ const Collections = () => {
   const inputRef = useRef(null);
 
   useEffect(() => {
+    const fetchData = async () => {
+      await fetchTasks();
+    };
+  
+    fetchData();
+  }, []);
+
+  useEffect(() => {
     if (inputRef.current) {
       inputRef.current.focus();
     }
@@ -222,7 +232,8 @@ const Collections = () => {
           {
             searchCollectionResult.map(({ collection_name, _id, total_tasks, total_finished }, id) => {
               return (
-                <Collection name={collection_name} total={total_tasks} done={total_finished} key={_id} />
+                // <Collection name={collection_name} total={total_tasks} done={total_finished} key={_id} />
+                <Collection name={collection_name} collection_id={_id} key={_id} />
               )
             })
           }

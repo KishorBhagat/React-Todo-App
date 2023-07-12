@@ -82,6 +82,7 @@ const StyledTask = styled.div`
 
                 .highlight{
                     background-color: #d684b9;
+                    /* color: #e756b5; */
                 }
             }
             span{
@@ -197,7 +198,8 @@ const Task = ({ _id, name, user, collection_id, isActive, showCollectionName }) 
 
 
     const UpdateTask = async (options) => {
-        await fetchCollections();
+        // await fetchCollections();
+        // await fetchTasks();
 
         try {
             const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/tasks/${_id}`, {
@@ -209,36 +211,14 @@ const Task = ({ _id, name, user, collection_id, isActive, showCollectionName }) 
                 body: JSON.stringify(options)
             });
             if (response.ok) {
-                await fetchCollections();
+                // await fetchCollections();
+                await fetchTasks();
             }
 
         } catch (error) {
             console.log(error);
         }
     }
-
-    const UpdateCollection = async (options) => {
-        await fetchCollections();
-
-        try {
-            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/collections/${collection_id}`, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'authToken': token
-                },
-                body: JSON.stringify(options)
-            });
-            if (response.ok) {
-                await fetchCollections();
-                // await fetchTasks();
-            }
-
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
 
     const handleOnCheck = async (e) => {
 
@@ -248,7 +228,6 @@ const Task = ({ _id, name, user, collection_id, isActive, showCollectionName }) 
             labelRef.current.style.textDecorationThickness = "1.5px";
             taskRef.current.style.opacity = ".5";
             await UpdateTask({ active: false });
-            await UpdateCollection({ total_finished: totalFinished + 1 });
             deleteRef.current.style.display = "block";
         }
         else {
@@ -256,13 +235,13 @@ const Task = ({ _id, name, user, collection_id, isActive, showCollectionName }) 
             taskRef.current.style.opacity = "1";
             deleteRef.current.style.display = "none";
             await UpdateTask({ active: true });
-            await UpdateCollection({ total_finished: totalFinished - 1 });
 
         }
     }
 
     const handleDelete = async (e) => {
-        await fetchCollections()
+        // await fetchCollections()
+        await fetchTasks();
 
         taskRef.current.style.opacity = ".3";
         taskRef.current.style.transform = "translate(100%)";
@@ -287,11 +266,6 @@ const Task = ({ _id, name, user, collection_id, isActive, showCollectionName }) 
         } catch (error) {
             console.log(error);
         }
-
-        UpdateCollection({
-            total_tasks: totalTasks - 1,
-            total_finished: totalFinished - 1,
-        })
 
     }
 

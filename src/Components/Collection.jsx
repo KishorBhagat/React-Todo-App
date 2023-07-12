@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import selectCollectionIcon from "../utils/SelectCollectionIcon";
 import { useContext } from "react";
 import { SearchContext } from "../Context/SearchContext";
+import { TaskContext } from "../Context/TaskContext";
 
 const StyledCollection = styled.div`
     background-color: var(--background-secondary);
@@ -39,6 +40,7 @@ const StyledCollection = styled.div`
 
             .highlight{
                 background-color: #d684b9;
+                /* color: #e756b5; */
             }
         }
         .stats{
@@ -54,8 +56,15 @@ const StyledCollection = styled.div`
     }
 `;
 
-const Collection = ({ name, total, done }) => {
+const Collection = ({name, collection_id}) => {
 
+    const {tasks} = useContext(TaskContext);
+    
+    const currentCollectionTasks = tasks?.filter((obj) => obj.collection_id === collection_id);
+    const total = currentCollectionTasks.length;
+    const finishedTasks = currentCollectionTasks?.filter((obj) => obj.active === false);
+    const done = finishedTasks.length;
+    
     const navigate = useNavigate();
 
     const handleRedirect = () => {
@@ -95,5 +104,7 @@ const Collection = ({ name, total, done }) => {
         </StyledCollection>
     )
 }
+
+
 
 export default Collection

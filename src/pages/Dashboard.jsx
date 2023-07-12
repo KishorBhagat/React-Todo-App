@@ -139,11 +139,15 @@ const StyledDashboard = styled.div`
 
 const Dashboard = () => {
 
+  const { user } = useContext(UserContext);
+  const { tasks, loadingTasks, fetchTasks } = useContext(TaskContext);
+  const { searchTaskResult } = useContext(SearchContext);
+
   const [greeting, setGreeting] = useState("");
 
   if (localStorage.getItem('isWelcomed') === 'true') {
     toast.success("Welcome to tasks.", { position: toast.POSITION.TOP_CENTER });
-    localStorage.removeItem('isWelcomed')
+    localStorage.removeItem('isWelcomed');
   }
 
   useEffect(() => {
@@ -155,16 +159,21 @@ const Dashboard = () => {
     } else {
       setGreeting("Good evening");
     }
-  }, [])
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await fetchTasks();
+    };
+    
+    fetchData();
+  }, []);
 
 
   const data = useSelector((state) => {
     return state.data;
   })
-  const { user } = useContext(UserContext);
-  const { tasks, loadingTasks } = useContext(TaskContext);
-  const { searchTaskResult } = useContext(SearchContext);
-  // console.log(tasks.length)
+
 
   return (
     <Layout>
@@ -180,14 +189,14 @@ const Dashboard = () => {
           </div>
         </header>
         <div className="task-container">
-          {loadingTasks && <h2 className="msg">Loading Tasks...</h2>}
           {!loadingTasks && tasks.length === 0 && <h2 className="msg">No tasks to show.<br/>Create your first task.</h2>}
           {
             searchTaskResult.map(({ _id, user, collection_id, task, active }, idx) => {
               return (<Task _id={_id} user={user} name={task} collection_id={collection_id} isActive={active} key={_id} showCollectionName={true} />)
             })
           }
-          {searchTaskResult.length === 0 && <h2 className="msg">No results</h2>}
+          {loadingTasks && <h2 className="msg">Loading Tasks...</h2>}
+          {tasks.length !== 0 && searchTaskResult.length === 0 && <h2 className="msg">No results</h2>}
         </div>
       </StyledDashboard>
     </Layout>

@@ -29,6 +29,10 @@ const StyledSearchInput = styled.div`
       padding: 0 10px;
       width: 100%;
       height: 100%;
+
+      &::placeholder{
+        color: #6e6e6e;
+      }
     }
   }
 
