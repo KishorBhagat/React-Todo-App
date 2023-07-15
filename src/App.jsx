@@ -16,6 +16,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Error404 from './pages/Error404';
 import { useDispatch } from 'react-redux';
 import { refreshLogin } from './store/slices/authSlice';
+import Profile from './pages/Profile';
 
 
 const SessionExpiredMsg = ({ closeToast }) => {
@@ -111,6 +112,7 @@ function App() {
           <Route exact path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
           <Route exact path="/collections" element={<ProtectedRoute><Collections /></ProtectedRoute>} />
           <Route exact path="/collections/:collection" element={<ProtectedRoute><SingleCollection /></ProtectedRoute>} />
+          <Route exact path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
           <Route exact path="/login" element={<Login />} />
           <Route exact path="/signup" element={<Signup />} />
           <Route exact path="/forgotpassword" element={<ForgotPassword />} />

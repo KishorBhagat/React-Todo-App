@@ -19,13 +19,16 @@ const StyledSearchInput = styled.div`
       background-color: transparent;
       width: 14px;
       height: 14px;
+      &:hover{
+        fill: black;
+      }
     }
     input{
       border-radius: 28px;
       border: none;
       outline: none;
       background-color: transparent;
-      color: var(--text-primary);
+      color: black;
       padding: 0 10px;
       width: 100%;
       height: 100%;
@@ -49,6 +52,7 @@ const StyledSearchInput = styled.div`
         input{
             font-size: 20px;
             height: 100%;
+            color: var(--text-primary);
         }
         svg{
             display: none;
@@ -83,7 +87,14 @@ const SearchInput = ({autofocus}) => {
         <StyledSearchInput>
             <div className="search-input-container">
                 <Search />
-                <input autoFocus={autofocus ? true : false} className="search-input" type="text" onChange={handleSearch} value={searchValue} placeholder="Search" />
+                <input 
+                  spellCheck={false} 
+                  autoFocus={autofocus ? true : false} 
+                  className="search-input" 
+                  type="text" 
+                  onChange={handleSearch} 
+                  value={searchValue} placeholder="Search" 
+                />
             </div>
         </StyledSearchInput>
     )

@@ -115,15 +115,13 @@ const StyledCollections = styled.div`
     }
 
     &::-webkit-scrollbar {
-        width: 2px;
-        /* height: 7.5px; */
+        width: 0px;
     }
     &::-webkit-scrollbar-track {
         background: transparent;
     }
     &::-webkit-scrollbar-thumb {
         background: #9a9aa8;
-        /* background: #1d1e26; */
         border-radius: 100px;
     }
   }

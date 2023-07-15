@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { toggelMenu } from "../store/slices/SidebarSlice";
 import Dashboard from "./icons/Dashboard";
 import Collection from "./icons/Collection";
-import { useContext, useRef } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import ToggleButton from "./ThemeToggleButton";
 import { UserContext } from "../Context/UserContext";
 import SearchInput from "./SearchInput";
@@ -94,6 +94,18 @@ const StyledNavbar = styled.nav`
         color: var(--avatar-font-color);
         font-weight: 500;
       }
+
+      .avatarImg{
+        height: 28px;
+        width: 28px;
+        border-radius: 50%;
+
+        img{
+          height: 100%;
+          width: 100%;
+          border-radius: 50%;
+        }
+      }
     }
 
     .add-btn{
@@ -127,7 +139,7 @@ const Navbar = ({ isFormModalOpen, setIsFormModalOpen }) => {
   const showProfileMenu = () => {
     let profileMenu = document.querySelector(".profile-menu");
     let profileContainer = document.querySelector(".profile-container");
-    if(profileMenu.classList.contains("active")){
+    if (profileMenu.classList.contains("active")) {
       profileMenu.classList.remove("active");
       profileContainer.classList.remove("active");
     }
@@ -138,6 +150,14 @@ const Navbar = ({ isFormModalOpen, setIsFormModalOpen }) => {
   }
 
   const { user } = useContext(UserContext);
+
+  const [image, setImage] = useState('');
+
+  useEffect(() => {
+    if (user.image) {
+      setImage(user.image);
+    }
+  }, [user])
 
   return (
     <StyledNavbar>
@@ -152,9 +172,16 @@ const Navbar = ({ isFormModalOpen, setIsFormModalOpen }) => {
         {/* <div className="search-input"><Search /><input type="text" onChange={handleSearch} /></div> */}
         <SearchInput />
         <button onClick={showProfileMenu}>
-          <div className="avatar">
-            {user.username?.charAt(0).toUpperCase()}
-          </div>
+          {
+            image ?
+              <div className="avatarImg">
+                <img src={image}/>
+              </div>
+              :
+              <div className="avatar">
+                {user.username?.charAt(0).toUpperCase()}
+              </div>
+          }
         </button>
       </ul>
     </StyledNavbar>

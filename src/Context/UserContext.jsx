@@ -1,6 +1,5 @@
 import { createContext, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { logout } from "../store/slices/authSlice";
 
 export const UserContext = createContext({}); 
 
@@ -16,7 +15,7 @@ export const UserContextProvider = ({children}) => {
             return
         }
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/auth/user`, {
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/user`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -27,7 +26,8 @@ export const UserContextProvider = ({children}) => {
             if(response.ok){
                 setUser(data);
                 setIsUser(true);
-                // console.log("User is: \n", data)
+                // console.log(data)
+                return response;
             }
             if(response.status === 401 && token == null){
                 console.log("401: User unauthorized")
@@ -43,7 +43,7 @@ export const UserContextProvider = ({children}) => {
     
 
     return(
-        <UserContext.Provider value={{user, isUser}}>
+        <UserContext.Provider value={{user, isUser, fetchUser}}>
             {children}
         </UserContext.Provider>
     )

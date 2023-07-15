@@ -111,9 +111,9 @@ const StyledTask = styled.div`
             background-color: inherit;
         }
     }
-    button.delete-btn{
+    /* button.delete-btn{
         display: none;
-    }
+    } */
     
 `;
 
@@ -180,6 +180,7 @@ const Task = ({ _id, name, user, collection_id, isActive, showCollectionName }) 
     const labelRef = useRef();
     const taskRef = useRef();
     const deleteRef = useRef();
+    const renameRef = useRef();
     const checkRef = useRef();
 
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -228,14 +229,15 @@ const Task = ({ _id, name, user, collection_id, isActive, showCollectionName }) 
             labelRef.current.style.textDecorationThickness = "1.5px";
             taskRef.current.style.opacity = ".5";
             await UpdateTask({ active: false });
-            deleteRef.current.style.display = "block";
+            // deleteRef.current.style.display = "block";
+            // renameRef.current.style.display = "none";
         }
         else {
             labelRef.current.style.textDecoration = "none";
             taskRef.current.style.opacity = "1";
-            deleteRef.current.style.display = "none";
+            // deleteRef.current.style.display = "none";
             await UpdateTask({ active: true });
-
+            // renameRef.current.style.display = "block";
         }
     }
 
@@ -348,8 +350,12 @@ const Task = ({ _id, name, user, collection_id, isActive, showCollectionName }) 
                     </div>
                 </div>
                 <div className="icons-btn">
-                    <button className="rename-btn" onClick={() => setIsModalOpen(true)}><PencilSquare /></button>
-                    <button ref={deleteRef} className="delete-btn" onClick={handleDelete}><Trash /></button>
+                    {
+                        isActive ? 
+                        <button ref={renameRef} className="rename-btn" onClick={() => setIsModalOpen(true)}><PencilSquare /></button>
+                        :
+                        <button ref={deleteRef} className="delete-btn" onClick={handleDelete}><Trash /></button>
+                    }
                 </div>
 
                 <audio ref={audioPlayer} src={NotificationSound} />

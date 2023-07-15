@@ -3,7 +3,9 @@ import styled, { createGlobalStyle } from "styled-components";
 const GlobalStyle = createGlobalStyle`
     .dark-theme{
         --background-primary: #1d1e26;
+        /* --background-primary: #181820; */
         --background-secondary: #272836;
+        /* --background-secondary: #21212b; */
         --text-primary: #fff;
         --text-secondary: #9a9aa8;
         --text-tertiary: #d2d2e0;

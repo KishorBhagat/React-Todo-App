@@ -145,7 +145,7 @@ const NavbarMobile = ({ setIsFormModalOpen }) => {
           <button onClick={handleHideSearch}><Cross /></button>
         </StyledSearchBar>
       }
-      <StyledNavbarMobile>
+      <StyledNavbarMobile className="navbar-mobile">
         <ul className="menus">
           <li><NavLink to="/dashboard"><Dashboard /></NavLink></li>
           <li><NavLink end to="/collections"><Collection /></NavLink></li>

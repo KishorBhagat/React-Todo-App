@@ -161,13 +161,13 @@ const Dashboard = () => {
     }
   }, []);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      await fetchTasks();
-    };
-    
-    fetchData();
-  }, []);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     await fetchTasks();
+  //   };
+
+  //   fetchData();
+  // }, []);
 
 
   const data = useSelector((state) => {
@@ -185,7 +185,7 @@ const Dashboard = () => {
           </div>
           <div className="greet">
             <h1>{greeting},</h1>
-            <h1>{user.username}</h1>
+            <h1>{user.username?.split(' ')[0]}</h1>
           </div>
         </header>
         <div className="task-container">

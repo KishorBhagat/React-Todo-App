@@ -3,11 +3,13 @@ import Avatar from "./icons/Avatar"
 import Logout from "./icons/Logout"
 import Cross from "./icons/Cross"
 import ToggleButton from "./ThemeToggleButton"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { useDispatch } from "react-redux"
 import { logout } from "../store/slices/authSlice"
 import { UserContext } from "../Context/UserContext"
-import { useContext, useEffect } from "react"
+import { useContext, useEffect, useState } from "react"
+import PencilSquare from "./icons/PencilSquare"
+import Person from "./icons/Person"
 
 const StyledProfileMenu = styled.div`
     background-color: transparent;
@@ -83,12 +85,33 @@ const StyledProfileMenu = styled.div`
                 justify-content: center;
                 color: var(--avatar-font-color);
                 font-size: 50px;
+                position: relative;
             }
             .profile-img{
                 height: 100px;
                 width: 100px;
                 border-radius: 50%;
                 background-color: #fff;
+                position: relative;
+                
+                img{
+                    height: 100%;
+                    width: 100%;
+                    border-radius: 50%;
+                }
+            }
+
+            .edit-icon{
+                position: absolute;
+                right: 2px;
+                bottom: 2px;
+                background-color: #fff;
+                display: flex;
+                padding: 5px;
+                border-radius: 50%;
+                svg{
+                    fill: var(--text-secondary);
+                }
             }
             .name{
                 margin-top: 10px;
@@ -105,8 +128,8 @@ const StyledProfileMenu = styled.div`
             }
             button{
                 margin-top: 10px;
-                padding: 5px 10px;
-                border-radius: 5px;
+                padding: 5px 12px;
+                border-radius: 15px;
                 border: 1px solid var(--text-secondary);
                 background-color: var(--background-secondary);
                 cursor: pointer;
@@ -129,6 +152,12 @@ const StyledProfileMenu = styled.div`
                 align-items: center;
                 cursor: pointer;
                 white-space: nowrap;
+                a{
+                    display: flex;
+                    align-items: center;
+                    text-decoration: none;
+                    color: var(--text-secondary);
+                }
                 svg{
                     fill: var(--text-secondary);
                     background-color: inherit;
@@ -149,6 +178,9 @@ const StyledProfileMenu = styled.div`
             left: 0;
             top: 0;
             height: calc(100vh);
+            &.active{
+                width: 260px;
+            }
             .profile{
                 padding-top: 70px;
     
@@ -191,19 +223,38 @@ const ProfileMenu = () => {
 
     const {user, isUser} = useContext(UserContext);
 
+    const [image, setImage] = useState('');
+
+    useEffect(() => {
+        if(user.image){
+            setImage(user.image);
+        }
+    }, [user])
+
   return (
     <StyledProfileMenu className="profile-menu" onClick={handleCloseProfileMenu}>
     <div className="profile-container" onClick={e => e.stopPropagation()}>
         <div className="profile">
             <span className="close-btn" onClick={handleCloseProfileMenu}><Cross /></span>
             <span className="toggle-btn"><ToggleButton /></span>
-            <div className="no-img">{user.username?.charAt(0).toUpperCase()}</div>
-            {/* <div className="profile-img"></div> */}
+            {
+                image ? 
+                <div className="profile-img">
+                    <img src={image} alt="" />
+                    {/* <div className="edit-icon"><PencilSquare /></div> */}
+                </div>
+                :
+                <div className="no-img">
+                    {user.username?.charAt(0).toUpperCase()}
+                    {/* <div className="edit-icon"><PencilSquare /></div> */}
+                </div>
+            }
             <p className="name">{user.username}</p>
             <p className="email">{user.email}</p>
-            {/* <button className="edit">Edit</button> */}
+            {/* <button className="edit">Edit Profile</button> */}
         </div>
         <ul>
+            <li><Link to="/profile"><Person /> Profile</Link></li>
             <li onClick={handleLogout}><Logout /> Logout</li>
             {/* <li></li> */}
         </ul>
