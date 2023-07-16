@@ -115,11 +115,11 @@ const StyledFormModal = styled.div`
                 /* border: 3px solid var(--background-secondary); */
                 color: var(--text-primary);
                 border: none;
-                border-bottom: 2px solid var(--text-secondary);
+                border-bottom: 1px solid var(--text-secondary);
                 /* border-radius: 10px; */
                 :focus{
                     outline: none;
-                    border-bottom: 2px solid #e756b5;
+                    border-bottom: 1px solid #e756b5;
                 }
             }
             .collection-options{
@@ -136,11 +136,11 @@ const StyledFormModal = styled.div`
                     background-color: inherit;
                     color: var(--text-primary);
                     border: none;
-                    border-bottom: 2px solid var(--text-secondary);
+                    border-bottom: 1px solid var(--text-secondary);
                     margin-right: 20px;
                     :focus{
                         outline: none;
-                        border-bottom: 2px solid #e756b5;
+                        border-bottom: 1px solid #e756b5;
                     }
                 }
                 svg{
@@ -161,7 +161,7 @@ const StyledFormModal = styled.div`
                     height: 40px;
                     width: 50%;
                     border: none;
-                    border: 2px solid #e756b5;
+                    border: 1px solid #e756b5;
                     border-radius: 4px;
                     padding: 8px 20px;
                     cursor: pointer;

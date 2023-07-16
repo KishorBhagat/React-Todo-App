@@ -161,7 +161,7 @@ const ForgotPassword = () => {
                             <button type="submit" className="btn">Continue</button>
                     }
                 </form>
-                <p><span>Go back to </span> <Link to="/login">Login</Link><span> Page.</span></p>
+                <p><span>Go to </span> <Link to="/login">Login</Link><span> Page.</span></p>
             </div>
         </StyledForgotPassword>
     )

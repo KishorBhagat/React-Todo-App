@@ -172,7 +172,7 @@ const ResetPassword = () => {
     return (
         <StyledResetPassword>
             <div className="form-container">
-                <h1>Reset Password?</h1>
+                <h1>Reset Password</h1>
                 <p className="desc">You will be required to enter this password whenever you log in.</p>
                 <form className="form" onSubmit={(e) => handleSubmit(e)}>
                     <input type="password" name="newpassword" placeholder="New password" required />

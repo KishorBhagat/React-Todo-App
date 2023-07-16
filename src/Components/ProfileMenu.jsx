@@ -241,12 +241,10 @@ const ProfileMenu = () => {
                 image ? 
                 <div className="profile-img">
                     <img src={image} alt="" />
-                    {/* <div className="edit-icon"><PencilSquare /></div> */}
                 </div>
                 :
                 <div className="no-img">
                     {user.username?.charAt(0).toUpperCase()}
-                    {/* <div className="edit-icon"><PencilSquare /></div> */}
                 </div>
             }
             <p className="name">{user.username}</p>

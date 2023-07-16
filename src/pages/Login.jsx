@@ -8,116 +8,179 @@ import { login } from "../store/slices/authSlice";
 import { toast } from "react-toastify";
 
 const StyledLogin = styled.section`
-    height: 100vh;
-    display: flex;
+    min-height: 100vh;
     background-color: var(--background-primary);
-    justify-content: center;
-    align-items: center;
-    h1{
-        font-size: 35px;
-        font-weight: 500;
-        text-align: center;
-        margin-bottom: 60px;
-        color: var(--text-primary);
-    }
-    .form{
+
+    nav{
+        position: relative;
+        width: 100%;
         display: flex;
-        flex-direction: column;
-        gap: 16px;
-        input{
-            background-color: var(--background-primary);
-            border: 3px solid #2d2e37;
-            border-radius: 12px;
-            padding: 10px 15px;
-            width: 300px;
-            font-size: 15px;
+        justify-content: space-between;
+        align-items: center;
+        padding: 38px 16%;
+        background-color: inherit;
+        background-color: inherit;
+        height: 110px;
+        
+        .logo{
+            font-size: 30px;
             color: var(--text-primary);
-            &::placeholder{
-                color: #9a9aa8;
-            }
-            &:focus{
-                border: 3px solid #e756b5;
-                outline: none;
+            a{
+                text-decoration: none;
+                color: var(--text-primary);
             }
         }
-
-        button[type=submit]{
-            height: 46px;
-            margin: 10px 0;
-            font-size: 15px;
-            cursor: pointer;
-            color: white;
+        ul{
             display: flex;
-            align-items: center;
-            justify-content: center;
-
-            svg{
-                fill: white;
-            }
-        }
-        button[disabled]{
-            cursor: not-allowed;
-            padding: 10.5px 15px;
-            .spinner{
-                background-color: inherit;
-                animation: spin 2s linear infinite;
-            }
-            @keyframes spin {
-                0% { transform: rotate(0deg); }
-                100% { transform: rotate(360deg); }
-            }
-        }
-
-        .auth-btn{
-            border: 3px solid #2d2e37;
-            border-radius: 12px;
-            padding: 10px 15px;
-            color: #9a9aa8;
-            font-size: 15px;
-            font-weight: 500;
+        li {
+            list-style: none;
+            margin: 0 12px;
+            a{
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 14px;
             transition: 0.2s ease;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             &:hover{
-                background-color: #2d2e37;
                 color: white;
             }
-            svg{
-                background-color: inherit;
             }
         }
-        
-    }
-    p{
-        text-align: center;
-        margin: 10px 0;
-    }
-    a{
-        text-decoration: none;
-        font-weight: 500;
-        position: relative;
-        color: var(--text-primary);
-        
-        ::after{
-            content: "";
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            height: 1px;
-            width: 0;
-            background-color: var(--text-primary);
-            transition: .2s ease;
+        .signup-link > a{
+            border: 3px solid #2d2e37;
+            border-radius: 10px;
+            padding: 8px 20px;
+            &:hover{
+            background-color: #2d2e37;
+            }
         }
-        &:hover::after{
-            width: 100%;
-            left: 0;
         }
     }
-    span{
-        text-align: center;
-        color: var(--text-secondary);
+
+    .form-container{
+        display: flex;
+        background-color: var(--background-primary);
+        justify-content: center;
+        align-items: center;
+        padding-bottom: 50px;
+        flex-direction: column;
+        /* height: calc(100vh - 110px); */
+        h1{
+            font-size: 35px;
+            font-weight: 500;
+            text-align: center;
+            margin-bottom: 60px;
+            color: var(--text-primary);
+        }
+        .form{
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            input{
+                background-color: var(--background-primary);
+                border: 3px solid #2d2e37;
+                border-radius: 12px;
+                padding: 10px 15px;
+                width: 300px;
+                font-size: 15px;
+                color: var(--text-primary);
+                &::placeholder{
+                    color: #9a9aa8;
+                }
+                &:focus{
+                    border: 3px solid #e756b5;
+                    outline: none;
+                }
+            }
+    
+            button[type=submit]{
+                height: 46px;
+                margin: 10px 0;
+                font-size: 15px;
+                cursor: pointer;
+                color: white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+    
+                svg{
+                    fill: white;
+                }
+            }
+            button[disabled]{
+                cursor: not-allowed;
+                padding: 10.5px 15px;
+                .spinner{
+                    background-color: inherit;
+                    animation: spin 2s linear infinite;
+                }
+                @keyframes spin {
+                    0% { transform: rotate(0deg); }
+                    100% { transform: rotate(360deg); }
+                }
+            }
+    
+            .auth-btn{
+                border: 3px solid #2d2e37;
+                border-radius: 12px;
+                padding: 10px 15px;
+                color: #9a9aa8;
+                font-size: 15px;
+                font-weight: 500;
+                transition: 0.2s ease;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                &:hover{
+                    background-color: #2d2e37;
+                    color: white;
+                }
+                svg{
+                    background-color: inherit;
+                }
+            }
+            
+        }
+        p{
+            text-align: center;
+            margin: 10px 0;
+        }
+        a{
+            text-decoration: none;
+            font-weight: 500;
+            position: relative;
+            color: var(--text-primary);
+            
+            ::after{
+                content: "";
+                position: absolute;
+                bottom: 0;
+                left: 50%;
+                height: 1px;
+                width: 0;
+                background-color: var(--text-primary);
+                transition: .2s ease;
+            }
+            &:hover::after{
+                width: 100%;
+                left: 0;
+            }
+        }
+        span{
+            text-align: center;
+            color: var(--text-secondary);
+        }
+    }
+
+    @media (max-width: 700px){
+        nav{
+            padding: 38px 6%;
+            padding-bottom: 68px;
+            height: 50px;
+        }
+        .form-container{
+            height: auto;
+        }
     }
 `;
 
@@ -150,10 +213,10 @@ const Login = () => {
             .unwrap()
             .then((res) => {
                 console.log(res)
-                if(res.error){
-                    toast.error(res.error.message, {position: toast.POSITION.TOP_CENTER});
+                if (res.error) {
+                    toast.error(res.error.message, { position: toast.POSITION.TOP_CENTER });
                 }
-                else{
+                else {
                     localStorage.setItem('accessToken', (res.token.access));
                     localStorage.setItem("isWelcomed", "true");
                     // navigate('/dashboard')
@@ -165,6 +228,12 @@ const Login = () => {
 
     return (
         <StyledLogin>
+            <nav>
+                <div className="logo"><h4><Link to='/'>task.</Link></h4></div>
+                <ul>
+                    <li className="signup-link"><Link to="/signup">Sign up</Link></li>
+                </ul>
+            </nav>
             <div className="form-container">
                 <h1>Log in.</h1>
                 <form className="form" onSubmit={(e) => handleSubmit(e)}>

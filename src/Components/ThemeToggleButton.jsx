@@ -60,11 +60,12 @@ const ToggleButton = () => {
         if (document.body.classList == "dark-theme") {
             document.body.classList = "light-theme";
             thumbRef.current.style.transform = "translateX(20px)";
+            localStorage.setItem('theme', 'light-theme')
         }
         else {
             document.body.classList = "dark-theme"
             thumbRef.current.style.transform = "translateX(0px)";
-
+            localStorage.setItem('theme', 'dark-theme')
         }
     }
 

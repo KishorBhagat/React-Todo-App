@@ -4,6 +4,7 @@ import { useContext, useEffect, useState } from "react"
 import { TaskContext } from "../Context/TaskContext"
 import { SearchContext } from "../Context/SearchContext"
 import { CollectionContext } from "../Context/CollectionContext"
+import Cross from "./icons/Cross"
 
 const StyledSearchInput = styled.div`
   .search-input-container{
@@ -12,7 +13,7 @@ const StyledSearchInput = styled.div`
     align-items: center;
     border-radius: 28px;
     padding-left: 8px;
-    width: 150px;
+    width: 160px;
     height: 28px;
     svg{
       fill: black;
@@ -30,11 +31,24 @@ const StyledSearchInput = styled.div`
       background-color: transparent;
       color: black;
       padding: 0 10px;
-      width: 100%;
+      width: calc(100% - 14px);
       height: 100%;
 
       &::placeholder{
         color: #6e6e6e;
+      }
+    }
+    .clear-search{
+      width: 18px;
+      height: 18px;
+      margin-right: 2px;
+      .clear-search-button{
+        background-color: transparent;
+        display: flex;
+        svg{
+          width: 18px;
+          height: 18px;
+        }
       }
     }
   }
@@ -53,6 +67,9 @@ const StyledSearchInput = styled.div`
             font-size: 20px;
             height: 100%;
             color: var(--text-primary);
+        }
+        .clear-search-button{
+          display: none;
         }
         svg{
             display: none;
@@ -83,6 +100,9 @@ const SearchInput = ({autofocus}) => {
         }
     }, [searchValue])
 
+    const handleClearSearch = () => {
+      setSearchValue('')
+    }
     return (
         <StyledSearchInput>
             <div className="search-input-container">
@@ -95,6 +115,11 @@ const SearchInput = ({autofocus}) => {
                   onChange={handleSearch} 
                   value={searchValue} placeholder="Search" 
                 />
+                <div className="clear-search">
+                  {
+                    searchValue.length!==0 && <button className="clear-search-button" onClick={handleClearSearch}><Cross /></button>
+                  }
+                </div>
             </div>
         </StyledSearchInput>
     )

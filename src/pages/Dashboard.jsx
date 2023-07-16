@@ -146,8 +146,13 @@ const Dashboard = () => {
   const [greeting, setGreeting] = useState("");
 
   if (localStorage.getItem('isWelcomed') === 'true') {
-    toast.success("Welcome to tasks.", { position: toast.POSITION.TOP_CENTER });
+    toast.success("Welcome to task.", { position: toast.POSITION.TOP_CENTER });
     localStorage.removeItem('isWelcomed');
+  }
+
+  if (localStorage.getItem('passwordChanged') === 'true') {
+    toast.success('Password Changed Successfully!', { position: toast.POSITION.TOP_CENTER });
+    localStorage.removeItem('passwordChanged');
   }
 
   useEffect(() => {
@@ -160,14 +165,6 @@ const Dashboard = () => {
       setGreeting("Good evening");
     }
   }, []);
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     await fetchTasks();
-  //   };
-
-  //   fetchData();
-  // }, []);
 
 
   const data = useSelector((state) => {
@@ -189,7 +186,7 @@ const Dashboard = () => {
           </div>
         </header>
         <div className="task-container">
-          {!loadingTasks && tasks.length === 0 && <h2 className="msg">No tasks to show.<br/>Create your first task.</h2>}
+          {!loadingTasks && tasks.length === 0 && <h2 className="msg">No tasks to show.<br />Create your first task.</h2>}
           {
             searchTaskResult.map(({ _id, user, collection_id, task, active }, idx) => {
               return (<Task _id={_id} user={user} name={task} collection_id={collection_id} isActive={active} key={_id} showCollectionName={true} />)

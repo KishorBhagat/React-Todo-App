@@ -3,8 +3,8 @@ import styled from "styled-components"
 
 const StyledLanding = styled.div`
   height: 100vh;
-  background-color: var(--background-primary);
   background-color: #1d1e26;
+  background-color: var(--background-primary);
   color: var(--text-primary);
   /* padding: 0 16%; */
   nav{
@@ -76,6 +76,9 @@ const StyledLanding = styled.div`
     nav, section{
       padding-left: 6%;
       padding-right: 6%;
+    }
+    nav{
+      padding-top: 20px;
     }
     .signup-link{
       margin-right: 0;
