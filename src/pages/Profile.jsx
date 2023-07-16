@@ -5,7 +5,7 @@ import { UserContext } from "../Context/UserContext";
 import UploadingSpinner from "../Components/icons/UploadingSpinner";
 import { useDispatch } from "react-redux";
 import { logout } from "../store/slices/authSlice";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const StyledProfile = styled.div`
@@ -38,6 +38,7 @@ const StyledProfile = styled.div`
         display: flex;
 
         button{
+            display: none;
             background-color: var(--background-secondary);
             height: 29px;
             width: 29px;
@@ -45,7 +46,8 @@ const StyledProfile = styled.div`
             border-radius: 10px;
             font-weight: 500;
             border: none;
-            color: white;
+            color: var(--text-primary);
+            font-weight: 500;
             font-size: 16px;
             font-family: monospace;
             cursor: pointer;
@@ -143,7 +145,7 @@ const StyledProfile = styled.div`
                 width: 80%;
                 background-color: transparent;
                 height: fit-content;
-                label{
+                label, span{
                     color: var(--text-secondary);
                 }
                 input{
@@ -199,12 +201,16 @@ const StyledProfile = styled.div`
                     width: 65px;
 
                 }
+                a{
+                    text-decoration: none;
+                    color: white;
+                }
             }
         }
     }
     button.signout-btn{
         background-color: var(--background-secondary);
-        background-color: #33333e;
+        /* background-color: #33333e; */
         /* background-color: #272732; */
         padding: 12px 25px;
         color: var(--text-primary);
@@ -232,6 +238,11 @@ const StyledProfile = styled.div`
 
       .heading {
         height: 60px;
+        h1{
+            button{
+                display: block;
+            }
+        }
       }
 
     }
@@ -253,24 +264,26 @@ const Profile = () => {
 
     const { user, fetchUser } = useContext(UserContext);
 
-    const [image, setImage] = useState('');
     const [isUploading, setIsUploading] = useState(false);
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
+    const [image, setImage] = useState('');
 
     const fileInputRef = useRef(null);
 
     const token = localStorage.getItem('accessToken')
 
+    const navigate = useNavigate();
+
+    if (localStorage.getItem('passwordChanged') === 'true') {
+        toast.success('Password Changed Successfully!', { position: toast.POSITION.TOP_CENTER });
+        localStorage.removeItem('passwordChanged');
+    }
+
     useEffect(() => {
         setName(user.username);
         setEmail(user.email);
-    }, [user])
-
-    useEffect(() => {
-        if (user.image) {
-            setImage(user.image);
-        }
+        setImage(user.image);
     }, [user])
 
     useEffect(() => {
@@ -282,7 +295,13 @@ const Profile = () => {
         }
     }, [])
 
-    const navigate = useNavigate();
+    useEffect(() => {
+        const fetchData = async () => {
+            await fetchUser();
+        }
+        fetchData();
+    }, [])
+
 
     const handleBack = () => {
         window.history.back();
@@ -334,22 +353,17 @@ const Profile = () => {
         } catch (error) {
             console.log(error);
         }
-        dispatch(logout());        
+        dispatch(logout());
     }
 
     const [isEditingName, setIsEditingName] = useState(false);
-    const [isEditingEmail, setIsEditingEmail] = useState(false);
-
-    const inputNameRef = useRef(null);
-    const inputEmailRef = useRef(null);
 
     const handleEditName = () => {
         setIsEditingName(!isEditingName);
-        inputNameRef.current.focus();
     }
 
     const handleSubmitName = async (e) => {
-        const formData = { username: name}
+        const formData = { username: name }
         try {
             const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/user`, {
                 method: 'PATCH',
@@ -359,28 +373,20 @@ const Profile = () => {
                 },
                 body: JSON.stringify(formData)
             })
-            if(response.ok){
+            if (response.ok) {
                 await fetchUser();
             }
-            else{
-                toast.error('Failed to update! Try again or wait for some time.', {position: toast.POSITION.TOP_CENTER});
+            else {
+                toast.error('Failed to update! Try again or wait for some time.', { position: toast.POSITION.TOP_CENTER });
             }
             setIsEditingName(!isEditingName);
         } catch (error) {
-            toast.error('Failed to update! Try again or wait for some time.', {position: toast.POSITION.TOP_CENTER});
+            toast.error('Failed to update! Try again or wait for some time.', { position: toast.POSITION.TOP_CENTER });
             setIsEditingName(!isEditingName);
         }
     }
 
-    const handleChangeEmail = () => {
-        // setIsEditingEmail(!isEditingEmail);
-        // inputEmailRef.current.focus();
-        // Edit email by sending verification email
-    }
 
-    const handleChangePassword = () => {
-        
-    }
     return (
         <Layout>
             <StyledProfile>
@@ -420,61 +426,57 @@ const Profile = () => {
                         <div className="info">
                             <form className="col-1" id="nameForm" onSubmit={handleSubmitName}>
                                 <label htmlFor="">Name</label>
-                                <input 
-                                    type="text" 
-                                    name="username" 
-                                    readOnly={isEditingName ? false : true} 
-                                    style={{borderBottom: `${isEditingName ? '1px solid var(--pink)': 'none'}`}} 
-                                    value={name} 
-                                    ref={inputNameRef} 
-                                    onChange={e => setName(e.target.value)}
-                                />
+                                {
+                                    isEditingName ?
+                                    <input
+                                        type="text"
+                                        name="username"
+                                        style={{ borderBottom: '1px solid var(--pink)' }}
+                                        value={name}
+                                        onChange={e => setName(e.target.value)}
+                                        autoFocus={true}
+                                    />
+                                    :
+                                    <div>
+                                        {name}
+                                    </div>
+                                }
                             </form>
                             <div className="col-2">
                                 {
                                     isEditingName ?
-                                    <button type="submit" htmlFor="nameForm" style={{backgroundColor: 'var(--pink)'}} onClick={handleSubmitName}>Save</button>
-                                    :
-                                    <button onClick={handleEditName}>Edit</button>
+                                        <button type="submit" htmlFor="nameForm" style={{ backgroundColor: 'var(--pink)' }} onClick={handleSubmitName}>Save</button>
+                                        :
+                                        <button onClick={handleEditName}>Edit</button>
                                 }
                             </div>
                         </div>
                         <div className="info">
                             <div className="col-1">
-                                <label htmlFor="">Email</label>
-                                {/* <textarea
-                                    type="email" 
-                                    name="email"
-                                    readOnly={isEditingEmail ? false : true} 
-                                    style={{borderBottom: `${isEditingEmail ? '1px solid var(--text-primary)': 'none'}`}} 
-                                    value={email}
-                                    ref={inputEmailRef} 
-                                    onChange={e => setEmail(e.target.value)} 
-                                /> */}
+                                <span htmlFor="">Email</span>
                                 <div>
                                     {email}
                                 </div>
                             </div>
                             <div className="col-2">
-                                <button onClick={handleChangeEmail}>{isEditingEmail ? 'Save': 'Change'}</button>
+                                <button><Link to='/changeemail'>Change</Link></button>
                             </div>
                         </div>
                         <div className="info">
                             <div className="col-1">
-                                <label htmlFor="">Password</label>
-                                {/* <input type="password" readOnly={true} style={{fontSize: "25px", letterSpacing: "2px"}} value="&#x2022;•••••••••" /> */}
-                                <div style={{fontSize: "25px", letterSpacing: "2px"}}>
+                                <span>Password</span>
+                                <div style={{ fontSize: "25px", letterSpacing: "2px" }}>
                                     &#x2022;•••••••••
                                 </div>
                             </div>
                             <div className="col-2">
-                                <button>Change</button>
+                                <button><Link to='/changepassword'>Change</Link></button>
                             </div>
                         </div>
                     </div>
                     <button className="signout-btn" onClick={handleLogout}>Log out</button>
                 </div>
-                
+
 
             </StyledProfile>
         </Layout>
