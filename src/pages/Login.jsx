@@ -6,6 +6,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../store/slices/authSlice";
 import { toast } from "react-toastify";
+import { GoogleLogin } from '@react-oauth/google';
+import jwtDecode from "jwt-decode";
 
 const StyledLogin = styled.section`
     min-height: 100vh;
@@ -237,9 +239,20 @@ const Login = () => {
             <div className="form-container">
                 <h1>Log in.</h1>
                 <form className="form" onSubmit={(e) => handleSubmit(e)}>
-                    <div className="auth-btn"><Google />&nbsp;&nbsp;Continue with Google</div>
-                    <div className="auth-btn"><Facebook />&nbsp;&nbsp;Continue with Facebook</div>
-                    <span>or</span>
+                    {/* <GoogleLogin
+                        onSuccess={credentialResponse => {
+                            // console.log(credentialResponse);
+                            const decodedToken = jwtDecode(credentialResponse.credential);
+                            console.log(decodedToken);
+                        }}
+                        onError={() => {
+                            console.log('Login Failed');
+                        }}
+                        text="continue_with"
+                    /> */}
+                    {/* <div className="auth-btn"><Google />&nbsp;&nbsp;Continue with Google</div> */}
+                    {/* <div className="auth-btn"><Facebook />&nbsp;&nbsp;Continue with Facebook</div> */}
+                    {/* <span>or</span> */}
                     <input type="email" name="email" placeholder="Email" required />
                     <input type="password" name="password" placeholder="Password" required />
                     {/* {data && data.error && <p style={{color: "red"}}>{data.error.message}</p>} */}

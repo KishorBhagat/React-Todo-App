@@ -222,6 +222,7 @@ const ChangePassword = () => {
                         <input type="password" name="currentpassword" placeholder="Current password" required />
                         <input type="password" name="newpassword" placeholder="New password" required />
                         <input type="password" name="confirmNewPassword" placeholder="Re-type new password" required />
+                        <p style={{textAlign: "left", paddingLeft: "5px"}}><Link to="/forgotpassword">Forgot password?</Link></p>
                         {
                             isPending ?
                                 <button type="submit" className="btn" disabled><Spinner /></button>
@@ -229,7 +230,7 @@ const ChangePassword = () => {
                                 <button type="submit" className="btn">Change password</button>
                         }
                     </form>
-                    <p> <Link to="/forgotpassword">Forgot password?</Link></p>
+                    <p> <Link to="/dashboard">Go back to Dashboard</Link></p>
                 </div>
             </div>
         </StyledChangePassword>

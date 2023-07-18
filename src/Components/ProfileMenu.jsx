@@ -71,7 +71,8 @@ const StyledProfileMenu = styled.div`
             }
             .toggle-btn{
                 top: 17px;
-                left: 15px;    
+                left: 20px;    
+                /* transform: scale(1.2); */
             }
     
             .no-img{
@@ -98,6 +99,7 @@ const StyledProfileMenu = styled.div`
                     height: 100%;
                     width: 100%;
                     border-radius: 50%;
+                    object-fit: cover;
                 }
             }
 

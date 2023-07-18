@@ -274,7 +274,7 @@ const SingleCollection = () => {
 
   const { tasks, loadingTasks, fetchTasks } = useContext(TaskContext);
   const { collections, fetchCollections } = useContext(CollectionContext);
-  const { searchTaskResult } = useContext(SearchContext);
+  const { searchValue, searchTaskResult } = useContext(SearchContext);
 
 
   const currentCollection = collections?.filter((obj) => obj.collection_name === collectionName);
@@ -443,6 +443,7 @@ const SingleCollection = () => {
     setCurColName(e.target.value);
   }
 
+
   return (
     <Layout>
       <StyledSingleCollection>
@@ -482,14 +483,17 @@ const SingleCollection = () => {
               return (<Task _id={_id} collection_id={collection_id} user={user} name={task} isActive={active} key={_id} showCollectionName={false} />)
             })
           }
-          {/* {loadingTasks && filteredTasks.length === 0 && <h2 className="msg">Loading Tasks...</h2>}
-          {!loadingTasks && filteredTasks.length === 0 && <h2 className="msg">No tasks in this collection.</h2>} */}
           {
-            filteredTasks.length === 0 && (
-              loadingTasks? <h2 className="msg">Loading Tasks...</h2>:<h2 className="msg">No tasks in this collection.</h2>
+            loadingTasks ? (<h2 className="msg">Loading Tasks...</h2>) :
+            (
+              filteredTasks.length === 0 && searchValue.length === 0 ? (<h2 className="msg">No tasks in this collection.</h2>) : 
+              (
+                filteredTasks.length === 0 && searchValue.length !== 0? <h2 className="msg">No result</h2> : null
+              )
             )
           }
-          {filteredTasks.length !== 0 && searchTaskResult.length === 0 && <h2 className="msg">No result</h2>}
+
+
         </div>
         <Modal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen}>
           <div className="modal-inner-container">

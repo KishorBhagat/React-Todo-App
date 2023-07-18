@@ -254,9 +254,9 @@ const Signup = () => {
             <div className="form-container">
                 <h1>Sign up.</h1>
                 <form className="form" onSubmit={(e) => handleSubmit(e)}>
-                    <div className="auth-btn"><Google />&nbsp;&nbsp;Continue with Google</div>
-                    <div className="auth-btn"><Facebook />&nbsp;&nbsp;Continue with Facebook</div>
-                    <span>or</span>
+                    {/* <div className="auth-btn"><Google />&nbsp;&nbsp;Continue with Google</div> */}
+                    {/* <div className="auth-btn"><Facebook />&nbsp;&nbsp;Continue with Facebook</div> */}
+                    {/* <span>or</span> */}
                     <input
                         type="text"
                         name="username"

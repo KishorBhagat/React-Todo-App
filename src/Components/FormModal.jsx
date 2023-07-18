@@ -259,7 +259,7 @@ const FormModal = ({ isFormModalOpen, setIsFormModalOpen }) => {
         formData[e.target[0].getAttribute("name")] = e.target[0].value;
         // formData[e.target[1].getAttribute("name")] = currentCollection[0]._id;
         formData[e.target[1].getAttribute("name")] = e.target[1].value;
-        e.target[0].value = "";
+        // e.target[0].value = "";
         e.target[1].value = "default";
         console.log(formData)
 
@@ -274,7 +274,8 @@ const FormModal = ({ isFormModalOpen, setIsFormModalOpen }) => {
             });
             if (response.ok) {
                 const data = await response.json();
-                tasks.push(data);
+                // tasks.push(data);
+                e.target[0].value = "";
                 await fetchCollections();
                 await fetchTasks();
                 UpdateCollection({ total_tasks: currentCollection[0].total_tasks + 1 });
@@ -307,10 +308,11 @@ const FormModal = ({ isFormModalOpen, setIsFormModalOpen }) => {
             });
             if (response.ok) {
                 const data = await response.json();
-                collections.push(data);
-                // await fetchCollections();
+                // collections.push(data);
+                await fetchCollections();
+                console.log(data._id)
+                console.log(collections?.filter((obj) => obj.collection_name === data.collection_name)[0]?._id);
                 document.querySelector("#coll").value = data?._id;
-
             }
 
         } catch (error) {
@@ -334,17 +336,17 @@ const FormModal = ({ isFormModalOpen, setIsFormModalOpen }) => {
     }, [collection]);
 
     const selectRef = useRef();
-    
-    useEffect(() => {
-        if (collectionName) {
-            document.querySelector("#coll").value = currentCollection[0]?._id;
-        }
-        else {
-            if (collections?.filter((obj) => obj.collection_name === "default").length !== 0) {
-                selectRef.current.value = collections?.filter((obj) => obj.collection_name === "default")[0]?._id;
-            }
-        }
-    }, [collectionName])
+
+    // useEffect(() => {
+    //     if (collectionName) {
+    //         document.querySelector("#coll").value = currentCollection[0]?._id;
+    //     }
+    //     else {
+    //         if (collections?.filter((obj) => obj.collection_name === "default").length !== 0) {
+    //             selectRef.current.value = collections?.filter((obj) => obj.collection_name === "default")[0]?._id;
+    //         }
+    //     }
+    // }, [collectionName])
 
     return (
         <StyledFormModal className="overlay" style={{ display: `${isFormModalOpen ? "block" : "none"}` }} onClick={() => { setIsFormModalOpen(false); setIsModalOpen(false) }}>
@@ -369,13 +371,10 @@ const FormModal = ({ isFormModalOpen, setIsFormModalOpen }) => {
                     <input type="text" name="task" autoComplete="off" placeholder="Enter task here" autoFocus={true} required />
                     <label htmlFor="">Add to Collection</label>
                     <div className="collection-options">
-                        <select name="collection_id" id="coll" ref={selectRef}>
-                            {/* <option value="default" >Default</option> */}
+                        <select name="collection_id" id="coll" ref={selectRef} value={collectionName ? currentCollection[0]?._id : collections?.filter((obj) => obj.collection_name === "default")[0]?._id}>
                             {
                                 collections.map(({ collection_name, _id }, idx) => {
-                                    // if (collection_name !== "default") {
-                                    return (<option value={_id} key={idx}>{capitalize(collection_name)}</option>)
-                                    // }
+                                    return (<option value={_id} key={idx} >{capitalize(collection_name)}</option>)
                                 })
                             }
                         </select>

@@ -77,6 +77,7 @@ const StyledProfile = styled.div`
                 height: 80px;
                 width: 80px;
                 border-radius: 50%;
+                object-fit: cover;
             }
             .no-img{
                 background-color: var(--avatar);
@@ -417,9 +418,12 @@ const Profile = () => {
                         />
                         <div>
                             <p className="username">{user.username}</p>
-                            <button onClick={handleButtonClick}>
-                                {image ? "Change Photo" : "Upload Photo"}
-                            </button>
+                            <div>
+                                <button onClick={handleButtonClick}>
+                                    {image ? "Change Photo" : "Upload Photo"}
+                                </button>
+                                {/* {image && <button>Remove Photo</button>} */}
+                            </div>
                         </div>
                     </div>
                     <div className="row-2">

@@ -219,7 +219,7 @@ const ChangeEmail = () => {
                                 <button type="submit" className="btn">Continue</button>
                         }
                     </form>
-                    {/* <p> <Link to="/profile">Go back to profile</Link></p> */}
+                    <p> <Link to="/dashboard">Go back to Dashboard</Link></p>
                 </div>
             </div>
         </StyledChangeEmail>

@@ -1,13 +1,14 @@
 import { useRef } from "react";
 import styled from "styled-components"
+import Moon from "./icons/Moon";
+import Sun from "./icons/Sun";
 
 const StyledToggleButton = styled.div`
     background-color: inherit;
     cursor: pointer;
-
     .toggle-track{
-       height: 20px;
-       width: 40px;
+       height: 24px;
+       width: 48px;
        border-radius: 20px;
        background-color: #9a9aa8;
        display: flex;
@@ -16,15 +17,14 @@ const StyledToggleButton = styled.div`
         /* flex-direction: column; */
 
         &:hover .toggle-thumb{
-            box-shadow: 0 0 2px 4px #e756b5;
-
+            box-shadow: 0 0 4px 6px #e756b5;
         }
        .toggle-thumb{
            position: absolute;
            height: 16px;
            width: 16px;
            border-radius: 50%;
-           margin: 0 2px;
+           margin: 0 4px;
            background-color: #fafafa;
            cursor: pointer;
            transition: .2s ease;
@@ -32,8 +32,8 @@ const StyledToggleButton = styled.div`
        }
        .toggle-icons{
             position: absolute;
-            height: 20px;
-            width: 40px;
+            height: 24px;
+            width: 48px;
             border-radius: 20px;
             background-color: transparent;
             display: flex;
@@ -41,11 +41,11 @@ const StyledToggleButton = styled.div`
             justify-content: space-around;
 
             .moon, .sun{
-                font-size: 10px;
+                font-size: 12px;
                 border-radius: 50%;
                 background-color: transparent;
                 ::selection{
-                    color: red;
+                    background-color: transparent;
                 }
             }
        }
@@ -59,7 +59,7 @@ const ToggleButton = () => {
     const handleToggleTheme = (e) => {
         if (document.body.classList == "dark-theme") {
             document.body.classList = "light-theme";
-            thumbRef.current.style.transform = "translateX(20px)";
+            thumbRef.current.style.transform = "translateX(24px)";
             localStorage.setItem('theme', 'light-theme')
         }
         else {
