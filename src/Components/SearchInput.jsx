@@ -105,7 +105,7 @@ const SearchInput = ({autofocus}) => {
     }
     return (
         <StyledSearchInput>
-            <div className="search-input-container" onClick={(e) => {e.stopPropagation()}}>
+            <div className="search-input-container">
                 <Search />
                 <input 
                   spellCheck={false} 

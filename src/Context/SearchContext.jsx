@@ -12,6 +12,8 @@ export const SearchContextProvider = ({children}) => {
     const [searchValue, setSearchValue] = useState('');
     const [searchTaskResult, setSearchTaskResult] = useState(tasks);
     const [searchCollectionResult, setSearchCollectionResult] = useState(collections);
+    const [searchOpen, setSearchOpen] = useState(false);
+
 
     useEffect(() => {
         setSearchTaskResult(tasks)
@@ -35,6 +37,8 @@ export const SearchContextProvider = ({children}) => {
             setSearchValue,
             searchCollectionResult, 
             setSearchCollectionResult,
+            searchOpen,
+            setSearchOpen
         }}>
             {children}
         </SearchContext.Provider>

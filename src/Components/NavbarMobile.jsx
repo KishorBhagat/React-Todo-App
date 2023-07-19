@@ -111,16 +111,12 @@ const StyledSearchBar = styled.div`
   @media (max-width: 700px) {
     transition: .5s ease;
     display: block;
-    height: 100vh;
-    z-index: 100;
   }
 `
 
 const NavbarMobile = ({ setIsFormModalOpen }) => {
 
-  const [searchOpen, setSearchOpen] = useState(false);
-
-  const {setSearchValue} = useContext(SearchContext)
+  const {setSearchValue, searchOpen, setSearchOpen} = useContext(SearchContext)
 
   const showProfileMenu = () => {
     let profileMenu = document.querySelector(".profile-menu");
@@ -143,7 +139,7 @@ const NavbarMobile = ({ setIsFormModalOpen }) => {
     <>
       {
         searchOpen &&
-        <StyledSearchBar className="Search-Bar" onClick={handleHideSearch}>
+        <StyledSearchBar className="Search-Bar">
           <SearchInput autofocus={true}/>
           <button onClick={handleHideSearch}><Cross /></button>
         </StyledSearchBar>
