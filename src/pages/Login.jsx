@@ -8,6 +8,9 @@ import { login } from "../store/slices/authSlice";
 import { toast } from "react-toastify";
 import { GoogleLogin } from '@react-oauth/google';
 import jwtDecode from "jwt-decode";
+import EyeSlash from "../Components/icons/EyeSlash";
+import Eye from "../Components/icons/Eye";
+import { useState } from "react";
 
 const StyledLogin = styled.section`
     min-height: 100vh;
@@ -91,6 +94,24 @@ const StyledLogin = styled.section`
                 &:focus{
                     border: 3px solid #e756b5;
                     outline: none;
+                }
+            }
+
+            span{
+                position: relative;
+                input[type=password]{
+                    padding-right: 50px;
+                }
+                .show-btn{
+                    background-color: transparent;
+                    display: flex;
+                    border: none;
+                    color: var(--text-secondary);
+                    position: absolute;
+                    right: 15px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    cursor: pointer;
                 }
             }
     
@@ -190,6 +211,9 @@ const StyledLogin = styled.section`
 const Login = () => {
     // const [isLoading, setIsLoading] = useState(false);
     // const navigate = useNavigate();
+    const [showPassword, setShowPassword] = useState(false);
+    // const hasNativeToggle = typeof document !== 'undefined' && 'password' in document.createElement('input');
+
     const dispatch = useDispatch();
 
     const isLoading = useSelector((state) => {
@@ -202,6 +226,10 @@ const Login = () => {
     // const isLoggedIn = useSelector((state) => {
     //     return state.auth.isLoggedIn;
     // })
+    if (localStorage.getItem('passwordRestSuccess') === 'true') {
+        toast.success('Password change successfully.', { position: toast.POSITION.TOP_CENTER });
+        localStorage.removeItem('passwordRestSuccess');
+    }
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -254,7 +282,12 @@ const Login = () => {
                     {/* <div className="auth-btn"><Facebook />&nbsp;&nbsp;Continue with Facebook</div> */}
                     {/* <span>or</span> */}
                     <input type="email" name="email" placeholder="Email" required />
-                    <input type="password" name="password" placeholder="Password" required />
+                    <span>
+                        <input type={showPassword? "text" : "password"} name="password" placeholder="Password" required />
+                        <button type="button" className="show-btn" onClick={() => setShowPassword(!showPassword)}>
+                            {showPassword ? <EyeSlash /> : <Eye />}
+                        </button>
+                    </span>
                     {/* {data && data.error && <p style={{color: "red"}}>{data.error.message}</p>} */}
                     {
                         isLoading ?

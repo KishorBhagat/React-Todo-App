@@ -14,6 +14,7 @@ import { SearchContext } from "../Context/SearchContext";
 
 const StyledNavbarMobile = styled.nav`
   position: fixed;
+  /* position: relative; */
   bottom: 0;
   left: 0;
   width: 100%;
@@ -21,6 +22,7 @@ const StyledNavbarMobile = styled.nav`
   padding: 0 20px;
   background-color: var(--background-primary);
   display: none;
+  border-top: 0.5px solid rgba(128, 128, 128, 0.5);
   ul{
     width: 100%;
     display: flex;
@@ -109,7 +111,8 @@ const StyledSearchBar = styled.div`
   @media (max-width: 700px) {
     transition: .5s ease;
     display: block;
-    height: 50px;
+    height: 100vh;
+    z-index: 100;
   }
 `
 
@@ -140,7 +143,7 @@ const NavbarMobile = ({ setIsFormModalOpen }) => {
     <>
       {
         searchOpen &&
-        <StyledSearchBar className="Search-Bar">
+        <StyledSearchBar className="Search-Bar" onClick={handleHideSearch}>
           <SearchInput autofocus={true}/>
           <button onClick={handleHideSearch}><Cross /></button>
         </StyledSearchBar>

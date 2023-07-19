@@ -148,6 +148,7 @@ const StyledProfile = styled.div`
                 height: fit-content;
                 label, span{
                     color: var(--text-secondary);
+                    font-size: 14px;
                 }
                 input{
                     background-color: transparent;
@@ -429,7 +430,7 @@ const Profile = () => {
                     <div className="row-2">
                         <div className="info">
                             <form className="col-1" id="nameForm" onSubmit={handleSubmitName}>
-                                <label htmlFor="">Name</label>
+                                <label className="profile-labels" htmlFor="">Name</label>
                                 {
                                     isEditingName ?
                                     <input
@@ -457,7 +458,7 @@ const Profile = () => {
                         </div>
                         <div className="info">
                             <div className="col-1">
-                                <span htmlFor="">Email</span>
+                                <span className="profile-labels" htmlFor="">Email</span>
                                 <div>
                                     {email}
                                 </div>
@@ -468,7 +469,7 @@ const Profile = () => {
                         </div>
                         <div className="info">
                             <div className="col-1">
-                                <span>Password</span>
+                                <span className="profile-labels">Password</span>
                                 <div style={{ fontSize: "25px", letterSpacing: "2px" }}>
                                     &#x2022;•••••••••
                                 </div>

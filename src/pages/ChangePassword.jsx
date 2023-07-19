@@ -6,6 +6,8 @@ import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { updatePassword } from "../store/slices/authSlice";
 import Cross from "../Components/icons/Cross";
+import Eye from "../Components/icons/Eye";
+import EyeSlash from "../Components/icons/EyeSlash";
 
 const StyledChangePassword = styled.section`
     .frame{
@@ -64,7 +66,24 @@ const StyledChangePassword = styled.section`
                     outline: none;
                 }
             }
-    
+
+            span{
+                position: relative;
+                input[type=password]{
+                    padding-right: 50px;
+                }
+                .show-btn{
+                    background-color: transparent;
+                    display: flex;
+                    border: none;
+                    color: var(--text-secondary);
+                    position: absolute;
+                    right: 15px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    cursor: pointer;
+                }
+            }
             
     
             button[type=submit]{
@@ -159,6 +178,10 @@ const StyledChangePassword = styled.section`
 
 const ChangePassword = () => {
 
+    const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+    const [showNewPassword, setShowNewPassword] = useState(false);
+    const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false);
+
     const dispatch = useDispatch();
 
     const isLoading = useSelector((state) => {
@@ -188,7 +211,7 @@ const ChangePassword = () => {
             });
             const data = await response.json();
             console.log(data)
-            if(response.ok){
+            if (response.ok) {
                 e.target[0].value = "";
                 e.target[1].value = "";
                 e.target[2].value = "";
@@ -196,7 +219,7 @@ const ChangePassword = () => {
                 navigate('/dashboard');
             }
             else {
-                toast.error(data.error.message, { postion: toast.POSITION.TOP_CENTER});
+                toast.error(data.error.message, { position: toast.POSITION.TOP_CENTER });
             }
             setIsPending(false);
         }
@@ -219,10 +242,25 @@ const ChangePassword = () => {
                     <h1>Change Password</h1>
                     <p className="desc"></p>
                     <form className="form" onSubmit={(e) => handleSubmit(e)}>
-                        <input type="password" name="currentpassword" placeholder="Current password" required />
-                        <input type="password" name="newpassword" placeholder="New password" required />
-                        <input type="password" name="confirmNewPassword" placeholder="Re-type new password" required />
-                        <p style={{textAlign: "left", paddingLeft: "5px"}}><Link to="/forgotpassword">Forgot password?</Link></p>
+                        <span>
+                            <input type={showCurrentPassword ? "text" : "password"} name="currentpassword" placeholder="Current password" required />
+                            <button type="button" className="show-btn" onClick={() => setShowCurrentPassword(!showCurrentPassword)}>
+                                {showCurrentPassword ? <EyeSlash /> : <Eye />}
+                            </button>
+                        </span>
+                        <span>
+                            <input type={showNewPassword ? "text" : "password"} name="newpassword" placeholder="New password" required />
+                            <button type="button" className="show-btn" onClick={() => setShowNewPassword(!showNewPassword)}>
+                                {showNewPassword ? <EyeSlash /> : <Eye />}
+                            </button>
+                        </span>
+                        <span>
+                            <input type={showConfirmNewPassword ? "text" : "password"} name="confirmNewPassword" placeholder="Re-type new password" required />
+                            <button type="button" className="show-btn" onClick={() => setShowConfirmNewPassword(!showConfirmNewPassword)}>
+                                {showConfirmNewPassword ? <EyeSlash /> : <Eye />}
+                            </button>
+                        </span>
+                        <p style={{ textAlign: "left", paddingLeft: "5px" }}><Link to="/forgotpassword">Forgot password?</Link></p>
                         {
                             isPending ?
                                 <button type="submit" className="btn" disabled><Spinner /></button>

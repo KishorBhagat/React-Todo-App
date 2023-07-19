@@ -132,6 +132,11 @@ const VerifyOTP = () => {
         email = JSON.parse(atob(resetToken?.split('.')[1])).user.email;
     }
 
+    if (localStorage.getItem('codeSent') === 'true') {
+        toast.info('A security code is sent to your email. Please check your email.', { position: toast.POSITION.TOP_CENTER });
+        localStorage.removeItem('codeSent');
+    }
+
     const dispatch = useDispatch();
 
     const isLoading = useSelector((state) => {
@@ -155,6 +160,7 @@ const VerifyOTP = () => {
                 }
                 else {
                     localStorage.setItem('resetToken', (res.token));
+                    localStorage.setItem('codeVerified', 'true');
                     navigate('/resetpassword');
                 }
             })
@@ -168,7 +174,7 @@ const VerifyOTP = () => {
                 <h1>Verification required.</h1>
                 <p className="desc">To continue, complete this verification step. We've sent an OTP to the email {email}. Please enter it below to complete verification.</p>
                 <form className="form" onSubmit={(e) => handleSubmit(e)}>
-                    <input type="number" name="resetCode" placeholder="Enter OTP" required />
+                    <input type="number" name="resetCode" placeholder="Enter OTP" required autoComplete="off" />
                     {
                         isLoading ?
                             <button type="submit" className="btn" disabled><Spinner /></button>

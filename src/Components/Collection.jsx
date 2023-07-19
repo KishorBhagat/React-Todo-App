@@ -54,6 +54,25 @@ const StyledCollection = styled.div`
             }
         }
     }
+    @media (max-width: 480px){
+        width: 160px;
+        height: 160px;
+    }
+    @media (max-width: 340px){
+        width: 120px;
+        height: 120px;
+        .icon {
+            svg{
+                width: 30px;
+                height: 30px;
+            }
+        }
+        .details{
+            .name{
+                font-size: 16px;
+            }
+        }
+    }
 `;
 
 const Collection = ({name, collection_id}) => {

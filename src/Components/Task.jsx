@@ -274,8 +274,7 @@ const Task = ({ _id, name, user, collection_id, isActive, showCollectionName }) 
     const handleRenameCollection = async (e) => {
         e.preventDefault();
         const formData = {};
-        formData[e.target[0].getAttribute("name")] = (e.target[0].value).toLowerCase();
-        e.target[0].value = "";
+        formData[e.target[0].getAttribute("name")] = (e.target[0].value);
         // console.log(formData)
         try {
             const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/tasks/${_id}`, {
@@ -289,6 +288,7 @@ const Task = ({ _id, name, user, collection_id, isActive, showCollectionName }) 
             if (response.ok) {
                 const data = await response.json();
                 setIsModalOpen(false);
+                e.target[0].value = "";
                 await fetchTasks();
                 // await fetchCollections();
                 // navigate(`/collections/${data.collection_name}`, { replace: true });
@@ -331,6 +331,10 @@ const Task = ({ _id, name, user, collection_id, isActive, showCollectionName }) 
         return text.replace(regex, (match) => `<label class="highlight">${match}</label>`);
     }
 
+    useEffect(() => {
+        inputRenameTaskRef.current.value = name;
+    }, [isModalOpen])
+
     return (
         <>
 
@@ -366,7 +370,7 @@ const Task = ({ _id, name, user, collection_id, isActive, showCollectionName }) 
                         <h2 className="heading">Rename Task</h2>
                         <form className="rename-collection-form" onSubmit={handleRenameCollection}>
                             <input onFocus={(e) => e.target.select()}
-                                onChange={handleInputChange} autoComplete="off" type="text" name="task" required ref={inputRenameTaskRef} value={curTaskName} />
+                                onChange={handleInputChange} autoComplete="off" type="text" name="task" required ref={inputRenameTaskRef} />
                             <div className="buttons">
                                 <button type="button" onClick={() => { setIsModalOpen(false); setCurTaskName(name) }}>CANCEL</button>
                                 <button type="submit">DONE</button>

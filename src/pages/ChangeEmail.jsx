@@ -192,7 +192,7 @@ const ChangeEmail = () => {
                 toast.info('Verifiaction link sent to your email. Please check your email.', { postion: toast.POSITION.TOP_CENTER, autoClose: false});
             }
             else {
-                toast.error(data.error.message, { postion: toast.POSITION.TOP_CENTER});
+                toast.error(data.error.message, { position: toast.POSITION.TOP_CENTER });
             }
             setIsPending(false);
         }

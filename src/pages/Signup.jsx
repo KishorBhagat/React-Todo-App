@@ -7,6 +7,8 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { signup } from "../store/slices/authSlice";
 import { toast } from "react-toastify";
+import Eye from "../Components/icons/Eye";
+import EyeSlash from "../Components/icons/EyeSlash";
 
 const StyledSignup = styled.section`
     min-height: 100vh;
@@ -89,6 +91,24 @@ const StyledSignup = styled.section`
                 &:focus{
                     border: 3px solid #C82F8E;
                     outline: none;
+                }
+            }
+            
+            span{
+                position: relative;
+                input[type=password]{
+                    padding-right: 50px;
+                }
+                .show-btn{
+                    background-color: transparent;
+                    display: flex;
+                    border: none;
+                    color: var(--text-secondary);
+                    position: absolute;
+                    right: 15px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    cursor: pointer;
                 }
             }
     
@@ -188,6 +208,8 @@ const Signup = () => {
 
     const [isPending, setIsPending] = useState(false);
     const [isFormSubmitted, setIsFormSubmitted] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     const initialFormState = {
         username: '',
@@ -272,20 +294,30 @@ const Signup = () => {
                         value={formData.email}
                         required
                     />
-                    <input type="password"
-                        name="password"
-                        onChange={handleInputChange}
-                        value={formData.password}
-                        placeholder="Password"
-                        required
-                    />
-                    <input type="password"
-                        name="confirmPassword"
-                        onChange={handleInputChange}
-                        value={formData.confirmPassword}
-                        placeholder="Re-enter password"
-                        required
-                    />
+                    <span>
+                        <input type={showPassword ? 'text' : 'password'}
+                            name="password"
+                            onChange={handleInputChange}
+                            value={formData.password}
+                            placeholder="Password"
+                            required
+                        />
+                        <button type="button" className="show-btn" onClick={() => setShowPassword(!showPassword)}>
+                            {showPassword ? <EyeSlash /> : <Eye />}
+                        </button>
+                    </span>
+                    <span>
+                        <input type={showConfirmPassword ? 'text' : 'password'}
+                            name="confirmPassword"
+                            onChange={handleInputChange}
+                            value={formData.confirmPassword}
+                            placeholder="Re-enter password"
+                            required
+                        />
+                        <button type="button" className="show-btn" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
+                            {showConfirmPassword ? <EyeSlash /> : <Eye />}
+                        </button>
+                    </span>
                     {
                         isLoading ?
                             <button type="submit" className="btn" disabled><Spinner /></button>

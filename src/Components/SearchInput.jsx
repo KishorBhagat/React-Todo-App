@@ -54,10 +54,10 @@ const StyledSearchInput = styled.div`
   }
 
   @media (max-width: 700px) {
-    height: 100%;
     .search-input-container{
         width: 100%;
         height: 100%;
+        height: 50px;
         border-radius: 0;
         padding-right: 40px;
         background-color: var(--background-secondary);
@@ -88,7 +88,7 @@ const SearchInput = ({autofocus}) => {
     }
 
     useEffect(() => {
-        const filteredTasks = tasks.filter((obj) => obj.task.toLowerCase().includes(searchValue.toLowerCase()));
+        let filteredTasks = tasks.filter((obj) => obj.task.toLowerCase().includes(searchValue.toLowerCase()));
         const filteredCollections = collections.filter((obj) => obj.collection_name.toLowerCase().includes(searchValue.toLowerCase()));
         if (searchValue.length === 0) {
             setSearchTaskResult(tasks);
@@ -105,7 +105,7 @@ const SearchInput = ({autofocus}) => {
     }
     return (
         <StyledSearchInput>
-            <div className="search-input-container">
+            <div className="search-input-container" onClick={(e) => {e.stopPropagation()}}>
                 <Search />
                 <input 
                   spellCheck={false} 

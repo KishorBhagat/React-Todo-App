@@ -136,12 +136,8 @@ const ForgotPassword = () => {
                 }
                 else {
                     localStorage.setItem('resetToken', (res.token));
-                    toast.info("A security code is sent to your email. Please check your email.", {
-                        position: toast.POSITION.TOP_CENTER,
-                        onClose: () => {
-                            navigate('/forgotpassword/verify')
-                        }
-                    });
+                    localStorage.setItem('codeSent', 'true');
+                    navigate('/forgotpassword/verify')
                 }
             })
 

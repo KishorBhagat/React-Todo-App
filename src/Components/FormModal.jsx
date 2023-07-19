@@ -257,11 +257,7 @@ const FormModal = ({ isFormModalOpen, setIsFormModalOpen }) => {
         e.preventDefault();
         const formData = {};
         formData[e.target[0].getAttribute("name")] = e.target[0].value;
-        // formData[e.target[1].getAttribute("name")] = currentCollection[0]._id;
         formData[e.target[1].getAttribute("name")] = e.target[1].value;
-        // e.target[0].value = "";
-        e.target[1].value = "default";
-        console.log(formData)
 
         try {
             const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/tasks`, {
@@ -274,22 +270,16 @@ const FormModal = ({ isFormModalOpen, setIsFormModalOpen }) => {
             });
             if (response.ok) {
                 const data = await response.json();
-                // tasks.push(data);
+                setIsFormModalOpen(false);
                 e.target[0].value = "";
-                await fetchCollections();
                 await fetchTasks();
-                UpdateCollection({ total_tasks: currentCollection[0].total_tasks + 1 });
             }
 
         } catch (error) {
             console.log(error);
         }
 
-
-        setIsFormModalOpen(false);
     }
-
-    const [newCollectionAdded, isNewCollectionAdded] = useState(null);
 
     const handleAddNewCollection = async (e) => {
         e.preventDefault();
@@ -308,17 +298,16 @@ const FormModal = ({ isFormModalOpen, setIsFormModalOpen }) => {
             });
             if (response.ok) {
                 const data = await response.json();
-                // collections.push(data);
                 await fetchCollections();
                 console.log(data._id)
                 console.log(collections?.filter((obj) => obj.collection_name === data.collection_name)[0]?._id);
                 document.querySelector("#coll").value = data?._id;
             }
-
+            
         } catch (error) {
             console.log(error);
         }
-
+        
         setIsModalOpen(false);
     }
 
@@ -335,27 +324,35 @@ const FormModal = ({ isFormModalOpen, setIsFormModalOpen }) => {
         setCollectionName(collection);
     }, [collection]);
 
+    const inputTaskRef = useRef();
+    const inputCollectionRef = useRef();
     const selectRef = useRef();
 
-    // useEffect(() => {
-    //     if (collectionName) {
-    //         document.querySelector("#coll").value = currentCollection[0]?._id;
-    //     }
-    //     else {
-    //         if (collections?.filter((obj) => obj.collection_name === "default").length !== 0) {
-    //             selectRef.current.value = collections?.filter((obj) => obj.collection_name === "default")[0]?._id;
-    //         }
-    //     }
-    // }, [collectionName])
+    useEffect(() => {
+        if (collectionName) {
+            document.querySelector("#coll").value = currentCollection[0]?._id;
+        }
+        else {
+            if (collections?.filter((obj) => obj.collection_name === "default").length !== 0) {
+                selectRef.current.value = collections?.filter((obj) => obj.collection_name === "default")[0]?._id;
+            }
+        }
+    }, [collectionName, isFormModalOpen])
+
+    useEffect(() => {
+        inputTaskRef.current.value = "";
+    }, [isFormModalOpen]);
+    useEffect(() => {
+        inputCollectionRef.current.value = "";
+    }, [isModalOpen]);
 
     return (
         <StyledFormModal className="overlay" style={{ display: `${isFormModalOpen ? "block" : "none"}` }} onClick={() => { setIsFormModalOpen(false); setIsModalOpen(false) }}>
-            {/* <Modal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen}> */}
             <div className="new-collection-modal" style={{ display: `${isModalOpen ? "block" : "none"}` }} onClick={e => e.stopPropagation()}>
                 <div className="container">
                     <h2 className="heading">New Collection</h2>
                     <form className="add-collection-form" onSubmit={handleAddNewCollection}>
-                        <input autoFocus={true} autoComplete="off" type="text" name="collection_name" placeholder="Enter collection name" required />
+                        <input autoFocus={true} autoComplete="off" type="text" name="collection_name" placeholder="Enter collection name" ref={inputCollectionRef} required />
                         <div className="buttons">
                             <button type="button" onClick={() => setIsModalOpen(false)}>CANCEL</button>
                             <button type="submit">ADD</button>
@@ -363,15 +360,14 @@ const FormModal = ({ isFormModalOpen, setIsFormModalOpen }) => {
                     </form>
                 </div>
             </div>
-            {/* </Modal> */}
             <div className="form-container" onClick={e => e.stopPropagation()}>
                 <h2 className="heading">Add new Task</h2>
                 <form action="" onSubmit={handleAddNewTask}>
                     <label htmlFor="">What is to be done?</label>
-                    <input type="text" name="task" autoComplete="off" placeholder="Enter task here" autoFocus={true} required />
+                    <input type="text" name="task" autoComplete="off" placeholder="Enter task here" autoFocus={true} ref={inputTaskRef} required />
                     <label htmlFor="">Add to Collection</label>
                     <div className="collection-options">
-                        <select name="collection_id" id="coll" ref={selectRef} value={collectionName ? currentCollection[0]?._id : collections?.filter((obj) => obj.collection_name === "default")[0]?._id}>
+                        <select name="collection_id" id="coll" ref={selectRef}>
                             {
                                 collections.map(({ collection_name, _id }, idx) => {
                                     return (<option value={_id} key={idx} >{capitalize(collection_name)}</option>)

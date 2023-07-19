@@ -308,7 +308,7 @@ const SingleCollection = () => {
     const fetchData = async () => {
       await fetchTasks();
     };
-  
+
     fetchData();
   }, []);
 
@@ -412,8 +412,7 @@ const SingleCollection = () => {
   const handleRenameCollection = async (e) => {
     e.preventDefault();
     const formData = {};
-    formData[e.target[0].getAttribute("name")] = (e.target[0].value).toLowerCase();
-    e.target[0].value = "";
+    formData[e.target[0].getAttribute("name")] = (e.target[0].value).toLowerCase().trim();
     // console.log(formData)
     try {
       const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/collections/${currentCollectionID}`, {
@@ -426,6 +425,8 @@ const SingleCollection = () => {
       });
       if (response.ok) {
         const data = await response.json();
+        setIsModalOpen(false);
+        e.target[0].value = "";
         await fetchCollections();
         navigate(`/collections/${data.collection_name}`, { replace: true });
       }
@@ -433,7 +434,6 @@ const SingleCollection = () => {
     } catch (error) {
       console.log(error);
     }
-    setIsModalOpen(false);
   }
 
   const inputRenameRef = useRef();
@@ -442,6 +442,10 @@ const SingleCollection = () => {
     inputRenameRef.current.focus()
     setCurColName(e.target.value);
   }
+  
+  useEffect(() => {
+    inputRenameRef.current.value = capitalize(collection);
+  }, [isModalOpen])
 
 
   return (
@@ -479,18 +483,18 @@ const SingleCollection = () => {
         <div className="task-container">
           {
             filteredTasks
-            .map(({ _id, user, collection_id, task, active }, idx) => {
-              return (<Task _id={_id} collection_id={collection_id} user={user} name={task} isActive={active} key={_id} showCollectionName={false} />)
-            })
+              .map(({ _id, user, collection_id, task, active }, idx) => {
+                return (<Task _id={_id} collection_id={collection_id} user={user} name={task} isActive={active} key={_id} showCollectionName={false} />)
+              })
           }
           {
             loadingTasks ? (<h2 className="msg">Loading Tasks...</h2>) :
-            (
-              filteredTasks.length === 0 && searchValue.length === 0 ? (<h2 className="msg">No tasks in this collection.</h2>) : 
               (
-                filteredTasks.length === 0 && searchValue.length !== 0? <h2 className="msg">No result</h2> : null
+                filteredTasks.length === 0 && searchValue.length === 0 ? (<h2 className="msg">No tasks in this collection.</h2>) :
+                  (
+                    filteredTasks.length === 0 && searchValue.length !== 0 ? <h2 className="msg">No result</h2> : null
+                  )
               )
-            )
           }
 
 
@@ -499,7 +503,7 @@ const SingleCollection = () => {
           <div className="modal-inner-container">
             <h2 className="heading">Rename Collection</h2>
             <form className="rename-collection-form" onSubmit={handleRenameCollection}>
-              <input onFocus={(e) => e.target.select()} onChange={handleInputChange} autoComplete="off" type="text" name="collection_name" required ref={inputRenameRef} value={curColName} />
+              <input onFocus={(e) => e.target.select()} onChange={handleInputChange} autoComplete="off" type="text" name="collection_name" required ref={inputRenameRef} />
               <div className="buttons">
                 <button type="button" onClick={() => { setIsModalOpen(false); setCurColName(collection) }}>CANCEL</button>
                 <button type="submit">DONE</button>

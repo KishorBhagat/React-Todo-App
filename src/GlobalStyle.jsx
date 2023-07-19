@@ -1,6 +1,9 @@
 import styled, { createGlobalStyle } from "styled-components";
 
 const GlobalStyle = createGlobalStyle`
+    :root{
+        --btn-gray: #555561
+    }
     .dark-theme{
         --background-primary: #1d1e26;
         /* --background-primary: #181820; */
@@ -16,15 +19,17 @@ const GlobalStyle = createGlobalStyle`
         --avatar-font-color: #272836;
     }
     .light-theme{
-        --background-primary: #dfdfe3;
+        /* --background-primary: #dfdfe3; */
         /* --background-primary: #d6d6db; */
         /* --background-primary: #b4b5bd; */
         /* --background-primary: #cecfd3; */
+        --background-primary: #ffffff;
 
-        --background-secondary: #bfc0c6;
+        /* --background-secondary: #bfc0c6; */
         /* --background-secondary: #b4b5bd; */
         /* --background-secondary: #d6d6db; */
         /* --background-secondary: #e4e4ef; */
+        --background-secondary: #e6e5e9;
 
         --text-primary: #000;
         --text-secondary: #000;

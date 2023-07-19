@@ -76,7 +76,35 @@ const StyledDashboard = styled.div`
     padding-bottom: 20px;
     overflow-x: hidden;
     overflow-y: auto;
-    transition: all .3s ease-in;
+    /* transition: all .3s ease-in; */
+
+    .greet-mobile{
+      display: none;
+    }
+
+    .filter-tabs{
+      padding: 0 5px;
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+      margin-bottom: 20px;
+      button{
+        padding: 5px 10px;
+        border-radius: 8px;
+        background-color: var(--background-primary);
+        border: 2px solid var(--btn-gray);
+        color: var(--text-primary);
+        cursor: pointer;
+
+        &:hover{
+          background-color: var(--background-secondary);
+        }
+
+        &.active{
+          background-color: var(--background-secondary);
+        }
+      }
+    }
 
     .msg{
       color: var(--text-primary);
@@ -84,10 +112,14 @@ const StyledDashboard = styled.div`
       font-weight: 300;
       position: relative;
       top: calc(50% - 50px);
+
+      @media (max-width: 700px){
+        top: calc(20%);
+      }
     }
 
     &::-webkit-scrollbar {
-      width: 2px;
+      width: 0px;
       /* height: 7.5px; */
     }
     &::-webkit-scrollbar-track {
@@ -120,30 +152,45 @@ const StyledDashboard = styled.div`
       }
 
       .greet {
-        height: 90px;
+        /* height: 90px; */
+        display: none;
       }
     }
 
     .task-container{
       width: 100%;
       padding: 0 10px;
-      padding-bottom: 10px;
-      height: calc(100vh - 230px);
-    }
+      padding-bottom: 60px;
+      height: calc(100vh - 140px);
 
-    /* .NOTtask-container::-webkit-scrollbar {
-      width: 4px;
-    } */
+      .greet-mobile{
+        height: 90px;
+        display: block;
+        font-size: 20px;
+        height: 90px;
+        padding: 0 5px;
+        background-color: inherit;
+        h1{
+          background-color: inherit;
+        }
+      }
+      .filter-tabs{
+        button{
+          flex: 1;
+        }
+      }
+    }
   }
 `;
 
 const Dashboard = () => {
 
   const { user } = useContext(UserContext);
-  const { tasks, loadingTasks, fetchTasks } = useContext(TaskContext);
-  const { searchTaskResult } = useContext(SearchContext);
+  const { tasks, setTasks, loadingTasks, fetchTasks } = useContext(TaskContext);
+  const { searchTaskResult, setSearchTaskResult } = useContext(SearchContext);
 
   const [greeting, setGreeting] = useState("");
+  const [tab, setTab] = useState('all');
 
   if (localStorage.getItem('isWelcomed') === 'true') {
     toast.success("Welcome to task.", { position: toast.POSITION.TOP_CENTER });
@@ -167,10 +214,25 @@ const Dashboard = () => {
   }, []);
 
 
-  const data = useSelector((state) => {
-    return state.data;
-  })
-
+  const handleTabChange = (name) => {
+    setTab(name);
+    switch (name) {
+      case 'all':
+        setSearchTaskResult(tasks);
+        break;
+      case 'pending':
+        // setTab(name);
+        setSearchTaskResult(tasks.filter((obj) => obj.active));
+        break;
+      case 'finished':
+        // setTab(name);
+        setSearchTaskResult(tasks.filter((obj) => !obj.active));
+        break;
+    }
+  }
+  // console.log("All", tasks)
+  // console.log("Pending", tasks.filter((obj) => obj.active))
+  // console.log("Finished", tasks.filter((obj) => !obj.active))
 
   return (
     <Layout>
@@ -186,6 +248,15 @@ const Dashboard = () => {
           </div>
         </header>
         <div className="task-container">
+          <div className="greet-mobile">
+            <h1>{greeting},</h1>
+            <h1>{user.username?.split(' ')[0]}</h1>
+          </div>
+          {/* <div className="filter-tabs">
+            <button className="tab-btn" style={{ backgroundColor: `${tab === 'all' ? 'var(--btn-gray)' : 'var(--background-primary)'}` }} onClick={() => handleTabChange('all')}>All</button>
+            <button className="tab-btn" style={{ backgroundColor: `${tab === 'pending' ? 'var(--btn-gray)' : 'var(--background-primary)'}` }} onClick={() => handleTabChange('pending')}>Pending</button>
+            <button className="tab-btn" style={{ backgroundColor: `${tab === 'finished' ? 'var(--btn-gray)' : 'var(--background-primary)'}` }} onClick={() => handleTabChange('finished')}>Finished</button>
+          </div> */}
           {!loadingTasks && tasks.length === 0 && <h2 className="msg">No tasks to show.<br />Create your first task.</h2>}
           {
             searchTaskResult.map(({ _id, user, collection_id, task, active }, idx) => {

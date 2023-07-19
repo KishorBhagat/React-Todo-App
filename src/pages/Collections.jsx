@@ -6,6 +6,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { CollectionContext } from "../Context/CollectionContext";
 import { SearchContext } from "../Context/SearchContext";
 import { TaskContext } from "../Context/TaskContext";
+import { toast } from "react-toastify";
 
 const StyledCollections = styled.div`
   margin-top: 50px;
@@ -72,57 +73,67 @@ const StyledCollections = styled.div`
       }
     }
   }
-  header{
+
+  .outer-collections-container{
     background-color: inherit;
-    /* background-color: green; */
-    width: 500px;
-    height: 80px;
+    /* background-color: red; */
+    width: fit-content;
+    height: calc(100vh - 90px);
     display: flex;
-    justify-content: space-between;
-    /* padding-bottom: 50px; */
+    flex-direction: column;
+    align-items: center;    
 
-    h1{
+    header{
       background-color: inherit;
-      font-weight: 500;
-    }
-  }
-
-  .collection-container{
-    background-color: transparent;
-    /* background-color: yellow; */
-    width: 500px;
-    max-height: calc(100vh - 170px);
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-    padding-bottom: 20px;
-    overflow: auto;
-
-    button{
-      width: 150px;
-      height: 85px;
-      border: 3px solid var(--background-secondary);
-      background-color: var(--background-primary);
-      border-radius: 20px;
-      cursor: pointer;
-      color: var(--text-secondary);
-      font-size: 25px;
-      transition: .2s ease;
-
-      &:hover{
-        background-color: var(--background-secondary);
+      /* background-color: green; */
+      width: 100%;
+      width: 470px;
+      height: 80px;
+      display: flex;
+      justify-content: space-between;
+      /* padding-bottom: 50px; */
+  
+      h1{
+        background-color: inherit;
+        font-weight: 500;
       }
     }
-
-    &::-webkit-scrollbar {
-        width: 0px;
-    }
-    &::-webkit-scrollbar-track {
-        background: transparent;
-    }
-    &::-webkit-scrollbar-thumb {
-        background: #9a9aa8;
-        border-radius: 100px;
+  
+    .collections-container{
+      background-color: transparent;
+      width: 470px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding-bottom: 20px;
+      overflow: auto;
+  
+      button{
+        width: 150px;
+        height: 85px;
+        border: 3px solid var(--background-secondary);
+        background-color: var(--background-primary);
+        border-radius: 20px;
+        cursor: pointer;
+        color: var(--text-secondary);
+        font-size: 25px;
+        transition: .2s ease;
+  
+        &:hover{
+          background-color: var(--background-secondary);
+        }
+      }
+  
+      &::-webkit-scrollbar {
+          width: 0px;
+      }
+      &::-webkit-scrollbar-track {
+          background: transparent;
+      }
+      &::-webkit-scrollbar-thumb {
+          background: #9a9aa8;
+          border-radius: 100px;
+      }
     }
   }
 
@@ -135,18 +146,42 @@ const StyledCollections = styled.div`
         width: 270px;
       }
     }
-    header{
-      width: 100%;
-      padding-top: 20px;
-      padding-left: 5%;
-      padding-right: 5%;
-    }
 
-    .collection-container{
+    .outer-collections-container{
       width: 100%;
-      padding: 0 5%;
-      padding-bottom: 10px;
-      min-height: calc(100vh - 140px);
+      height: calc(100vh - 60px);
+      header{
+        width: 100%;
+        padding-top: 20px;
+        padding-left: 5%;
+        padding-right: 5%;
+      }
+  
+      .collections-container{
+        width: 100%;
+        width: 470px;
+        padding-bottom: 60px;
+      }
+    }
+  }
+  @media (max-width: 480px){
+    .outer-collections-container{
+      .collections-container{
+        width: 330px;
+        button{
+          width: 160px;
+        }
+      }
+    }
+  }
+  @media (max-width: 340px){
+    .outer-collections-container{
+      .collections-container{
+        width: 250px;
+        button{
+          width: 120px;
+        }
+      }
     }
   }
 `;
@@ -222,21 +257,22 @@ const Collections = () => {
             </form>
           </div>
         </Modal>
-        <header>
-          <h1 className="collections-heading">Collections</h1>
-          {/* <h1>...</h1> */}
-        </header>
-        <div className="collection-container">
-          {
-            searchCollectionResult.map(({ collection_name, _id, total_tasks, total_finished }, id) => {
-              return (
-                // <Collection name={collection_name} total={total_tasks} done={total_finished} key={_id} />
-                <Collection name={collection_name} collection_id={_id} key={_id} />
-              )
-            })
-          }
+        <div className="outer-collections-container">
+          <header>
+            <h1 className="collections-heading">Collections</h1>
+          </header>
+          <div className="collections-container">
+            {
+              searchCollectionResult.map(({ collection_name, _id, total_tasks, total_finished }, id) => {
+                return (
+                  // <Collection name={collection_name} total={total_tasks} done={total_finished} key={_id} />
+                  <Collection name={collection_name} collection_id={_id} key={_id} />
+                )
+              })
+            }
 
-          <button onClick={() => setIsModalOpen(true)}>+</button>
+            <button onClick={() => setIsModalOpen(true)}>+</button>
+          </div>
         </div>
       </StyledCollections>
     </Layout>

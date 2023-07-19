@@ -31,7 +31,7 @@ const StyledLanding = styled.div`
           font-size: 14px;
           transition: 0.2s ease;
           &:hover{
-            color: white;
+            color: var(--text-primary);
           }
         }
       }

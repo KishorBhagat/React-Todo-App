@@ -136,7 +136,7 @@ const ResetPassword = () => {
         const formData = {};
         formData[e.target[0].getAttribute("name")] = e.target[0].value;
         formData[e.target[1].getAttribute("name")] = e.target[1].value;
-        // e.target[0].value = "";
+        
         dispatch(updatePassword({formData, resetToken}))
         .unwrap()
         .then((res) => {
@@ -145,29 +145,18 @@ const ResetPassword = () => {
             }
             else {
                 localStorage.removeItem("resetToken");
+                localStorage.setItem("passwordRestSuccess", 'true');
                 e.target[0].value = "";
                 e.target[1].value = "";
-                toast.success('Password change successfully.', {
-                    position: toast.POSITION.TOP_CENTER,
-                    onClose: () => {
-                        navigate('/login');
-                    }
-                })
+                navigate('/login');
             }
         })
     }
 
-    const [isPending, setIsPending] = useState(false);
-
-    useEffect(() => {
-        toast.info('You can now change your password.', {
-            position: toast.POSITION.TOP_CENTER
-        })
-    }, [])
-
-    // if (!resetToken) {
-    //     return <Navigate to='/' />
-    // }
+    if (localStorage.getItem('codeVerified') === 'true') {
+        toast.success('You can now change your password.', { position: toast.POSITION.TOP_CENTER });
+        localStorage.removeItem('codeVerified');
+    }
 
     return (
         <StyledResetPassword>
@@ -179,7 +168,7 @@ const ResetPassword = () => {
                     {/* <small className="desc">&#9432;&nbsp;&nbsp;Password must be at least 6 characters.</small> */}
                     <input type="password" name="confirmNewPassword" placeholder="Password again" required />
                     {
-                        isPending ?
+                        isLoading ?
                             <button type="submit" className="btn" disabled><Spinner /></button>
                             :
                             <button type="submit" className="btn">Save changes and log in</button>
