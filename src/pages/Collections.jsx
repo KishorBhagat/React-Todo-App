@@ -85,7 +85,6 @@ const StyledCollections = styled.div`
 
     header{
       background-color: inherit;
-      /* background-color: green; */
       width: 100%;
       width: 470px;
       height: 80px;
@@ -153,6 +152,7 @@ const StyledCollections = styled.div`
       header{
         width: 100%;
         padding-top: 20px;
+        padding-bottom: 20px;
         padding-left: 5%;
         padding-right: 5%;
       }

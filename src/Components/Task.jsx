@@ -125,56 +125,65 @@ const StyledModal = styled.div`
         border-radius: 2px;
 
         .heading{
-        color: var(--pink);
-        margin-bottom: 20px;
+            color: var(--pink);
+            margin-bottom: 20px;
+            font-weight: 500;
         }
 
         .rename-collection-form{
-        width: 300px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-    
-        input {
-            height: 40px;
-            width: 100%;
-            /* padding: 0 14px; */
-            background-color: inherit;
-            font-size: 16px;
-            border: none;
-            /* color: var(--text-primary); */
-            border-bottom: 2px solid #e756b5;
-            /* border-bottom: 2px solid black; */
-            /* border-radius: 10px; */
-            :focus{
-            outline: none;
-            border-bottom: 3px solid #e756b5;
-            caret-color: var(--pink);
-            }
-        }
-    
-        .buttons{
+            width: 300px;
             display: flex;
-            justify-content: end;
-            width: 100%;
-            gap: 5px;
-            margin-top: 20px;
-    
-            button{
-            border: none;
-            padding: 5px 10px;
-            color: var(--pink);
-            font-weight: 500;
-            background-color: inherit;
-            cursor: pointer;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            
+            input {
+                height: 40px;
+                width: 100%;
+                /* padding: 0 14px; */
+                background-color: inherit;
+                font-size: 16px;
+                border: none;
+                /* color: var(--text-primary); */
+                border-bottom: 1px solid #e756b5;
+                /* border-bottom: 2px solid black; */
+                /* border-radius: 10px; */
+                :focus{
+                outline: none;
+                border-bottom: 2px solid #e756b5;
+                caret-color: var(--pink);
+                }
+            }
+        
+            .buttons{
+                display: flex;
+                justify-content: end;
+                width: 100%;
+                gap: 5px;
+                margin-top: 20px;
+            
+                button{
+                border: none;
+                padding: 5px 10px;
+                color: var(--pink);
+                font-weight: 500;
+                background-color: inherit;
+                cursor: pointer;
+                }
             }
         }
+
+        @media (max-width: 700px){
+            border-radius: 14px;
+            .heading{
+                font-size: 20px;
+            }
         }
     }
+    
 `
 
-const Task = ({ _id, name, user, collection_id, isActive, showCollectionName }) => {
+const Task = ({ _id, name, user, collection_id, isActive, dueDate, showCollectionName }) => {
 
     const audioPlayer = useRef(null);
     const labelRef = useRef();
@@ -261,7 +270,7 @@ const Task = ({ _id, name, user, collection_id, isActive, showCollectionName }) 
                     'authToken': token,
                 },
             });
-            if(response.ok){
+            if (response.ok) {
                 await fetchTasks();
             }
 
@@ -335,6 +344,23 @@ const Task = ({ _id, name, user, collection_id, isActive, showCollectionName }) 
         inputRenameTaskRef.current.value = name;
     }, [isModalOpen])
 
+    const date = new Date(dueDate);
+
+    // Convert to IST (Indian Standard Time)
+    const options = {
+        timeZone: 'Asia/Kolkata', // Time zone for IST
+        weekday: 'short',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: true, // Use 12-hour format
+    };
+
+    const readableIST = date.toLocaleString('en-IN', options);
+    const formattedDueDate = readableIST.split(' at')[0] + ',' + readableIST.split(' at')[1];
+
     return (
         <>
 
@@ -348,6 +374,9 @@ const Task = ({ _id, name, user, collection_id, isActive, showCollectionName }) 
                             {/* {name} */}
                         </label>
                         {
+                            dueDate && (<span style={{ marginBottom: "5px"}}>By {formattedDueDate}</span>)
+                        }
+                        {
                             showCollectionName && collectionName && collectionName !== "default" && (<span style={{}}>{capitalize(collectionName)}</span>)
                         }
 
@@ -355,10 +384,10 @@ const Task = ({ _id, name, user, collection_id, isActive, showCollectionName }) 
                 </div>
                 <div className="icons-btn">
                     {
-                        isActive ? 
-                        <button ref={renameRef} className="rename-btn" onClick={() => setIsModalOpen(true)}><PencilSquare /></button>
-                        :
-                        <button ref={deleteRef} className="delete-btn" onClick={handleDelete}><Trash /></button>
+                        isActive ?
+                            <button ref={renameRef} className="rename-btn" onClick={() => setIsModalOpen(true)}><PencilSquare /></button>
+                            :
+                            <button ref={deleteRef} className="delete-btn" onClick={handleDelete}><Trash /></button>
                     }
                 </div>
 

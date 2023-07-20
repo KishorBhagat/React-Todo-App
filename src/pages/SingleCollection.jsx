@@ -62,22 +62,32 @@ const StyledSingleCollection = styled.div`
           width: fit-content;
           top: 29px;
           right: 10px;
-          border-radius: 2px;
+          border-radius: 8px;
+          padding: 8px 0;
+          overflow: hidden;
+          background-color: white;
           z-index: 1;
           cursor: pointer;
           box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 
           .options-list {
             li{
-              background-color: var(--background-secondary);
+              background-color: inherit;
               list-style: none;
-              padding: 8px 12px;
+              padding: 8px 16px;
               display: flex;
               align-items: center;
-              margin-top: 1px;
-              color: var(--text-secondary);
+              /* margin-top: 1px; */
+              color: black;
+              font-size: 14px;
+              transition: .2s ease;
+              &:hover{
+                background-color: #f1efef;
+              }
 
               svg{
+                display: none;
+                width: 13px;
                 fill: var(--text-secondary);
                 margin-right: 10px;
               }
@@ -168,6 +178,7 @@ const StyledSingleCollection = styled.div`
     .heading{
       color: var(--pink);
       margin-bottom: 20px;
+      font-weight: 500;
     }
 
     .rename-collection-form{
@@ -185,12 +196,12 @@ const StyledSingleCollection = styled.div`
         font-size: 16px;
         border: none;
         /* color: var(--text-primary); */
-        border-bottom: 2px solid #e756b5;
+        border-bottom: 1px solid #e756b5;
         /* border-bottom: 2px solid black; */
         /* border-radius: 10px; */
         :focus{
           outline: none;
-          border-bottom: 3px solid #e756b5;
+          border-bottom: 2px solid #e756b5;
           caret-color: var(--pink);
         }
       }
@@ -245,6 +256,12 @@ const StyledSingleCollection = styled.div`
       height: calc(100vh - 120px);
     }
 
+    .modal-inner-container{
+      border-radius: 14px;
+      .heading{
+        font-size: 20px;
+      }
+    }
     /* .NOTtask-container::-webkit-scrollbar {
       width: 4px;
     } */
@@ -483,8 +500,8 @@ const SingleCollection = () => {
         <div className="task-container">
           {
             filteredTasks
-              .map(({ _id, user, collection_id, task, active }, idx) => {
-                return (<Task _id={_id} collection_id={collection_id} user={user} name={task} isActive={active} key={_id} showCollectionName={false} />)
+              .map(({ _id, user, collection_id, task, dueDate, active }, idx) => {
+                return (<Task _id={_id} collection_id={collection_id} user={user} name={task} dueDate={dueDate} isActive={active} key={_id} showCollectionName={false} />)
               })
           }
           {

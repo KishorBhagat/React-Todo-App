@@ -4,6 +4,9 @@ import { useContext, useEffect, useRef, useState } from "react"
 import { useParams } from "react-router-dom"
 import { CollectionContext } from "../Context/CollectionContext"
 import { TaskContext } from "../Context/TaskContext"
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
 
 const StyledFormModal = styled.div`
     position: fixed;
@@ -30,7 +33,7 @@ const StyledFormModal = styled.div`
         .heading{
             color: var(--pink);
             margin-bottom: 20px;
-
+            font-weight: 500;
         }
 
         .add-collection-form{
@@ -43,17 +46,13 @@ const StyledFormModal = styled.div`
           input {
             height: 40px;
             width: 100%;
-            /* padding: 0 14px; */
             background-color: inherit;
             font-size: 16px;
             border: none;
-            /* color: var(--text-primary); */
-            border-bottom: 2px solid #e756b5;
-            /* border-bottom: 2px solid black; */
-            /* border-radius: 10px; */
+            border-bottom: 1px solid #e756b5;
             :focus{
               outline: none;
-              border-bottom: 3px solid #e756b5;
+              border-bottom: 2px solid #e756b5;
               caret-color: var(--pink);
             }
           }
@@ -107,6 +106,7 @@ const StyledFormModal = styled.div`
             }
             input{
                 height: 40px;
+                width: 100%;
                 padding: 0 5px;
                 background-color: inherit;
                 margin-top: 10px;
@@ -189,6 +189,12 @@ const StyledFormModal = styled.div`
 
     @media (max-width: 700px){
         padding: 0;
+        .new-collection-modal{
+            border-radius: 14px;
+            .heading{
+                font-size: 20px;
+            }
+        }
         .form-container{
             width: 100%;
             height: 100%;
@@ -202,6 +208,8 @@ const FormModal = ({ isFormModalOpen, setIsFormModalOpen }) => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [collectionName, setCollectionName] = useState('');
+    const [selectedDate, setSelectedDate] = useState(null)
+
     const { collection } = useParams();
 
     const { collections, fetchCollections } = useContext(CollectionContext);
@@ -256,8 +264,12 @@ const FormModal = ({ isFormModalOpen, setIsFormModalOpen }) => {
     const handleAddNewTask = async (e) => {
         e.preventDefault();
         const formData = {};
-        formData[e.target[0].getAttribute("name")] = e.target[0].value;
-        formData[e.target[1].getAttribute("name")] = e.target[1].value;
+        // formData[e.target[0].getAttribute("name")] = e.target[0].value;
+        // formData[e.target[1].getAttribute("name")] = e.target[1].value;
+        formData['task'] = task;
+        formData['dueDate'] = selectedDate;
+        formData['collection_id'] = selectRef.current.value;
+        console.log(formData)
 
         try {
             const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/tasks`, {
@@ -271,7 +283,9 @@ const FormModal = ({ isFormModalOpen, setIsFormModalOpen }) => {
             if (response.ok) {
                 const data = await response.json();
                 setIsFormModalOpen(false);
-                e.target[0].value = "";
+                // e.target[0].value = "";
+                setTask('');
+                setSelectedDate(null);
                 await fetchTasks();
             }
 
@@ -303,11 +317,11 @@ const FormModal = ({ isFormModalOpen, setIsFormModalOpen }) => {
                 console.log(collections?.filter((obj) => obj.collection_name === data.collection_name)[0]?._id);
                 document.querySelector("#coll").value = data?._id;
             }
-            
+
         } catch (error) {
             console.log(error);
         }
-        
+
         setIsModalOpen(false);
     }
 
@@ -346,6 +360,12 @@ const FormModal = ({ isFormModalOpen, setIsFormModalOpen }) => {
         inputCollectionRef.current.value = "";
     }, [isModalOpen]);
 
+    // useEffect(()=> {
+    //     console.log(selectedDate)
+    // }, [selectedDate])
+
+    const [task, setTask] = useState('');
+
     return (
         <StyledFormModal className="overlay" style={{ display: `${isFormModalOpen ? "block" : "none"}` }} onClick={() => { setIsFormModalOpen(false); setIsModalOpen(false) }}>
             <div className="new-collection-modal" style={{ display: `${isModalOpen ? "block" : "none"}` }} onClick={e => e.stopPropagation()}>
@@ -364,7 +384,19 @@ const FormModal = ({ isFormModalOpen, setIsFormModalOpen }) => {
                 <h2 className="heading">Add new Task</h2>
                 <form action="" onSubmit={handleAddNewTask}>
                     <label htmlFor="">What is to be done?</label>
-                    <input type="text" name="task" autoComplete="off" placeholder="Enter task here" autoFocus={true} ref={inputTaskRef} required />
+                    <input onChange={(e) => {setTask(e.target.value)}} value={task} type="text" name="task" autoComplete="off" placeholder="Enter task here" autoFocus={true} ref={inputTaskRef} required />
+                    <label htmlFor="">Due date</label>
+                    <DatePicker
+                        selected={selectedDate}
+                        onChange={(date) => setSelectedDate(date)}
+                        dateFormat={"MMMM d, yyyy h:mm aa"}
+                        minDate={new Date}
+                        isClearable
+                        showYearDropdown
+                        scrollableYearDropdown
+                        showTimeSelect
+                        placeholderText="No due date"
+                    />
                     <label htmlFor="">Add to Collection</label>
                     <div className="collection-options">
                         <select name="collection_id" id="coll" ref={selectRef}>
@@ -375,7 +407,6 @@ const FormModal = ({ isFormModalOpen, setIsFormModalOpen }) => {
                             }
                         </select>
                         <div onClick={handleModal}>
-
                             <Collection />
                         </div>
                     </div>

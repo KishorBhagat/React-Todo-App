@@ -32,7 +32,6 @@ const StyledDashboard = styled.div`
       padding: 0 5px;
       height: 60px;
       background-color: inherit;
-      /* background-color: pink; */
 
       h1{
         font-weight: 500;
@@ -187,7 +186,7 @@ const Dashboard = () => {
 
   const { user } = useContext(UserContext);
   const { tasks, setTasks, loadingTasks, fetchTasks } = useContext(TaskContext);
-  const { searchTaskResult, setSearchTaskResult } = useContext(SearchContext);
+  const { searchTaskResult, setSearchTaskResult} = useContext(SearchContext);
 
   const [greeting, setGreeting] = useState("");
   const [tab, setTab] = useState('all');
@@ -230,6 +229,7 @@ const Dashboard = () => {
         break;
     }
   }
+
   // console.log("All", tasks)
   // console.log("Pending", tasks.filter((obj) => obj.active))
   // console.log("Finished", tasks.filter((obj) => !obj.active))
@@ -259,8 +259,8 @@ const Dashboard = () => {
           </div> */}
           {!loadingTasks && tasks.length === 0 && <h2 className="msg">No tasks to show.<br />Create your first task.</h2>}
           {
-            searchTaskResult.map(({ _id, user, collection_id, task, active }, idx) => {
-              return (<Task _id={_id} user={user} name={task} collection_id={collection_id} isActive={active} key={_id} showCollectionName={true} />)
+            searchTaskResult.map(({ _id, user, collection_id, task, dueDate, active }, idx) => {
+              return (<Task _id={_id} user={user} name={task} collection_id={collection_id} dueDate={dueDate} isActive={active} key={_id} showCollectionName={true} />)
             })
           }
           {loadingTasks && <h2 className="msg">Loading Tasks...</h2>}

@@ -23,6 +23,7 @@ export const TaskContextProvider = ({children}) => {
             });
             if(response.ok){
                 const data = await response.json();
+                data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
                 setTasks(data);
                 setLoadingTasks(false);
                 return response;
