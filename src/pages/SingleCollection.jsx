@@ -403,11 +403,11 @@ const SingleCollection = () => {
   }
 
   const handleDeleteCollection = async () => {
+    setIsOptionsOpen(false);
     if (!confirm("Delete the collection?\nAll tasks in this collection will be deleted.")) {
       setIsOptionsOpen(false)
       return
     }
-    setIsOptionsOpen(false);
     try {
       const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/collections/${currentCollectionID}`, {
         method: 'DELETE',
@@ -485,7 +485,7 @@ const SingleCollection = () => {
                       <div className="options-list">
 
                         <li onClick={handleDeleteCollection}><Trash /> Delete</li>
-                        <li onClick={() => setIsModalOpen(true)}><PencilSquare />Rename</li>
+                        <li onClick={() => {setIsModalOpen(true); setIsOptionsOpen(false);}}><PencilSquare />Rename</li>
 
                       </div>
                     )

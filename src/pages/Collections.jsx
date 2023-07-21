@@ -234,10 +234,8 @@ const Collections = () => {
   }, []);
 
   useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current.focus();
-    }
-  }, []);
+    inputRef.current.focus();
+  }, [isModalOpen]);
 
   const {searchValue, searchCollectionResult} = useContext(SearchContext);
 
