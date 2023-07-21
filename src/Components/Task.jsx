@@ -252,7 +252,7 @@ const Task = ({ _id, name, user, collection_id, isActive, dueDate, showCollectio
 
     const handleDelete = async (e) => {
         // await fetchCollections()
-        await fetchTasks();
+        // await fetchTasks();
 
         taskRef.current.style.opacity = ".3";
         taskRef.current.style.transform = "translate(100%)";
@@ -328,8 +328,9 @@ const Task = ({ _id, name, user, collection_id, isActive, dueDate, showCollectio
 
     const inputRenameTaskRef = useRef();
     const [curTaskName, setCurTaskName] = useState(name);
+
     const handleInputChange = (e) => {
-        inputRenameTaskRef.current.focus()
+        // inputRenameTaskRef.current.focus()
         setCurTaskName(e.target.value);
     }
 
@@ -342,6 +343,7 @@ const Task = ({ _id, name, user, collection_id, isActive, dueDate, showCollectio
 
     useEffect(() => {
         inputRenameTaskRef.current.value = name;
+        inputRenameTaskRef.current.focus();
     }, [isModalOpen])
 
     const date = new Date(dueDate);
@@ -398,8 +400,15 @@ const Task = ({ _id, name, user, collection_id, isActive, dueDate, showCollectio
                     <div className="modal-inner-container">
                         <h2 className="heading">Rename Task</h2>
                         <form className="rename-collection-form" onSubmit={handleRenameCollection}>
-                            <input onFocus={(e) => e.target.select()}
-                                onChange={handleInputChange} autoComplete="off" type="text" name="task" required ref={inputRenameTaskRef} />
+                            <input 
+                                // onFocus={(e) => e.target.select()}
+                                type="text" 
+                                name="task" 
+                                onChange={handleInputChange} 
+                                ref={inputRenameTaskRef} 
+                                autoComplete="off" 
+                                required 
+                            />
                             <div className="buttons">
                                 <button type="button" onClick={() => { setIsModalOpen(false); setCurTaskName(name) }}>CANCEL</button>
                                 <button type="submit">DONE</button>

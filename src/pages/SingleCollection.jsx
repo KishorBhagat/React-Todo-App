@@ -455,13 +455,14 @@ const SingleCollection = () => {
 
   const inputRenameRef = useRef();
   const [curColName, setCurColName] = useState(collection);
+  
   const handleInputChange = (e) => {
-    inputRenameRef.current.focus()
     setCurColName(e.target.value);
   }
   
   useEffect(() => {
     inputRenameRef.current.value = capitalize(collection);
+    inputRenameRef.current.focus()
   }, [isModalOpen])
 
 
@@ -520,7 +521,15 @@ const SingleCollection = () => {
           <div className="modal-inner-container">
             <h2 className="heading">Rename Collection</h2>
             <form className="rename-collection-form" onSubmit={handleRenameCollection}>
-              <input onFocus={(e) => e.target.select()} onChange={handleInputChange} autoComplete="off" type="text" name="collection_name" required ref={inputRenameRef} />
+              <input 
+                // onFocus={(e) => e.target.select()} 
+                type="text" 
+                name="collection_name" 
+                onChange={handleInputChange} 
+                ref={inputRenameRef} 
+                autoComplete="off" 
+                required 
+              />
               <div className="buttons">
                 <button type="button" onClick={() => { setIsModalOpen(false); setCurColName(collection) }}>CANCEL</button>
                 <button type="submit">DONE</button>

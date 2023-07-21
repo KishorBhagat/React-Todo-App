@@ -208,6 +208,7 @@ const FormModal = ({ isFormModalOpen, setIsFormModalOpen }) => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [collectionName, setCollectionName] = useState('');
+    const [task, setTask] = useState('');
     const [selectedDate, setSelectedDate] = useState(null)
 
     const { collection } = useParams();
@@ -360,11 +361,12 @@ const FormModal = ({ isFormModalOpen, setIsFormModalOpen }) => {
         inputCollectionRef.current.value = "";
     }, [isModalOpen]);
 
-    // useEffect(()=> {
-    //     console.log(selectedDate)
-    // }, [selectedDate])
-
-    const [task, setTask] = useState('');
+    useEffect(() => {
+        inputTaskRef.current.focus();
+    }, [isFormModalOpen])
+    useEffect(() => {
+        inputCollectionRef.current.focus();
+    }, [isModalOpen])
 
     return (
         <StyledFormModal className="overlay" style={{ display: `${isFormModalOpen ? "block" : "none"}` }} onClick={() => { setIsFormModalOpen(false); setIsModalOpen(false) }}>
