@@ -28,6 +28,7 @@ const StyledCollections = styled.div`
     .heading{
       color: var(--pink);
       margin-bottom: 20px;
+      font-weight: 500;
     }
 
     .add-collection-form{
@@ -40,17 +41,13 @@ const StyledCollections = styled.div`
       input {
         height: 40px;
         width: 100%;
-        /* padding: 0 14px; */
         background-color: inherit;
         font-size: 16px;
         border: none;
-        /* color: var(--text-primary); */
-        border-bottom: 2px solid #e756b5;
-        /* border-bottom: 2px solid black; */
-        /* border-radius: 10px; */
+        border-bottom: 1px solid #e756b5;
         :focus{
           outline: none;
-          border-bottom: 3px solid #e756b5;
+          border-bottom: 2px solid #e756b5;
           caret-color: var(--pink);
         }
       }
@@ -141,6 +138,10 @@ const StyledCollections = styled.div`
     padding-top: 0;
 
     .container{
+      border-radius: 14px;
+      .heading{
+        font-size: 20px;
+      }
       .add-collection-form{
         width: 270px;
       }
