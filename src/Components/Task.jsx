@@ -201,8 +201,6 @@ const Task = ({ _id, name, user, collection_id, isActive, dueDate, showCollectio
 
     const currentCollection = collections?.filter((obj) => obj._id === collection_id);
     const collectionName = currentCollection[0]?.collection_name;
-    const totalTasks = currentCollection[0]?.total_tasks;
-    const totalFinished = currentCollection[0]?.total_finished;
 
     const token = localStorage.getItem('accessToken');
 

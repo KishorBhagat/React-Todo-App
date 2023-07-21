@@ -156,7 +156,7 @@ const StyledSingleCollection = styled.div`
     }
 
     &::-webkit-scrollbar {
-      width: 2px;
+      width: 0px;
       /* height: 7.5px; */
     }
     &::-webkit-scrollbar-track {

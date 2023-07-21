@@ -1,11 +1,12 @@
 import styled from "styled-components"
 import Collection from "./icons/Collection"
-import { useContext, useEffect, useRef, useState } from "react"
+import { forwardRef, useContext, useEffect, useRef, useState } from "react"
 import { useParams } from "react-router-dom"
 import { CollectionContext } from "../Context/CollectionContext"
 import { TaskContext } from "../Context/TaskContext"
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import Calender from "./icons/Calender"
 
 
 const StyledFormModal = styled.div`
@@ -17,6 +18,30 @@ const StyledFormModal = styled.div`
     z-index: 99;
     padding: 0 10px;
     background-color: rgba(0, 0, 0, 0.5);
+    
+    .date-time-picker{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        input{
+            margin-right: 16px;
+            cursor: pointer;
+        }
+        .calender-icon{
+            display: flex;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            width: 28px;
+            height: 28px;
+            svg{
+                fill: var(--text-primary);
+                background-color: inherit;
+                height: 28px;
+                width: 28px;
+            }
+        }
+    }
 
     .new-collection-modal{
         background-color: white;
@@ -122,6 +147,7 @@ const StyledFormModal = styled.div`
                     border-bottom: 1px solid #e756b5;
                 }
             }
+            
             .collection-options{
                 display: flex;
                 align-items: center;
@@ -146,8 +172,8 @@ const StyledFormModal = styled.div`
                 svg{
                     fill: var(--text-primary);
                     background-color: inherit;
-                    height: 24px;
-                    width: 24px;
+                    height: 22px;
+                    width: 22px;
                     cursor: pointer;
                 }
             }
@@ -368,6 +394,23 @@ const FormModal = ({ isFormModalOpen, setIsFormModalOpen }) => {
         inputCollectionRef.current.focus();
     }, [isModalOpen])
 
+
+    const CustomDateInput = forwardRef(({ value, onClick }, ref) => (
+        <div className="date-time-picker">
+            <input
+                ref={ref}
+                value={value}
+                onClick={onClick}
+                onChange={() => { }}
+                readOnly
+                placeholder="No due date"
+            />
+            <button type="button" onClick={onClick} className="calender-icon">
+                {!selectedDate && <Calender />}
+            </button>
+        </div>
+    ));
+
     return (
         <StyledFormModal className="overlay" style={{ display: `${isFormModalOpen ? "block" : "none"}` }} onClick={() => { setIsFormModalOpen(false); setIsModalOpen(false) }}>
             <div className="new-collection-modal" style={{ display: `${isModalOpen ? "block" : "none"}` }} onClick={e => e.stopPropagation()}>
@@ -386,7 +429,7 @@ const FormModal = ({ isFormModalOpen, setIsFormModalOpen }) => {
                 <h2 className="heading">Add new Task</h2>
                 <form action="" onSubmit={handleAddNewTask}>
                     <label htmlFor="">What is to be done?</label>
-                    <input onChange={(e) => {setTask(e.target.value)}} value={task} type="text" name="task" autoComplete="off" placeholder="Enter task here" autoFocus={true} ref={inputTaskRef} required />
+                    <input onChange={(e) => { setTask(e.target.value) }} value={task} type="text" name="task" autoComplete="off" placeholder="Enter task here" autoFocus={true} ref={inputTaskRef} required />
                     <label htmlFor="">Due date</label>
                     <DatePicker
                         selected={selectedDate}
@@ -397,7 +440,7 @@ const FormModal = ({ isFormModalOpen, setIsFormModalOpen }) => {
                         showYearDropdown
                         scrollableYearDropdown
                         showTimeSelect
-                        placeholderText="No due date"
+                        customInput={<CustomDateInput />}
                     />
                     <label htmlFor="">Add to Collection</label>
                     <div className="collection-options">
