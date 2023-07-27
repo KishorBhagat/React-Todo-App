@@ -112,6 +112,28 @@ function App() {
     document.body.classList = "dark-theme";
   }
 
+  // useEffect(() => {
+  //   const isFirstVisit = localStorage.getItem('isFirstVisit');
+
+  //   if (isFirstVisit === null) {
+  //     localStorage.setItem('isFirstVisit', 'true');
+  //     window.location.reload();
+  //   }
+  // }, []);
+
+  useEffect(() => {
+    // Add a "beforeunload" event listener to the window to refresh the page when the user leaves or revisits.
+    const handleBeforeUnload = () => {
+      window.location.reload();
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    // Clean up the event listener when the component is unmounted to avoid memory leaks.
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, []);
 
   return (
     <>
