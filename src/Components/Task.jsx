@@ -394,7 +394,7 @@ const Task = ({ _id, name, user, collection_id, isActive, dueDate, showCollectio
                 <audio ref={audioPlayer} src={NotificationSound} />
             </StyledTask>
             <StyledModal>
-                <Modal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} refInput={inputRenameTaskRef} refInputValue={name}>
+                <Modal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen}>
                     <div className="modal-inner-container">
                         <h2 className="heading">Rename Task</h2>
                         <form className="rename-collection-form" onSubmit={handleRenameCollection}>

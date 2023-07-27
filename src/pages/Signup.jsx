@@ -159,6 +159,14 @@ const StyledSignup = styled.section`
                     background-color: inherit;
                 }
             }
+
+            .error-msg{
+                text-align: left;
+                color: red;
+                margin-left: 6px;
+                position: relative;
+                top: -10px;
+            }
             
         }
         p{
@@ -210,6 +218,8 @@ const Signup = () => {
     const [isFormSubmitted, setIsFormSubmitted] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [passwordError, setPasswordError] = useState('');
+    const [confirmPasswordError, setConfirmPasswordError] = useState('');
 
     const initialFormState = {
         username: '',
@@ -232,36 +242,63 @@ const Signup = () => {
         }));
     }
 
+    const handlePasswordError = (e) => {
+        if (e.target.value.length !== 0 && e.target.value.length < 6) {
+            setPasswordError("** Password must be atleast 6 characters")
+        }
+        else {
+            setPasswordError('');
+        }
+
+        if (e.target.value !== formData.confirmPassword) {
+            setConfirmPasswordError('** Passwords do not match.');
+        }
+        else {
+            setConfirmPasswordError('');
+        }
+    }
+    const handleConfirmPasswordError = (e) => {
+        if (e.target.value !== formData.password) {
+            setConfirmPasswordError('** Passwords do not match.');
+        }
+        else {
+            setConfirmPasswordError('');
+        }
+    }
+
     const dispatch = useDispatch();
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        dispatch(signup(formData))
-            .unwrap()
-            .then((res) => {
-                if(res.error){
-                    toast.error(res.error.message, {position: toast.POSITION.TOP_CENTER});
-                }
-                else {
-                    console.log(res.user);
-                    toast.info("A verification link is sent to your email.\nPlease check your email.", {
-                        position: toast.POSITION.TOP_CENTER,
-                        autoClose: false
-                    });
-                    setIsFormSubmitted(true);
-                }
-            })
-            .catch((error) => {
-                console.log(error)
-            });
+        if (!passwordError && !confirmPasswordError) {
+
+            dispatch(signup(formData))
+                .unwrap()
+                .then((res) => {
+                    if (res.error) {
+                        toast.error(res.error.message, { position: toast.POSITION.TOP_CENTER });
+                    }
+                    else {
+                        console.log(res.user);
+                        toast.info("A verification link is sent to your email.\nPlease check your email.", {
+                            position: toast.POSITION.TOP_CENTER,
+                            autoClose: false
+                        });
+                        setIsFormSubmitted(true);
+                    }
+                })
+                .catch((error) => {
+                    console.log(error)
+                });
+        }
     }
 
     useEffect(() => {
         if (isFormSubmitted) {
-          setFormData(initialFormState);
-          setIsFormSubmitted(false);
+            setFormData(initialFormState);
+            setIsFormSubmitted(false);
         }
-      }, [isFormSubmitted]);
+    }, [isFormSubmitted]);
 
 
 
@@ -297,7 +334,7 @@ const Signup = () => {
                     <span>
                         <input type={showPassword ? 'text' : 'password'}
                             name="password"
-                            onChange={handleInputChange}
+                            onChange={(e) => { handleInputChange(e); handlePasswordError(e); }}
                             value={formData.password}
                             placeholder="Password"
                             required
@@ -306,10 +343,11 @@ const Signup = () => {
                             {showPassword ? <EyeSlash /> : <Eye />}
                         </button>
                     </span>
+                    {passwordError && <small className="error-msg">{passwordError}</small>}
                     <span>
                         <input type={showConfirmPassword ? 'text' : 'password'}
                             name="confirmPassword"
-                            onChange={handleInputChange}
+                            onChange={(e) => { handleInputChange(e); handleConfirmPasswordError(e); }}
                             value={formData.confirmPassword}
                             placeholder="Re-enter password"
                             required
@@ -318,6 +356,7 @@ const Signup = () => {
                             {showConfirmPassword ? <EyeSlash /> : <Eye />}
                         </button>
                     </span>
+                    {confirmPasswordError && <small className="error-msg">{confirmPasswordError}</small>}
                     {
                         isLoading ?
                             <button type="submit" className="btn" disabled><Spinner /></button>

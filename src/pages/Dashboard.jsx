@@ -186,7 +186,7 @@ const Dashboard = () => {
 
   const { user } = useContext(UserContext);
   const { tasks, setTasks, loadingTasks, fetchTasks } = useContext(TaskContext);
-  const { searchTaskResult, setSearchTaskResult} = useContext(SearchContext);
+  const { searchValue, searchTaskResult, setSearchTaskResult} = useContext(SearchContext);
 
   const [greeting, setGreeting] = useState("");
   const [tab, setTab] = useState('all');
@@ -211,7 +211,6 @@ const Dashboard = () => {
       setGreeting("Good evening");
     }
   }, []);
-
 
   const handleTabChange = (name) => {
     setTab(name);
@@ -264,7 +263,8 @@ const Dashboard = () => {
             })
           }
           {loadingTasks && <h2 className="msg">Loading Tasks...</h2>}
-          {tasks.length !== 0 && searchTaskResult.length === 0 && <h2 className="msg">No results</h2>}
+          {tasks.length !== 0 && searchValue.length !== 0 && searchTaskResult.length === 0 && <h2 className="msg">No results</h2>}
+  
         </div>
       </StyledDashboard>
     </Layout>

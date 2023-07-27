@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import styled from "styled-components"
 
 const StyledModal = styled.div`
@@ -23,15 +24,10 @@ const StyledModal = styled.div`
     }
 `;
 
-const Modal = ({ isModalOpen, setIsModalOpen, children, refInput, refInputValue }) => {
+const Modal = ({ isModalOpen, setIsModalOpen, children }) => {
 
     const handleModalClose = () => {
         setIsModalOpen(false);
-        if(refInput && refInputValue){
-            // refInput.current.value = refInputValue;
-            console.log(refInput.current.value)
-            console.log(refInputValue)
-        }
     }
 
     return (

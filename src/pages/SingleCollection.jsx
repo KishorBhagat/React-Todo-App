@@ -483,10 +483,8 @@ const SingleCollection = () => {
                   {
                     isOptionsOpen && (
                       <div className="options-list">
-
                         <li onClick={handleDeleteCollection}><Trash /> Delete</li>
                         <li onClick={() => {setIsModalOpen(true); setIsOptionsOpen(false);}}><PencilSquare />Rename</li>
-
                       </div>
                     )
                   }
@@ -506,9 +504,9 @@ const SingleCollection = () => {
               })
           }
           {
-            loadingTasks ? (<h2 className="msg">Loading Tasks...</h2>) :
+            loadingTasks && filteredTasks.length === 0 ? (<h2 className="msg">Loading Tasks...</h2>) :
               (
-                filteredTasks.length === 0 && searchValue.length === 0 ? (<h2 className="msg">No tasks in this collection.</h2>) :
+                tasks.length !== 0 && filteredTasks.length === 0 && searchValue.length === 0 ? (<h2 className="msg">No tasks in this collection.</h2>) :
                   (
                     filteredTasks.length === 0 && searchValue.length !== 0 ? <h2 className="msg">No result</h2> : null
                   )
