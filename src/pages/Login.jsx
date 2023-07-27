@@ -242,7 +242,6 @@ const Login = () => {
         dispatch(login(formData))
             .unwrap()
             .then((res) => {
-                console.log(res)
                 if (res.error) {
                     toast.error(res.error.message, { position: toast.POSITION.TOP_CENTER });
                 }

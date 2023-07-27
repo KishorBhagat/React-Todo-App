@@ -255,7 +255,7 @@ const Task = ({ _id, name, user, collection_id, isActive, dueDate, showCollectio
         taskRef.current.style.opacity = ".3";
         taskRef.current.style.transform = "translate(100%)";
         setTimeout(() => {
-            // audioPlayer.current.play();
+            audioPlayer.current.play();
             taskRef.current.style.opacity = "0";
             taskRef.current.style.display = "none";
         }, 700)

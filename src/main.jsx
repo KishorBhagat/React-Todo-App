@@ -12,6 +12,15 @@ import { SearchContextProvider } from './Context/SearchContext.jsx'
 // import { PersistGate } from 'redux-persist/integration/react';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker
+      .register("./service-worker.js")
+      .then((reg) => console.log("Successfully registered Service Workers: ", reg.scope))
+      .catch((err) => console.log("Failure: ", err));
+  });
+}
+
 ReactDOM.createRoot(document.getElementById('root')).render(
   // <React.StrictMode>
   <GoogleOAuthProvider clientId={import.meta.env.VITE_CLIENT_ID}>
