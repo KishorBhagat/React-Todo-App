@@ -10,10 +10,13 @@ import Wishlist from "../Components/icons/Wishlist";
 const selectCollectionIcon = (collection_name) => {
     switch (collection_name.toLowerCase()) {
         case "school":
+        case "college":
+        case "study":
             return <School />
         case "personal":
             return <Personal />;
         case "design":
+        case "art":
             return <Design />;
         case "groceries":
         case "shopping":
@@ -21,6 +24,7 @@ const selectCollectionIcon = (collection_name) => {
         case "birthday":
             return <Birthday />;
         case "wishlist":
+        case "favourites":
             return <Wishlist />;
         case "music":
             return <Music />;
