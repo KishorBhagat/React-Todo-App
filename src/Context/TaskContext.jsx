@@ -27,7 +27,11 @@ export const TaskContextProvider = ({children}) => {
                 setTasks(data);
                 setLoadingTasks(false);
                 return response;
-            } else{
+            }
+            else if(response.status === 401){
+                fetchTasks();
+            }
+            else{
                 setLoadingTasks(false);
             }
         } catch (error) {

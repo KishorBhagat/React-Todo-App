@@ -32,9 +32,6 @@ export const UserContextProvider = ({children}) => {
             if(response.status === 401 && token == null){
                 console.log("401: User unauthorized")
             }
-            if(response.status === 401){
-                window.location.reload();
-            }
         } catch (error) {
             console.log(error);
         }
