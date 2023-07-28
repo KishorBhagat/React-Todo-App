@@ -112,27 +112,29 @@ function App() {
     document.body.classList = "dark-theme";
   }
 
-  // useEffect(() => {
-  //   const isFirstVisit = localStorage.getItem('isFirstVisit');
-
-  //   if (isFirstVisit === null) {
-  //     localStorage.setItem('isFirstVisit', 'true');
-  //     window.location.reload();
-  //   }
-  // }, []);
+  // Temporary code to reload page once when revisited
+  const reload = sessionStorage.getItem('reload');
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
 
   useEffect(() => {
-    // Add a "beforeunload" event listener to the window to refresh the page when the user leaves or revisits.
-    const handleBeforeUnload = () => {
-      window.location.reload();
+    const handleOnlineStatusChange = () => {
+      setIsOnline(navigator.onLine);
     };
 
-    window.addEventListener('beforeunload', handleBeforeUnload);
+    window.addEventListener('online', handleOnlineStatusChange);
+    // window.addEventListener('offline', handleOnlineStatusChange);
 
-    // Clean up the event listener when the component is unmounted to avoid memory leaks.
     return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
+      window.removeEventListener('online', handleOnlineStatusChange);
+      // window.removeEventListener('offline', handleOnlineStatusChange);
     };
+  }, []);
+
+  useEffect(() => {
+    if(reload === null && isOnline){
+      sessionStorage.setItem('reload', 'true');
+      window.location.reload();
+    }
   }, []);
 
   return (
