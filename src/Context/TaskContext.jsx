@@ -1,4 +1,7 @@
 import { createContext, useEffect, useState } from "react";
+import isAccessTokenValid from "../utils/verifyJwt";
+import { useDispatch } from "react-redux";
+import { refreshLogin } from "../store/slices/authSlice";
 
 export const TaskContext = createContext({}); 
 
@@ -6,7 +9,9 @@ export const TaskContextProvider = ({children}) => {
     const [tasks, setTasks] = useState([]);
     const [loadingTasks, setLoadingTasks] = useState(false);
 
-    const token = localStorage.getItem('accessToken');
+    const dispatch = useDispatch();
+
+    let token = localStorage.getItem('accessToken');
 
     const fetchTasks = async () => {
         setLoadingTasks(true);
@@ -36,7 +41,17 @@ export const TaskContextProvider = ({children}) => {
     }
 
     useEffect(() => {
-        fetchTasks();
+        if(!isAccessTokenValid(token)){
+            dispatch(refreshLogin())
+                .unwrap()
+                .then((res) => {
+                    token = res.token.access;
+                    fetchTasks();
+                })
+        } 
+        else {
+            fetchTasks();
+        }
     }, []);
     
 

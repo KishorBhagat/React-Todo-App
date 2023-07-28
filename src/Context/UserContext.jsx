@@ -1,5 +1,7 @@
 import { createContext, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
+import isAccessTokenValid from "../utils/verifyJwt";
+import { refreshLogin } from "../store/slices/authSlice";
 
 export const UserContext = createContext({}); 
 
@@ -9,7 +11,8 @@ export const UserContextProvider = ({children}) => {
     
     const dispatch = useDispatch();
 
-    const token = localStorage.getItem('accessToken');
+    let token = localStorage.getItem('accessToken');
+
     const fetchUser = async () => {
         if(!token){
             return
@@ -38,7 +41,17 @@ export const UserContextProvider = ({children}) => {
     }
 
     useEffect(() => {
-        fetchUser();
+        if(!isAccessTokenValid(token)){
+            dispatch(refreshLogin())
+                .unwrap()
+                .then((res) => {
+                    token = res.token.access;
+                    fetchUser()
+                })
+        } 
+        else{
+            fetchUser();
+        }
     }, []);
     
 
