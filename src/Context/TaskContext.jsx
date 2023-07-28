@@ -42,11 +42,11 @@ export const TaskContextProvider = ({children}) => {
 
     useEffect(() => {
         if(!isAccessTokenValid(token)){
+            setLoadingTasks(true);
             dispatch(refreshLogin())
                 .unwrap()
                 .then((res) => {
                     token = res.token.access;
-                    setLoadingTasks(true);
                     fetchTasks();
                 })
         } 
