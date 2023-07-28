@@ -112,30 +112,32 @@ function App() {
     document.body.classList = "dark-theme";
   }
 
+
+
   // Temporary code to reload page once when revisited
-  const reload = sessionStorage.getItem('reload');
-  const [isOnline, setIsOnline] = useState(navigator.onLine);
+  // const reload = sessionStorage.getItem('reload');
+  // const [isOnline, setIsOnline] = useState(navigator.onLine);
 
-  useEffect(() => {
-    const handleOnlineStatusChange = () => {
-      setIsOnline(navigator.onLine);
-    };
+  // useEffect(() => {
+  //   const handleOnlineStatusChange = () => {
+  //     setIsOnline(navigator.onLine);
+  //   };
 
-    window.addEventListener('online', handleOnlineStatusChange);
-    // window.addEventListener('offline', handleOnlineStatusChange);
+  //   window.addEventListener('online', handleOnlineStatusChange);
+  //   // window.addEventListener('offline', handleOnlineStatusChange);
 
-    return () => {
-      window.removeEventListener('online', handleOnlineStatusChange);
-      // window.removeEventListener('offline', handleOnlineStatusChange);
-    };
-  }, []);
+  //   return () => {
+  //     window.removeEventListener('online', handleOnlineStatusChange);
+  //     // window.removeEventListener('offline', handleOnlineStatusChange);
+  //   };
+  // }, []);
 
-  useEffect(() => {
-    if(reload === null && isOnline){
-      sessionStorage.setItem('reload', 'true');
-      window.location.reload();
-    }
-  }, []);
+  // useEffect(() => {
+  //   if(reload === null && isOnline){
+  //     sessionStorage.setItem('reload', 'true');
+  //     window.location.reload();
+  //   }
+  // }, []);
 
   return (
     <>
