@@ -46,6 +46,7 @@ export const TaskContextProvider = ({children}) => {
                 .unwrap()
                 .then((res) => {
                     token = res.token.access;
+                    setLoadingTasks(true);
                     fetchTasks();
                 })
         } 
