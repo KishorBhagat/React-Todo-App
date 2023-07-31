@@ -214,10 +214,10 @@ const StyledSignup = styled.section`
 
 const Signup = () => {
 
-    const [isPending, setIsPending] = useState(false);
     const [isFormSubmitted, setIsFormSubmitted] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [emailError, setEmailError] = useState('');
     const [passwordError, setPasswordError] = useState('');
     const [confirmPasswordError, setConfirmPasswordError] = useState('');
 
@@ -240,6 +240,19 @@ const Signup = () => {
             ...prevData,
             [name]: value,
         }));
+    }
+
+    const isValidEmail = (email) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    };
+
+    const handleEmailError = (e) => {
+        if (e.target.value.length !== 0 && !isValidEmail(e.target.value)) {
+            setEmailError("Please enter a valid email address.");
+        } else {
+            setEmailError("");
+        }
     }
 
     const handlePasswordError = (e) => {
@@ -270,7 +283,7 @@ const Signup = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (!passwordError && !confirmPasswordError) {
+        if (!emailError && !passwordError && !confirmPasswordError) {
 
             dispatch(signup(formData))
                 .unwrap()
@@ -327,10 +340,11 @@ const Signup = () => {
                     <input type="email"
                         name="email"
                         placeholder="Email"
-                        onChange={handleInputChange}
+                        onChange={(e) => { handleInputChange(e); handleEmailError(e); }}
                         value={formData.email}
                         required
                     />
+                    {emailError && <small className="error-msg">{emailError}</small>}
                     <span>
                         <input type={showPassword ? 'text' : 'password'}
                             name="password"
