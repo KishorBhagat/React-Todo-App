@@ -7,6 +7,7 @@ import { TaskContext } from "../Context/TaskContext";
 import PencilSquare from "./icons/PencilSquare";
 import Modal from "./Modal";
 import { SearchContext } from "../Context/SearchContext";
+import Calender from "./icons/Calender";
 
 const StyledTask = styled.div`
     background-color: var(--background-secondary);
@@ -92,6 +93,16 @@ const StyledTask = styled.div`
                 font-size: 12px;
                 position: relative;
                 top: 5px;
+            }
+            .dueDate{
+                margin-bottom: 5px;
+                display: flex;
+                svg{
+                    height: 14px;
+                    width: 14px;
+                    fill: #c84949;
+                    margin-right: 5px;
+                }
             }
         }
     }
@@ -374,7 +385,11 @@ const Task = ({ _id, name, user, collection_id, isActive, dueDate, showCollectio
                             {/* {name} */}
                         </label>
                         {
-                            dueDate && (<span style={{ marginBottom: "5px"}}>By {formattedDueDate}</span>)
+                            dueDate && (
+                                <span className="dueDate">
+                                    <Calender /> By {formattedDueDate}
+                                </span>
+                            )
                         }
                         {
                             showCollectionName && collectionName && collectionName !== "default" && (<span style={{}}>{capitalize(collectionName)}</span>)
@@ -398,14 +413,14 @@ const Task = ({ _id, name, user, collection_id, isActive, dueDate, showCollectio
                     <div className="modal-inner-container">
                         <h2 className="heading">Rename Task</h2>
                         <form className="rename-collection-form" onSubmit={handleRenameCollection}>
-                            <input 
+                            <input
                                 // onFocus={(e) => e.target.select()}
-                                type="text" 
-                                name="task" 
-                                onChange={handleInputChange} 
-                                ref={inputRenameTaskRef} 
-                                autoComplete="off" 
-                                required 
+                                type="text"
+                                name="task"
+                                onChange={handleInputChange}
+                                ref={inputRenameTaskRef}
+                                autoComplete="off"
+                                required
                             />
                             <div className="buttons">
                                 <button type="button" onClick={() => { setIsModalOpen(false); setCurTaskName(name) }}>CANCEL</button>
