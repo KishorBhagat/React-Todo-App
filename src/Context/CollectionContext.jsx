@@ -36,7 +36,7 @@ export const CollectionContextProvider = ({children}) => {
     }
 
     useEffect(() => {
-        if(!isAccessTokenValid(token)){
+        if(token && !isAccessTokenValid(token)){
             dispatch(refreshLogin())
                 .unwrap()
                 .then((res) => {

@@ -352,10 +352,10 @@ const Profile = () => {
                 method: 'POST',
                 credentials: "include",
             });
+            dispatch(logout());
         } catch (error) {
             console.log(error);
         }
-        dispatch(logout());
     }
 
     const [isEditingName, setIsEditingName] = useState(false);

@@ -21,7 +21,8 @@ const selectCollectionColor = (name) => {
             return "#46be4e";
         default:
             // return "#ffffff";
-            return "#c84949";
+            // return "#c84949";
+            return "#e756b5";
     }
 }
 

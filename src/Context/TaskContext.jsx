@@ -41,7 +41,7 @@ export const TaskContextProvider = ({children}) => {
     }
 
     useEffect(() => {
-        if(!isAccessTokenValid(token)){
+        if(token && !isAccessTokenValid(token)){
             setLoadingTasks(true);
             dispatch(refreshLogin())
                 .unwrap()

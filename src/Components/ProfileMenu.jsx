@@ -211,10 +211,10 @@ const ProfileMenu = () => {
                 credentials: "include",
                 // withCredentials: true,
             });
+            dispatch(logout());        
         } catch (error) {
             console.log(error);
         }
-        dispatch(logout());        
     }
 
     const handleCloseProfileMenu = () => {

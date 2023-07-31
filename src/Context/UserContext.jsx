@@ -41,7 +41,7 @@ export const UserContextProvider = ({children}) => {
     }
 
     useEffect(() => {
-        if(!isAccessTokenValid(token)){
+        if(token && !isAccessTokenValid(token)){
             dispatch(refreshLogin())
                 .unwrap()
                 .then((res) => {
