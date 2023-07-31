@@ -506,7 +506,7 @@ const SingleCollection = () => {
           {
             loadingTasks && filteredTasks.length === 0 ? (<h2 className="msg">Loading Tasks...</h2>) :
               (
-                tasks.length !== 0 && filteredTasks.length === 0 && searchValue.length === 0 ? (<h2 className="msg">No tasks in this collection.</h2>) :
+                (tasks.length !== 0 && filteredTasks.length === 0 && searchValue.length === 0) || tasks.length === 0 ? (<h2 className="msg">No tasks in this collection.</h2>) :
                   (
                     filteredTasks.length === 0 && searchValue.length !== 0 ? <h2 className="msg">No result</h2> : null
                   )
