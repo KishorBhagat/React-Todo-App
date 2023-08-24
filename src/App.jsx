@@ -66,7 +66,7 @@ function App() {
         dispatch(refreshLogin())
           .unwrap()
           .then((res) => {
-            if (res.error && res.error.name === "TokenExpiredError") {
+            if (res.error && (res.error.name === "TokenExpiredError" || res.error.name === "JsonWebTokenError")) {
               toast.error(<SessionExpiredMsg />, {
                 position: toast.POSITION.TOP_CENTER,
                 theme: 'colored',

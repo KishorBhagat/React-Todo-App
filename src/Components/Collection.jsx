@@ -86,8 +86,14 @@ const Collection = ({name, collection_id}) => {
     
     const navigate = useNavigate();
 
-    const handleRedirect = () => {
+    const handleRedirect = (e) => {
         navigate(`/collections/${name.toLowerCase()}`);
+    }
+
+    const handleKeyDown = (e) => {
+        if(e.code === 'Enter') {
+            handleRedirect();
+        }
     }
 
     const capitalize = (str) => {
@@ -105,7 +111,7 @@ const Collection = ({name, collection_id}) => {
     }
 
     return (
-        <StyledCollection onClick={handleRedirect} id={name.toLowerCase()}>
+        <StyledCollection onClick={handleRedirect} id={name.toLowerCase()} tabIndex={0} onKeyDown={handleKeyDown}>
             <div className="icon">{selectCollectionIcon(name)}</div>
             <div className="details">
                 <div className="name" dangerouslySetInnerHTML={{ __html: highlightText(capitalize(name)) }}>
