@@ -3,7 +3,7 @@ import styled from "styled-components"
 import Moon from "./icons/Moon";
 import Sun from "./icons/Sun";
 
-const StyledToggleButton = styled.div`
+const StyledToggleButton = styled.button`
     background-color: inherit;
     cursor: pointer;
     .toggle-track{

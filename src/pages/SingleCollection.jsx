@@ -402,7 +402,10 @@ const SingleCollection = () => {
     return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
   }
 
-  const handleDeleteCollection = async () => {
+  const handleDeleteCollection = async (e) => {
+    if(e.code !== 'Enter'){
+      return
+    }
     setIsOptionsOpen(false);
     if (!confirm("Delete the collection?\nAll tasks in this collection will be deleted.")) {
       setIsOptionsOpen(false)
@@ -483,8 +486,8 @@ const SingleCollection = () => {
                   {
                     isOptionsOpen && (
                       <div className="options-list">
-                        <li onClick={handleDeleteCollection}><Trash /> Delete</li>
-                        <li onClick={() => {setIsModalOpen(true); setIsOptionsOpen(false);}}><PencilSquare />Rename</li>
+                        <li onClick={handleDeleteCollection} tabIndex={0} onKeyDown={handleDeleteCollection}><Trash /> Delete</li>
+                        <li onClick={() => {setIsModalOpen(true); setIsOptionsOpen(false);}} onKeyDown={(e) => {if(e.code === 'Enter') { e.preventDefault(); setIsModalOpen(true); setIsOptionsOpen(false); }}} tabIndex={0}><PencilSquare />Rename</li>
                       </div>
                     )
                   }

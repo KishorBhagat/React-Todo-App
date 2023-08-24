@@ -206,6 +206,10 @@ const StyledProfile = styled.div`
                 a{
                     text-decoration: none;
                     color: white;
+                    margin-bottom: 8px;
+                    button{
+                        margin-bottom: 0;
+                    }
                 }
             }
         }
@@ -464,18 +468,18 @@ const Profile = () => {
                                 </div>
                             </div>
                             <div className="col-2">
-                                <button><Link to='/changeemail'>Change</Link></button>
+                                <Link to='/changeemail'><button tabIndex={-1}>Change</button></Link>
                             </div>
                         </div>
                         <div className="info">
                             <div className="col-1">
                                 <span className="profile-labels">Password</span>
-                                <div style={{ fontSize: "25px", letterSpacing: "2px" }}>
+                                <div style={{ letterSpacing: "2px", transform: "scale(1.5)", transformOrigin: "left" }}>
                                     &#x2022;•••••••••
                                 </div>
                             </div>
                             <div className="col-2">
-                                <button><Link to='/changepassword'>Change</Link></button>
+                                <Link to='/changepassword'><button tabIndex={-1}>Change</button></Link>
                             </div>
                         </div>
                     </div>
