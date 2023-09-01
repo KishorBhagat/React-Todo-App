@@ -474,7 +474,7 @@ const Profile = () => {
                         <div className="info">
                             <div className="col-1">
                                 <span className="profile-labels">Password</span>
-                                <div style={{ letterSpacing: "2px", transform: "scale(1.5)", transformOrigin: "left" }}>
+                                <div style={{ letterSpacing: "2px", transformOrigin: "left" }}>
                                     &#x2022;•••••••••
                                 </div>
                             </div>
