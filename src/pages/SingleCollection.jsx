@@ -403,7 +403,7 @@ const SingleCollection = () => {
   }
 
   const handleDeleteCollection = async (e) => {
-    if(e.code !== 'Enter'){
+    if(e.type ==='keydown' && e.code === 'Tab'){
       return
     }
     setIsOptionsOpen(false);
