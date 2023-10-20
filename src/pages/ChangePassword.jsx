@@ -196,8 +196,8 @@ const ChangePassword = () => {
         e.preventDefault();
         const formData = {};
         formData[e.target[0].getAttribute("name")] = e.target[0].value;
-        formData[e.target[1].getAttribute("name")] = e.target[1].value;
         formData[e.target[2].getAttribute("name")] = e.target[2].value;
+        formData[e.target[4].getAttribute("name")] = e.target[4].value;
         // e.target[0].value = "";
         setIsPending(true);
         try {
