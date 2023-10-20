@@ -118,6 +118,7 @@ const StyledLogin = styled.section`
             button[type=submit]{
                 height: 46px;
                 margin: 10px 0;
+                margin-bottom: 0;
                 font-size: 15px;
                 cursor: pointer;
                 color: white;
@@ -161,6 +162,13 @@ const StyledLogin = styled.section`
                 svg{
                     background-color: inherit;
                 }
+            }
+            .guest-login-btn{
+                background-color: #3fc73f;
+                font-size: 15px;
+                cursor: pointer;
+                color: white;
+                margin-bottom: 10px;
             }
             
         }
@@ -254,6 +262,24 @@ const Login = () => {
             })
     }
 
+    const [isGuestLogging, setIsGuestLogging] = useState(false);
+    const guestLogin = (e) => {
+        setIsGuestLogging(true);
+        const guestCredentials = {
+            email: "guest@gmail.com",
+            password: "guest@123"
+        }
+        const form = document.querySelector('.form');
+        const showBtn = document.querySelector('.show-btn');
+        setTimeout(() => {
+            form[0].value = guestCredentials.email;
+            form[1].value = guestCredentials.password;
+            showBtn.style.display = "none";
+            e.target.style.display = "none";
+            setShowPassword(false);
+            setIsGuestLogging(false);
+        }, 1500)
+    }
 
     return (
         <StyledLogin>
@@ -293,6 +319,12 @@ const Login = () => {
                             <button type="submit" className="btn" disabled><Spinner /></button>
                             :
                             <button type="submit" className="btn">Log in</button>
+                    }
+                    {
+                        isGuestLogging ?
+                            <button onClick={guestLogin} type="button" className="btn guest-login-btn" disabled><Spinner /></button>
+                            :
+                            <button onClick={guestLogin} type="button" className="btn guest-login-btn">Get Guest User Credentials</button>
                     }
                 </form>
                 <p><span>Don't have an account?</span> <Link to="/signup">Create Account</Link></p>
