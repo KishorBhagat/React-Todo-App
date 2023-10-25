@@ -19,28 +19,29 @@ import { refreshLogin } from './store/slices/authSlice';
 import Profile from './pages/Profile';
 import ChangePassword from './pages/ChangePassword';
 import ChangeEmail from './pages/ChangeEmail';
+import SessionExpiredMsg from './Components/SessionExpiredMsg';
 
-const SessionExpiredMsg = ({ closeToast }) => {
-  return (
-    <>
-      <p style={{textAlign: "center"}}>Your session has expired. Please log in again to continue using the app.</p>
-      <button 
-        onClick={closeToast}
-        style={{
-          cursor: "pointer",
-          border: "none",
-          padding: "5px 10px",
-          borderRadius: "3px",
-          position: "relative",
-          left: "50%",
-          transform: "translateX(-50%)",
-          marginTop: "20px"
-        }}
-      >
-        Log in
-      </button>
-    </>
-  )
+
+const toastErrorOptions = {
+  position: toast.POSITION.TOP_CENTER,
+  theme: 'colored',
+  transition: Zoom,
+  icon: false,
+  autoClose: false,
+  closeButton: false,
+  draggable: false,
+  closeOnClick: false,
+  style: {
+    position: 'absolute',
+    marginTop: 'calc(50vh - 76px)',
+    pointerEvents: 'auto',
+  },
+  onOpen: () => {
+    document.body.style.pointerEvents = 'none';
+  },
+  onClose: () => {
+    window.location.replace('/login');
+  }
 }
 
 
@@ -67,27 +68,7 @@ function App() {
           .unwrap()
           .then((res) => {
             if (res.error && (res.error.name === "TokenExpiredError" || res.error.name === "JsonWebTokenError")) {
-              toast.error(<SessionExpiredMsg />, {
-                position: toast.POSITION.TOP_CENTER,
-                theme: 'colored',
-                transition: Zoom,
-                icon: false,
-                autoClose: false,
-                closeButton: false,
-                draggable: false,
-                closeOnClick: false,
-                style: {
-                  position: 'absolute',
-                  marginTop: 'calc(50vh - 76px)',
-                  pointerEvents: 'auto',
-                },
-                onOpen: () => {
-                  document.body.style.pointerEvents = 'none';
-                },
-                onClose: () => {
-                  window.location.replace('/login');
-                }
-              })
+              toast.error(<SessionExpiredMsg />, toastErrorOptions)
               localStorage.removeItem('accessToken');
               clearInterval(relogging);
             }
