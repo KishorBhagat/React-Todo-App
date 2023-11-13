@@ -266,8 +266,8 @@ const Login = () => {
     const guestLogin = (e) => {
         setIsGuestLogging(true);
         const guestCredentials = {
-            email: "guest@gmail.com",
-            password: "guest@123"
+            email: import.meta.env.VITE_GUEST_EMAIL,
+            password: import.meta.env.VITE_GUEST_PASSWORD
         }
         const form = document.querySelector('.form');
         const showBtn = document.querySelector('.show-btn');

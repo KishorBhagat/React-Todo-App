@@ -126,6 +126,9 @@ const StyledProfile = styled.div`
             color: var(--text-primary);
             cursor: pointer;
         }
+        button:disabled{
+            cursor: not-allowed;
+        }
     }
     .row-2{
         background-color: var(--background-secondary);
@@ -202,6 +205,9 @@ const StyledProfile = styled.div`
                     margin-bottom: 8px;
                     width: 65px;
 
+                }
+                button:disabled{
+                    cursor: not-allowed;
                 }
                 a{
                     text-decoration: none;
@@ -392,6 +398,7 @@ const Profile = () => {
         }
     }
 
+    console.log(user.username === "guest")
 
     return (
         <Layout>
@@ -424,7 +431,7 @@ const Profile = () => {
                         <div>
                             <p className="username">{user.username}</p>
                             <div>
-                                <button onClick={handleButtonClick}>
+                                <button onClick={handleButtonClick} disabled={user.username === import.meta.env.VITE_GUEST_NAME?true:false}>
                                     {image ? "Change Photo" : "Upload Photo"}
                                 </button>
                                 {/* {image && <button>Remove Photo</button>} */}
@@ -456,7 +463,7 @@ const Profile = () => {
                                     isEditingName ?
                                         <button type="submit" htmlFor="nameForm" style={{ backgroundColor: 'var(--pink)' }} onClick={handleSubmitName}>Save</button>
                                         :
-                                        <button onClick={handleEditName}>Edit</button>
+                                        <button onClick={handleEditName} disabled={user.username === import.meta.env.VITE_GUEST_NAME?true:false}>Edit</button>
                                 }
                             </div>
                         </div>
@@ -468,7 +475,7 @@ const Profile = () => {
                                 </div>
                             </div>
                             <div className="col-2">
-                                <Link to='/changeemail'><button tabIndex={-1}>Change</button></Link>
+                                <Link to='/changeemail'><button tabIndex={-1} disabled={user.username === import.meta.env.VITE_GUEST_NAME?true:false}>Change</button></Link>
                             </div>
                         </div>
                         <div className="info">
@@ -479,7 +486,7 @@ const Profile = () => {
                                 </div>
                             </div>
                             <div className="col-2">
-                                <Link to='/changepassword'><button tabIndex={-1}>Change</button></Link>
+                                <Link to='/changepassword'><button tabIndex={-1} disabled={user.username === import.meta.env.VITE_GUEST_NAME?true:false}>Change</button></Link>
                             </div>
                         </div>
                     </div>
