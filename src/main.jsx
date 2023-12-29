@@ -11,13 +11,14 @@ import { SearchContextProvider } from './Context/SearchContext.jsx'
 // import { persistor, store } from './redux/store';
 // import { PersistGate } from 'redux-persist/integration/react';
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import { ThemeContextProvider } from './Context/ThemeContext.jsx'
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker
       .register("./service-worker.js")
-      // .then((reg) => console.log("Successfully registered Service Workers: ", reg.scope))
-      // .catch((err) => console.log("Failure: ", err));
+    // .then((reg) => console.log("Successfully registered Service Workers: ", reg.scope))
+    // .catch((err) => console.log("Failure: ", err));
   });
 }
 
@@ -30,7 +31,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <CollectionContextProvider>
           <TaskContextProvider>
             <SearchContextProvider>
-              <App />
+              <ThemeContextProvider>
+                <App />
+              </ThemeContextProvider>
             </SearchContextProvider>
           </TaskContextProvider>
         </CollectionContextProvider>

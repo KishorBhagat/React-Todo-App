@@ -84,14 +84,6 @@ function App() {
     };
   }, [dispatch])
 
-  const theme = localStorage.getItem('theme');
-  if(theme === 'light-theme'){
-    document.body.classList = "light-theme";
-  }
-  else {
-    document.body.classList = "dark-theme";
-  }
-
   return (
     <>
       <GlobalStyle />
