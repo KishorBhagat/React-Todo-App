@@ -1,5 +1,6 @@
-import { useEffect, useRef } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import styled from "styled-components"
+import { ThemeContext } from "../Context/ThemeContext";
 import Moon from "./icons/Moon";
 import Sun from "./icons/Sun";
 
@@ -55,26 +56,24 @@ const StyledToggleButton = styled.button`
 const ToggleButton = () => {
 
     const thumbRef = useRef();
-    const currentTheme = document.body.className;
+    const { theme, setTheme } = useContext(ThemeContext);
 
     const handleToggleTheme = (e) => {
-        if (document.body.classList == "dark-theme") {
-            document.body.classList = "light-theme";
+        if (theme === 'dark') {
+            setTheme('light');
             thumbRef.current.style.transform = "translateX(24px)";
-            localStorage.setItem('theme', 'light-theme')
         }
-        else {
-            document.body.classList = "dark-theme"
+        if (theme === 'light') {
+            setTheme('dark');
             thumbRef.current.style.transform = "translateX(0px)";
-            localStorage.setItem('theme', 'dark-theme')
         }
     }
 
     useEffect(() => {
-        if(currentTheme === 'light-theme'){
+        if (theme === 'light') {
             thumbRef.current.style.transform = "translateX(24px)";
         }
-    }, [])
+    }, [theme])
 
     return (
         <StyledToggleButton className="toggle" onClick={handleToggleTheme}>

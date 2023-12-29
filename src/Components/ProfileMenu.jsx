@@ -129,10 +129,7 @@ const StyledProfileMenu = styled.div`
                 color: var(--text-secondary);
             }
             button{
-                margin-top: 10px;
-                padding: 5px 12px;
-                border-radius: 15px;
-                border: 1px solid var(--text-secondary);
+                border: none;
                 background-color: var(--background-secondary);
                 cursor: pointer;
                 color: var(--text-secondary);

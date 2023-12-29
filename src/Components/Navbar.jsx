@@ -12,6 +12,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 import ToggleButton from "./ThemeToggleButton";
 import { UserContext } from "../Context/UserContext";
 import SearchInput from "./SearchInput";
+import ThemeSelector from "./ThemeSelector";
 
 const StyledNavbar = styled.nav`
   position: fixed;
@@ -169,8 +170,8 @@ const Navbar = ({ isFormModalOpen, setIsFormModalOpen }) => {
       </ul>
       <ul className="menus">
         <button className="add-btn" onClick={() => setIsFormModalOpen(true)}>+</button>
-        <ToggleButton />
-        {/* <div className="search-input"><Search /><input type="text" onChange={handleSearch} /></div> */}
+        {/* <ToggleButton /> */}
+        <ThemeSelector />
         <SearchInput />
         <button onClick={showProfileMenu}>
           {
